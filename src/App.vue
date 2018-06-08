@@ -1,46 +1,22 @@
 <script>
 import Utils from './components/Utils.js';
 
-import { RuntimeErrorException } from './components/BaseExceptions.js';
-import ContentBox from './components/ContentBox.vue';
-import ShowMoreLanguagesBar from './components/ShowMoreLanguagesBar.vue';
+import SharedStore from './components/SharedData';
+import CurrentTerm from './components/CurrentTerm';
+import ContentBox from './components/ContentBox';
+import ShowMoreLanguagesBar from './components/ShowMoreLanguagesBar';
 import ObjectHelper from './components/ObjectHelper';
-
-class CurrentTerm {
-    static Term = '';
-    static Wrapper;
-
-    static loadTerm( Term ) {
-    	CurrentTerm.Term = '';
-    	Utils.get( Term, CurrentTerm.onLoadTerm );
-    	Utils.waitUntil( CurrentTerm.termIsLoaded );
-    }
-
-    static onLoadTerm( Response, Error ) {
-    	if ( false === Utils.isEmpty( Error ) ) {
-    		throw new RuntimeErrorException( Error );
-    	}
-
-    	if ( 'function' !== typeof CurrentTerm.Wrapper ) {
-    		CurrentTerm.Term = Response;
-    	} else {
-    		CurrentTerm.Term = CurrentTerm.Wrapper( Response );
-    	}
-    }
-
-    static termIsLoaded() {
-    	return Utils.isEmpty( CurrentTerm.Term );
-    }
-}
 
 function wrapTerm( Term ) {
 	let Key, Alias;
 	const NewTerms = {};
-
+	const Languages = [];
 	for ( Key in Term.labels ) {
 		NewTerms[ Key ] = {
 			label: Term.labels[ Key ].value
 		};
+
+		Languages.push( Key );
 
 		if ( Key in Term.descriptions ) {
 			NewTerms[ Key ].description = Term.descriptions[ Key ].value;
@@ -56,6 +32,11 @@ function wrapTerm( Term ) {
 		}
 	}
 
+	// Add PTrie here
+	for ( Key in NewTerms ) {
+		NewTerms[ Key ].languages = ObjectHelper.copyObj( Languages );
+	}
+
 	NewTerms.id = Term.id;
 	return NewTerms;
 }
@@ -65,6 +46,7 @@ export default {
 	template: '<div/>',
 	components: { ContentBox, ShowMoreLanguagesBar },
 	beforeCreate: function () {
+
 	    CurrentTerm.Wrapper = wrapTerm;
 		CurrentTerm.loadTerm( './data/Q64_data.json' );
 	},
@@ -73,24 +55,33 @@ export default {
 			return this.$data.term.id;
 		},
 		title: function () {
-			return this.$data.term[ this.$data.currentLanguage ].label;
+			return this.$data.term[ this.getCurrentLanguage() ].label;
 		},
 		description: function () {
-			return this.$data.term[ this.$data.currentLanguage ].description;
+			return this.$data.term[ this.getCurrentLanguage() ].description;
 		},
 		aliases: function () {
-			return this.$data.term[ this.$data.currentLanguage ].aliases;
+			return this.$data.term[ this.getCurrentLanguage() ].aliases;
+		},
+		getTerm: function () {
+		    return ObjectHelper.copyObj( this.$data.term );
 		}
+
 	},
 	mounted: function () {
 		setTimeout( this.refreshOnLoaded, 10 );
 	},
 	methods: {
+	    getCurrentLanguage: function () {
+			return 'en';
+		},
 		refreshOnLoaded: function () {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
+				SharedStore.initStorage( CurrentTerm.Term.id );
+				SharedStore.set( { currentLanguage: this.getCurrentLanguage(), otherLanguages: [ this.getCurrentLanguage() ] } );
 			    this.$data.term = ObjectHelper.copyObj( CurrentTerm.Term );
 				this.$data.termLoaded = true;
-				this.$data.hasAlias = 0 < this.$data.term[ this.$data.currentLanguage ].aliases;
+				this.$data.hasAlias = 0 < this.$data.term[ this.getCurrentLanguage() ].aliases;
 				this.$nextTick( function () {
 					this.$forceUpdate();
 				} );
@@ -102,8 +93,7 @@ export default {
 	data: function () {
 		return {
 			termLoaded: false,
-			hasAlias: false,
-			currentLanguage: 'de'
+			hasAlias: false
 		};
 	}
 };
@@ -119,7 +109,7 @@ export default {
                 :hasAlias="hasAlias"
                 :aliases="aliases"
         />
-        <ShowMoreLanguagesBar/>
+        <ShowMoreLanguagesBar :term="getTerm"/>
     </div>
 </template>
 

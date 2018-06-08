@@ -1,20 +1,12 @@
-<template>
-    <div id="showMoreLanguagesBar">
-        <div id="showMoreLanguagesBar_buttonField" >
-            <button class="b_isActive" v-on:click="showMoreLanguages" >Show more languages</button><img id="img_moreLanguages" src="../assets/Arror1.png"/><img id="img_lessLanguages" src="../assets/Arror2.png"/>
-        </div >
-        <div id="showMoreLanguagesContent">
-            <MoreLanguagesBox/>
-        </div>
-    </div>
-</template>
-
 <script>
-import MoreLanguagesBox from './MoreLanguagesBox'
+import MoreLanguagesBox from './MoreLanguagesBox';
 
 export default{
 	name: 'ShowMoreLanguagesBar',
-    components: {MoreLanguagesBox},
+	components: { MoreLanguagesBox },
+	props: {
+	    term: Object
+	},
 	methods: {
 	    showMoreLanguages() {
 			const More = document.getElementById( 'img_moreLanguages' );
@@ -29,13 +21,29 @@ export default{
 				Less.style.display = 'none';
 			}
 
-            ContentBox.style.display = Less
-        }
+			ContentBox.style.display = Less;
+		}
+	},
+	computed: {
+	    getTerm() {
+	        return this.$props.term;
+		}
 	}
 
 };
 
 </script>
+
+<template>
+    <div id="showMoreLanguagesBar">
+        <div id="showMoreLanguagesBar_buttonField" v-on:click="showMoreLanguages">
+            <button class="b_isActive">Show more languages</button><img id="img_moreLanguages" src="../assets/Arror1.png"/><img id="img_lessLanguages" src="../assets/Arror2.png"/>
+        </div >
+        <div id="showMoreLanguagesContent">
+            <MoreLanguagesBox :term="getTerm"/>
+        </div>
+    </div>
+</template>
 
 <style>
 #showMoreLanguagesBar
@@ -74,7 +82,8 @@ img#img_moreLanguages, img#img_lessLanguages
     margin-top: 12.5px;
     height: 25px;
     overflow: hidden;
-    position:fixed;
+    position:relative;
+    float: right;
     right:20px;
 }
 

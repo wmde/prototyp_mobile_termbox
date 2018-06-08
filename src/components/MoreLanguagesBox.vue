@@ -1,3 +1,18 @@
+<script>
+import Utils from './Utils';
+import SharedStore from './SharedData';
+
+export default {
+	name: 'MoreLanguagesBox',
+	props: {
+	    term: Object
+	},
+	mounted: function () {
+	    Utils.debugObjectPrint( SharedStore.get() );
+	}
+};
+</script>
+
 <template>
     <div id="moreContentBox">
         <h1><span class="page-title-id"> ({{ id }})</span> <span class="page-title-label">{{ title }}</span></h1>
@@ -7,12 +22,6 @@
         </ul>
     </div>
 </template>
-
-<script>
-export default {
-	name: 'MoreLanguagesBox'
-};
-</script>
 
 <style scoped>
 
