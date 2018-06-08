@@ -1,4 +1,4 @@
-# prototyp mobile termboox
+# prototyp mobile termbox
 
 > just a prototyp
 
