@@ -2,8 +2,6 @@ import Axios from 'axios';
 import StringHelper from './StringHelper';
 import ObjectHelper from './ObjectHelper';
 
-import { RuntimeErrorException } from './BaseExceptions.js';
-
 class Utils {
 	static async _evaluateRequest( Response, Error, Hook ) {
 		while ( true === Utils.isEmpty( Response ) ) {
@@ -63,9 +61,11 @@ class Utils {
 		}
 	}
 
-	static debugObjectPrint( Object, Id ) {
-		const Element = document.getElementById( Id );
+	static debugObjectPrint( Object ) {
+		const Body = document.getElementsByTagName( 'body' )[ 0 ];
+		const Element = document.createElement( 'div' );
 		Element.innerHTML = `<pre>${ JSON.stringify( Object, undefined, 4 ) }</pre>`;
+		Body.appendChild( Element );
 	}
 }
 

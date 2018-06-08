@@ -1,29 +1,80 @@
 <script>
-import Utils from "./Utils.js"
+import Utils from './Utils.js';
 
 export default{
-    name: 'contentBox',
-    props: {
-        title: String,
-        id: String,
-        description: String,
-        hasAlias: Boolean,
-        aliases: Array,
-    },
-}
-    
+	name: 'contentBox',
+	props: {
+		title: String,
+		id: String,
+		description: String,
+		hasAlias: Boolean,
+		aliases: Array
+	},
+	// style correction
+	mounted: function () {
+		const ListItems = this.$el.getElementsByTagName( 'li' );
+		this.removeClass( ListItems[ ListItems.length - 1 ], 'listItem-extended' );
+	},
+	methods: {
+	    removeClass: function ( Element, ClassName ) {
+			Element.setAttribute(
+				'class',
+				Element.getAttribute( 'class' ).replace( ClassName, '' )
+			);
+
+			if ( true === Utils.isEmpty( Element.getAttribute( 'class' ) ) ) {
+				Element.removeAttribute( 'class' );
+			}
+		}
+	}
+};
+
 </script>
 
 <template>
-    <div id="contenBox">
-        <h1><span class="page-title-label">{{ title }}</span><span class="page-title-id"> {{ id }}</span></h1>
+    <div id="contentBox">
+        <h1><span class="page-title-id"> ({{ id }})</span> <span class="page-title-label">{{ title }}</span></h1>
         <p class="wikibase-entitytermsview-heading-description">{{ description }}</p>
         <ul class="wikibase-entitytermsview-aliases" v-if="0 < aliases.length">
-            <li class="alias in aliases">{{ alias }}</li>
+            <li class="listItem-extended" v-bind:key="alias" v-for="alias in aliases">{{ alias }}</li>
         </ul>
     </div>
 </template>
 
 <style>
-    
+    .page-title-id
+    {
+        color: #72777D;
+        display: block;
+        font-size:0.5em;
+    }
+
+    .wikibase-entitytermsview-heading-description, .wikibase-entitytermsview-aliases
+    {
+        margin-left: 30px;
+        margin-top: 15px;
+    }
+
+    .wikibase-entitytermsview-aliases > *
+    {
+        color: #72777D;
+    }
+
+    ul.wikibase-entitytermsview-aliases
+    {
+        list-style-type: none;
+        padding: 0px 0px 0px 0px;
+    }
+
+    ul.wikibase-entitytermsview-aliases > li
+    {
+        display: inline-block;
+    }
+
+    ul.wikibase-entitytermsview-aliases > li.listItem-extended::after
+    {
+        content: ' |';
+        padding-right: 5px;
+    }
+
 </style>
