@@ -113,7 +113,7 @@ export default{
 </script>
 
 <template>
-    <div id="showMoreLanguagesBar">
+    <div id="showMoreLanguagesHub">
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
         <div id="showMoreLanguagesBar_buttonField" v-on:click="showMoreLanguages">
             <button class="b_isActive">Show more languages</button><img id="img_moreLanguages" src="../assets/Arror1.png"/><img id="img_lessLanguages" src="../assets/Arror2.png"/>
@@ -129,18 +129,18 @@ export default{
 </template>
 
 <style>
-#showMoreLanguagesBar
+#showMoreLanguagesHub
 {
     margin: 50px 0px 0px 0px!important;
     padding-left: 0px!important;
     width: 100%;
+    background-color: #F8F9FA;
 }
 
 #showMoreLanguagesContent, #showMoreLanguagesBar_buttonField, .keepOnTheTop
 {
     width: 100%;
     padding-left: 15px;
-    background-color: #F8F9FA;
 }
 
 #showMoreLanguagesBar_buttonField, .keepOnTheTop
@@ -190,8 +190,8 @@ img#img_moreLanguages, img#img_lessLanguages
 {
     border-style: none;
     background-color: inherit;
-    margin-top: 12.5px;
-    height: 25px;
+    margin-top: 20px;
+    height: 12.5px;
     overflow: hidden;
     position:relative;
     float: right;
