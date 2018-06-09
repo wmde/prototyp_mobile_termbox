@@ -157,6 +157,8 @@ export default{
 {
     position: fixed!important;
     transition-timing-function: linear;
+    opacity: 0.9;
+    background-color: #F8F9FA;
     top:0;
 
 }
