@@ -9,6 +9,7 @@ export default {
 	},
 	methods: {
 	    isActiveOtherLanguages: function (Language) {
+	        return true
 			return -1 < SharedStore.get().otherLanguages.indexOf(Language);
 		}
 	}

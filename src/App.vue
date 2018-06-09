@@ -80,6 +80,7 @@ export default {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				SharedStore.initStorage( CurrentTerm.Term[ this.getCurrentLanguage() ].id );
 				SharedStore.set( { currentLanguage: this.getCurrentLanguage(), otherLanguages: [ this.getCurrentLanguage() ] } );
+				Utils.debugObjectPrint(CurrentTerm.Term)
 			    this.$data.term = ObjectHelper.copyObj( CurrentTerm.Term );
 				this.$data.termLoaded = true;
 				this.$data.hasAlias = 0 < this.$data.term[ this.getCurrentLanguage() ].aliases;
