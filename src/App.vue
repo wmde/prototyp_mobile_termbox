@@ -115,6 +115,11 @@ export default {
 </template>
 
 <style>
+    body
+    {
+        overflow-x: hidden;
+    }
+
     body > *
     {
         margin: 0px 0px 0px 0px;

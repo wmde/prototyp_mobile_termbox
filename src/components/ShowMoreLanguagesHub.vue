@@ -133,14 +133,14 @@ export default{
 {
     margin: 50px 0px 0px 0px!important;
     padding-left: 0px!important;
-    width: 100%;
+    width: 102.5%;
     background-color: #F8F9FA;
 }
 
 #showMoreLanguagesContent, #showMoreLanguagesBar_buttonField, .keepOnTheTop
 {
-    width: 100%;
     padding-left: 15px;
+    padding-right: 15px;
 }
 
 #showMoreLanguagesBar_buttonField, .keepOnTheTop
