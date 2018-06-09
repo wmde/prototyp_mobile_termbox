@@ -3,8 +3,8 @@ import Utils from './components/Utils.js';
 
 import SharedStore from './components/SharedData';
 import CurrentTerm from './components/CurrentTerm';
-import ContentBox from './components/ContentBox';
-import ShowMoreLanguagesBar from './components/ShowMoreLanguagesBar';
+import ContentBox from './components/MainContentBox';
+import ShowMoreLanguagesBar from './components/ShowMoreLanguagesHub';
 import ObjectHelper from './components/ObjectHelper';
 
 function wrapTerm( Term ) {
@@ -80,7 +80,6 @@ export default {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				SharedStore.initStorage( CurrentTerm.Term[ this.getCurrentLanguage() ].id );
 				SharedStore.set( { currentLanguage: this.getCurrentLanguage(), otherLanguages: [ this.getCurrentLanguage() ] } );
-				Utils.debugObjectPrint(CurrentTerm.Term)
 			    this.$data.term = ObjectHelper.copyObj( CurrentTerm.Term );
 				this.$data.termLoaded = true;
 				this.$data.hasAlias = 0 < this.$data.term[ this.getCurrentLanguage() ].aliases;

@@ -1,9 +1,9 @@
 <script>
-import MoreLanguagesBox from './MoreLanguagesBox';
+import MoreLanguagesBox from '../ShowMore/ShowMoreLanguagesContentBox';
 import Utils from "./Utils";
 
 export default{
-	name: 'ShowMoreLanguagesBar',
+	name: 'ShowMoreLanguagesHub',
 	components: { MoreLanguagesBox },
 	props: {
 	    term: Object
@@ -120,6 +120,9 @@ export default{
         </div >
         <div id="showMoreLanguagesContent">
             <MoreLanguagesBox :term="getTerm"/>
+        </div>
+        <div id="showMoreLanguagesMenuBar">
+
         </div>
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
     </div>

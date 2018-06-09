@@ -1,6 +1,6 @@
 <script>
-import Utils from './Utils';
-import SharedStore from './SharedData';
+import Utils from '../components/Utils';
+import SharedStore from '../components/SharedData';
 
 export default {
 	name: 'MoreLanguagesBox',
@@ -9,7 +9,6 @@ export default {
 	},
 	methods: {
 	    isActiveOtherLanguages: function (Language) {
-	        return true
 			return -1 < SharedStore.get().otherLanguages.indexOf(Language);
 		}
 	}
