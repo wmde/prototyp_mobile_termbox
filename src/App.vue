@@ -13,9 +13,11 @@ function wrapTerm( Term ) {
 	const Languages = [];
 	for ( Key in Term.labels ) {
 		NewTerms[ Key ] = {
-			label: Term.labels[ Key ].value
+			title: Term.labels[ Key ].value
 		};
 
+		NewTerms[ Key ].language = Key;
+		NewTerms[ Key ].id = Term.id;
 		Languages.push( Key );
 
 		if ( Key in Term.descriptions ) {
@@ -37,7 +39,6 @@ function wrapTerm( Term ) {
 		NewTerms[ Key ].languages = ObjectHelper.copyObj( Languages );
 	}
 
-	NewTerms.id = Term.id;
 	return NewTerms;
 }
 
@@ -52,10 +53,10 @@ export default {
 	},
 	computed: {
 		id: function () {
-			return this.$data.term.id;
+			return this.$data.term[ this.getCurrentLanguage() ].id;
 		},
 		title: function () {
-			return this.$data.term[ this.getCurrentLanguage() ].label;
+			return this.$data.term[ this.getCurrentLanguage() ].title;
 		},
 		description: function () {
 			return this.$data.term[ this.getCurrentLanguage() ].description;
@@ -73,11 +74,11 @@ export default {
 	},
 	methods: {
 	    getCurrentLanguage: function () {
-			return 'en';
+			return 'de';
 		},
 		refreshOnLoaded: function () {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
-				SharedStore.initStorage( CurrentTerm.Term.id );
+				SharedStore.initStorage( CurrentTerm.Term[ this.getCurrentLanguage() ].id );
 				SharedStore.set( { currentLanguage: this.getCurrentLanguage(), otherLanguages: [ this.getCurrentLanguage() ] } );
 			    this.$data.term = ObjectHelper.copyObj( CurrentTerm.Term );
 				this.$data.termLoaded = true;
@@ -139,7 +140,7 @@ export default {
     h1
     {
         font-weight: 300;
-        padding-left: 10px;
+        margin-left: 10px;
         padding-bottom: 0px;
         margin-bottom: 0px;
         font-family: 'Linux Libertine','Georgia','Times',serif !important;

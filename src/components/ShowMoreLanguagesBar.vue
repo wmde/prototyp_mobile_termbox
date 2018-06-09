@@ -16,9 +16,11 @@ export default{
 			if ( 'inline' === More.style.display ) {
 				Less.style.display = 'inline';
 				More.style.display = 'none';
+				ContentBox.style.display = 'inline-block';
 			} else {
 				More.style.display = 'inline';
 				Less.style.display = 'none';
+				ContentBox.style.display = 'none';
 			}
 
 			ContentBox.style.display = Less;
@@ -52,12 +54,17 @@ export default{
     padding-left: 0px!important;
     width: 100%;
 }
-#showMoreLanguagesBar_buttonField
+
+#showMoreLanguagesContent, #showMoreLanguagesBar_buttonField
 {
-    height: 50px;
     width: 100%;
     padding-left: 15px;
     background-color: #F8F9FA;
+}
+
+#showMoreLanguagesBar_buttonField
+{
+    height: 50px;
     border-color: #f5f5f5;
     border-width: 1px;
     border-bottom-color: #f4f4f4;

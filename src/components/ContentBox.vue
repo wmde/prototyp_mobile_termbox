@@ -1,6 +1,4 @@
 <script>
-import Utils from './Utils.js';
-
 export default{
 	name: 'contentBox',
 	props: {
@@ -9,23 +7,6 @@ export default{
 		description: String,
 		hasAlias: Boolean,
 		aliases: Array
-	},
-	// style correction
-	mounted: function () {
-		const ListItems = this.$el.getElementsByTagName( 'li' );
-		this.removeClass( ListItems[ ListItems.length - 1 ], 'listItem-extended' );
-	},
-	methods: {
-	    removeClass: function ( Element, ClassName ) {
-			Element.setAttribute(
-				'class',
-				Element.getAttribute( 'class' ).replace( ClassName, '' )
-			);
-
-			if ( true === Utils.isEmpty( Element.getAttribute( 'class' ) ) ) {
-				Element.removeAttribute( 'class' );
-			}
-		}
 	}
 };
 
@@ -33,7 +14,7 @@ export default{
 
 <template>
     <div id="contentBox">
-        <h1><span class="page-title-id"> ({{ id }})</span> <span class="page-title-label">{{ title }}</span></h1>
+        <h1><span class="page-title-id">({{ id }})</span><span class="page-title-label">{{ title }}</span></h1>
         <p class="wikibase-entitytermsview-heading-description">{{ description }}</p>
         <ul class="wikibase-entitytermsview-aliases" v-if="0 < aliases.length">
             <li class="listItem-extended" v-bind:key="alias" v-for="alias in aliases">{{ alias }}</li>
@@ -75,6 +56,11 @@ export default{
     {
         content: ' |';
         padding-right: 5px;
+    }
+
+    ul.wikibase-entitytermsview-aliases > li:last-child.listItem-extended::after
+    {
+        content: '';
     }
 
 </style>
