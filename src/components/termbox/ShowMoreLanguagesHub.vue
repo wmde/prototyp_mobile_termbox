@@ -12,8 +12,7 @@ export default{
 	name: 'ShowMoreLanguagesHub',
 	components: { MoreLanguagesBox },
 	props: {
-	    term: Object,
-        otherLanguages: Array
+	    shared: Object
 	},
 	data: function () {
 	    return {};
@@ -180,14 +179,9 @@ export default{
 		}
 	},
 	computed: {
-	    getTerm() {
-	        return this.$props.term;
-		},
-        getLanguagesSupport: function()
-        {
-            return this.$props.otherLanguages
-        }
-
+	    getShared() {
+	        return this.$props.shared;
+		}
 	}
 };
 
@@ -201,7 +195,7 @@ export default{
         </div>
         <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
             <div id="showMoreLanguagesContent">
-                <MoreLanguagesBox :term="getTerm" :otherLanguages="getLanguagesSupport"/>
+                <MoreLanguagesBox :shared="getShared"/>
             </div>
             <div id="showMoreLanguagesMenuBar">
 

@@ -6,7 +6,7 @@ export default {
 
 <template>
     <div id="showMoreLanguagesMenuSwitch">
-        <
+
     </div>
 </template>
 

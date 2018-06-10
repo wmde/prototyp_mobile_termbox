@@ -141,25 +141,25 @@ export default {
 	        let Index
 	        if (-1 === SupportedLanguages.indexOf(this.$data.defaultLanguage))
             {
+                this.$data.languages.splice(this.$data.languages.indexOf(this.$data.defaultLanguage), 1)
                 for (Index in this.$data.languages ) {
                     if ( -1 < SupportedLanguages.indexOf(this.$data.languages[Index]) ) {
-                        return this.$data.languages[Index];
+                        this.$data.defaultLanguage = this.$data.languages[Index]
+                        break
                     }
                 }
-            }
-            else if (-1 < SupportedLanguages.indexOf(this.$data.defaultLanguage))
-            {
-                return this.$data.defaultLanguage;
             }
             else {
 	            if( -1 < SupportedLanguages.indexOf('en') )
                 {
-                    return 'en'
+                    this.$data.defaultLanguage = 'en'
                 }
                 else {
-                    return SupportedLanguages[0]
+                    this.$data.defaultLanguage = SupportedLanguages[0]
                 }
             }
+
+            return this.$data.defaultLanguage;
 		},
 		getOtherLanguages: function () {
 			return this.$data.languages;

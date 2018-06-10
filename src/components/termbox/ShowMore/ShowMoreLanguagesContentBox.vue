@@ -5,20 +5,40 @@ import SharedStore from '../../lib/SharedStoreStatic';
 export default {
 	name: 'MoreLanguagesBox',
 	props: {
-	    term: Object,
-        otherLanguages: Array
+	    shared: Object
 	},
+    computed: {
+        getTerm: function(){
+            return this.$props.shared.get( 'term' )
+        },
+        currentLanguage: function(){
+            return this.$props.shared.get( 'currentLanguage' )
+        }
+    },
 	methods: {
 	    isActiveOtherLanguages: function ( Language ) {
-			return -1 < this.$props.otherLanguages.indexOf( Language );
-		}
+			return -1 < this.$props.shared.get( 'otherLanguages' ).indexOf( Language );
+		},
+        isNotDefaultLanguage: function(Language) {
+            return this.$props.shared.get( 'currentLanguage' ) !== Language
+        }
 	}
 };
 </script>
 
 <template>
     <div id="moreContentBox">
-        <div class="otherLanguages" v-bind:key="mterm" v-for="mterm in term" v-if="isActiveOtherLanguages(mterm.language)">
+        <div class="otherLanguages">
+            <h2 class="page-title-language">{{ getTerm[currentLanguage].language }}</h2>
+            <div class="otherLanguagesContainer">
+                <h3><span class="page-title-label">{{ getTerm[currentLanguage].title }}</span></h3>
+                <p class="wikibase-entitytermsview-heading-description">{{ getTerm[currentLanguage].description }}</p>
+                <ul class="wikibase-entitytermsview-aliases" v-if="0 < getTerm[currentLanguage].aliases.length">
+                    <li class="listItem-extended" v-bind:key="alias" v-for="alias in getTerm[currentLanguage].aliases">{{ alias }}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="otherLanguages" v-bind:key="mterm" v-for="mterm in getTerm" v-if="isNotDefaultLanguage(mterm.language) && isActiveOtherLanguages(mterm.language)">
             <h2 class="page-title-language">{{ mterm.language }}</h2>
             <div class="otherLanguagesContainer">
                 <h3><span class="page-title-label">{{ mterm.title }}</span></h3>
