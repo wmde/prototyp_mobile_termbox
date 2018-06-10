@@ -8,7 +8,7 @@ Vue.config.silent = true;
 
 /* eslint-disable no-new */
 new Vue( {
-	el: '#termbox',
 	components: { App },
+	el: '#app',
 	template: '<App/>'
 } );

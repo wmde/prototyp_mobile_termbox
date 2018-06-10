@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import Utils from './Utils';
+import Utils from '../../Utils';
 
 Vue.use( VueI18n );
 

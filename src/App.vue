@@ -1,11 +1,9 @@
 <script>
-import Utils from './components/Utils.js';
-
-import SharedStore from './components/SharedData';
-import CurrentTerm from './components/CurrentTerm';
-import ContentBox from './components/MainContentBox';
-import ShowMoreLanguagesBar from './components/ShowMoreLanguagesHub';
-import ObjectHelper from './components/ObjectHelper';
+import Utils from './Utils.js';
+import ObjectHelper from './components/lib/ObjectHelper';
+import CurrentTerm from './components/lib/CurrentTerm';
+import Termbox from './components/Termbox.vue';
+import SharedStore from './components/lib/SharedStore';
 
 function wrapTerm( Term ) {
 	let Key, Alias;
@@ -43,31 +41,12 @@ function wrapTerm( Term ) {
 }
 
 export default {
-	name: 'termbox',
+	name: 'mainHub',
 	template: '<div/>',
-	components: { ContentBox, ShowMoreLanguagesBar },
+	components: { Termbox },
 	beforeCreate: function () {
-
 	    CurrentTerm.Wrapper = wrapTerm;
-		CurrentTerm.loadTerm( './data/Q64_data.json' );
-	},
-	computed: {
-		id: function () {
-			return this.$data.term[ this.getCurrentLanguage() ].id;
-		},
-		title: function () {
-			return this.$data.term[ this.getCurrentLanguage() ].title;
-		},
-		description: function () {
-			return this.$data.term[ this.getCurrentLanguage() ].description;
-		},
-		aliases: function () {
-			return this.$data.term[ this.getCurrentLanguage() ].aliases;
-		},
-		getTerm: function () {
-		    return ObjectHelper.copyObj( this.$data.term );
-		}
-
+		CurrentTerm.loadTerm( 'components/data/Q64_data.json' );
 	},
 	mounted: function () {
 		setTimeout( this.refreshOnLoaded, 10 );
@@ -76,13 +55,19 @@ export default {
 	    getCurrentLanguage: function () {
 			return 'de';
 		},
+		getOtherLanguages: function () {
+			return [ 'de' ];
+		},
 		refreshOnLoaded: function () {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
-				SharedStore.initStorage( CurrentTerm.Term[ this.getCurrentLanguage() ].id );
-				SharedStore.set( { currentLanguage: this.getCurrentLanguage(), otherLanguages: [ this.getCurrentLanguage() ] } );
-			    this.$data.term = ObjectHelper.copyObj( CurrentTerm.Term );
+				this.$data.shared = new SharedStore();
+				this.$data.shared.multibleSets( [
+				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
+					[ 'currentLanguage', this.getCurrentLanguage() ],
+					[ 'otherLanguages', this.getOtherLanguages() ]
+				] );
+			    // Utils.debugObjectPrint(CurrentTerm.Term )
 				this.$data.termLoaded = true;
-				this.$data.hasAlias = 0 < this.$data.term[ this.getCurrentLanguage() ].aliases;
 				this.$nextTick( function () {
 					this.$forceUpdate();
 				} );
@@ -94,24 +79,22 @@ export default {
 	data: function () {
 		return {
 			termLoaded: false,
-			hasAlias: false
+			shared: null
 		};
+	},
+	computed: {
+	    getShared: function () {
+			return this.$data.shared;
+		}
 	}
 };
 
 </script>
 
 <template>
-    <div id="termbox" v-if="termLoaded">
-        <ContentBox
-                :title="title"
-                :id="id"
-                :description="description"
-                :hasAlias="hasAlias"
-                :aliases="aliases"
-        />
-        <ShowMoreLanguagesBar :term="getTerm"/>
-    </div>
+    <section id="termboxSection">
+        <Termbox :shared="getShared" v-if="termLoaded"/>
+    </section>
 </template>
 
 <style>
@@ -129,7 +112,7 @@ export default {
         background: none;
     }
 
-    div
+    div, section
     {
         margin-top: 0!important;
     }
@@ -151,15 +134,4 @@ export default {
         font-family: 'Linux Libertine','Georgia','Times',serif !important;
     }
 
-    #termbox
-    {
-        width: 101%;
-        left:0;
-        margin-left:-10px;
-    }
-
-    #termbox > div
-    {
-        padding-left: 15px;
-    }
 </style>

@@ -1,0 +1,299 @@
+<script>
+import MoreLanguagesBox from './ShowMore/ShowMoreLanguagesContentBox';
+import Utils from '../../Utils';
+import StringHelper from '../lib/StringHelper';
+import { TypeErrorException } from '../lib/BaseExceptions';
+
+const ErrorMessages = {
+	INVALID_ELEMENT_CLASS: 'Expected non empty string as parameter got {}.'
+};
+
+export default{
+	name: 'ShowMoreLanguagesHub',
+	components: { MoreLanguagesBox },
+	props: {
+	    term: Object
+	},
+	data: function () {
+	    return {};
+	},
+	mounted: function () {
+		this.loadProperties();
+		this.$data.IsScrolledIntervall = setInterval( this.keepButtonFieldVisible, 1 );
+	},
+	destroyed: function () {
+		clearInterval( this.$data.IsScrolledIntervall );
+	},
+	methods: {
+	    loadProperties() {
+			this.$data.TroggleFieldStartPosition = this.getPositionY( document.getElementById( 'showMoreLanguagesBarTroggleField' ) );
+			this.$data.TroogelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
+			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
+			this.$data.Repositioning = null;
+			this.$data.VisibilityCheckerNodes = document.getElementsByClassName( 'showMoreLanguagesBarVisibilityChecker' );
+			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesContent' );
+			this.$data.IsScrolledIntervall = null;
+		},
+	    showMoreLanguages() {
+			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
+
+			if ( 'inline' === More.style.display ) {
+				this.$data.MoreImage.style.display = 'inline';
+				More.style.display = 'none';
+				this.goBackToStartPositionTroggleField();
+			} else {
+				More.style.display = 'inline';
+				this.$data.MoreImage.style.display = 'none';
+				this.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+			}
+		},
+		keepButtonFieldVisible() {
+			const VisibilityChecker = [
+				this.getPositionY( this.$data.VisibilityCheckerNodes[ 0 ] ),
+				this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] )
+			];
+
+			if ( 'none' === this.$data.MoreImage.style.display ) {
+				if (
+					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() <= VisibilityChecker[ 1 ] ) ||
+                    true === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
+				) {
+					this.$data.TroogelField.style.top = `${window.pageYOffset }px`;
+					this.$data.TroogelField.setAttribute( 'class', 'keepOnTheTop' );
+				} else {
+					this.$data.TroogelField.removeAttribute( 'class' );
+					this.$data.TroogelField.removeAttribute( 'style' );
+				}
+			}
+		},
+		getWindowPositionY() {
+			return window.pageYOffset + window.innerHeight;
+		},
+		getPositionY( Element ) {
+			let Top = Element.offsetTop;
+			const Height = Element.offsetHeight;
+
+			while ( Element.offsetParent ) {
+				Element = Element.offsetParent;
+				Top += Element.offsetTop;
+			}
+
+			return ( Top + Height );
+		},
+		isElementInVertical( Element ) {
+			let Top = Element.offsetTop;
+			const Height = Element.offsetHeight;
+			while ( Element.offsetParent ) {
+				Element = Element.offsetParent;
+				Top += Element.offsetTop;
+			}
+			return (
+				window.pageYOffset <= Top &&
+                ( window.pageYOffset + window.innerHeight ) >= ( Top + Height )
+			);
+		},
+		removeClass( Element, ElementClass ) {
+			const ElementClasses = Element.getAttribute( 'class' );
+			if ( 'string' !== typeof ElementClass || 0 === ElementClass.length ) {
+				throw new TypeErrorException( StringHelper.format( ErrorMessages.INVALID_ELEMENT_CLASS, typeof ElementClass ) );
+			}
+			if ( null !== ElementClasses ) {
+				ElementClass = ElementClasses.replace( ElementClass, '' ).trim();
+				Element.setAttribute( 'class', ElementClass );
+				if ( 0 === ElementClass.length ) {
+					Element.removeAttribute( 'class' );
+					return;
+				}
+			}
+		},
+		addClass( Element, ElementClass ) {
+			const ElementClasses = Element.getAttribute( 'class' );
+			if ( 'string' !== typeof ElementClass || 0 === ElementClass.length ) {
+				throw new TypeErrorException( StringHelper.format( ErrorMessages.INVALID_ELEMENT_CLASS, typeof ElementClass ) );
+			}
+			if ( true !== Utils.isEmpty( ElementClasses ) ) {
+				ElementClass = `${ElementClasses } ${ ElementClass}`;
+				Element.setAttribute( 'class', ElementClass );
+			} else {
+				Element.setAttribute( 'class', ElementClass );
+			}
+		},
+		goBackToStartPositionTroggleField() {
+			let Scroll, Shrink;
+			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroogelField ) ) {
+				Scroll = this.scrollUp();
+				Shrink = this.shrinkContentBox();
+
+				if ( false === Scroll || false === Shrink ) {
+					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
+				} else {
+					clearTimeout( this.$data.Repositioning );
+					this.$data.Repositioning = null;
+					this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+					this.$data.ContentBox.removeAttribute( 'style' );
+					this.$data.TroogelField.removeAttribute( 'style' );
+				}
+			} else {
+				this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+				this.$data.ContentBox.removeAttribute( 'style' );
+				this.$data.TroogelField.removeAttribute( 'style' );
+			}
+		},
+		scrollUp() {
+			let ScrollTo;
+			if ( 0 < window.pageYOffset ) {
+				if ( 1 < window.pageYOffset ) {
+					ScrollTo = window.pageYOffset >> 1;
+					window.scrollTo( 0, ScrollTo );
+					return false;
+				} else {
+					this.$data.TroogelField.removeAttribute( 'class' );
+					window.scrollTo( 0, 0 );
+					return true;
+				}
+			} else {
+				return true;
+			}
+		},
+		shrinkContentBox() {
+			if ( 0 < this.$data.ContentBox.offsetHeight ) {
+				console.log( this.$data.ContentBox.offsetHeight );
+				this.$data.ContentBox.style.overflow = 'hidden';
+				if ( window.innerHeight <= this.$data.ContentBox.offsetHeight ) {
+					if ( 1 & window.innerHeight ) {
+						this.$data.ContentBox.style.height = `${window.innerHeight - 1 }px`;
+					} else {
+						this.$data.ContentBox.style.height = `${window.innerHeight }px`;
+					}
+				}
+
+				if ( 1 < this.$data.ContentBox.offsetHeight ) {
+					console.log( this.$data.ContentBox.offsetHeight >> 1 );
+					this.$data.ContentBox.style.height = `${this.$data.ContentBox.offsetHeight >> 1 }px`;
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
+		}
+	},
+	computed: {
+	    getTerm() {
+	        return this.$props.term;
+		}
+	}
+};
+
+</script>
+
+<template>
+    <div id="showMoreLanguagesHub">
+        <div class="showMoreLanguagesBarVisibilityChecker"></div>
+        <div id="showMoreLanguagesBarTroggleField" v-on:click="showMoreLanguages">
+            <button class="b_isActive">Show more languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
+        </div >
+        <div id="showMoreLanguagesContent" class="showMoreLanguagesContentInactive">
+            <MoreLanguagesBox :term="getTerm"/>
+        </div>
+        <div id="showMoreLanguagesMenuBar">
+
+        </div>
+        <div class="showMoreLanguagesBarVisibilityChecker"></div>
+    </div>
+</template>
+
+<style scoped>
+#showMoreLanguagesHub
+{
+    margin: 50px 0px 0px 0px!important;
+    padding-left: 0px!important;
+    /*width: 102.5%;*/
+    width: 100%;
+    background-color: #F8F9FA;
+}
+
+#showMoreLanguagesContent, #showMoreLanguagesBarTroggleField, .keepOnTheTop
+{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#showMoreLanguagesBarTroggleField, .keepOnTheTop
+{
+    height: 50px;
+    border-color: #f5f5f5;
+    border-width: 1px;
+    border-bottom-color: #f4f4f4;
+    border-style: solid;
+    padding-right: 15px!important;
+}
+
+.keepOnTheTop
+{
+    position: absolute!important;
+    opacity: 0.9;
+    background-color: #F8F9FA;
+    top:0;
+    width: 85% ;
+}
+
+.keepOnTheTop>img
+{
+    margin-right: 13px;
+    margin-top: 11px;
+}
+
+@-moz-document url-prefix()
+{
+    .keepOnTheTop>img
+    {
+        margin-top: 12.5px!important;
+        margin-right: 20px!important;
+    }
+}
+
+button.b_isActive
+{
+    display: inline;
+    border-style: none;
+    background-color: inherit;
+    margin-top: 15px;
+    color: #72777D;
+    position: relative;
+    font-size:1em;
+}
+
+img#showMoreLanguagesBarTroggleFieldMoreImage, img#showMoreLanguagesBarTroggleFieldLessImage
+{
+    border-style: none;
+    background-color: inherit;
+    margin-top: 20px;
+    height: 12.5px;
+    overflow: hidden;
+    position:relative;
+    float: right;
+    margin-right:20px;
+}
+
+img#showMoreLanguagesBarTroggleFieldMoreImage
+{
+    display: inline;
+}
+
+img#showMoreLanguagesBarTroggleFieldLessImage
+{
+    display: none;
+}
+
+div.showMoreLanguagesContentInactive
+{
+    display: none;
+}
+
+div.showMoreLanguagesContentActive
+{
+    display: block;
+}
+</style>

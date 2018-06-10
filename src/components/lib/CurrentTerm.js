@@ -1,5 +1,5 @@
 import { RuntimeErrorException } from './BaseExceptions.js';
-import Utils from './Utils';
+import Utils from '../../Utils';
 
 export default class CurrentTerm {
     static Term = '';
@@ -11,9 +11,10 @@ export default class CurrentTerm {
     	Utils.waitUntil( CurrentTerm.termIsLoaded );
     }
 
-    static onLoadTerm( Response, Error ) {
-    	if ( false === Utils.isEmpty( Error ) ) {
-    		throw new RuntimeErrorException( Error );
+    static onLoadTerm( Response, ResponseError ) {
+
+    	if ( 'object' === typeof ResponseError ) {
+    		throw new RuntimeErrorException( ResponseError );
     	}
 
     	if ( 'function' !== typeof CurrentTerm.Wrapper ) {

@@ -1,7 +1,7 @@
 <script>
-    export default {
-        name: "showMoreLanguagesMenuBar"
-    }
+export default {
+	name: 'showMoreLanguagesMenuBar'
+};
 </script>
 
 <template>
