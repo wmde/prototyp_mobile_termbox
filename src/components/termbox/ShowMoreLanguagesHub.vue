@@ -31,7 +31,7 @@ export default{
 			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
 			this.$data.Repositioning = null;
 			this.$data.VisibilityCheckerNodes = document.getElementsByClassName( 'showMoreLanguagesBarVisibilityChecker' );
-			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesContent' );
+			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesBox' );
 			this.$data.IsScrolledIntervall = null;
 		},
 	    showMoreLanguages() {
@@ -192,19 +192,21 @@ export default{
     <div id="showMoreLanguagesHub">
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
         <div id="showMoreLanguagesBarTroggleField" v-on:click="showMoreLanguages">
-            <button class="b_isActive">Show more languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
-        </div >
-        <div id="showMoreLanguagesContent" class="showMoreLanguagesContentInactive">
-            <MoreLanguagesBox :term="getTerm"/>
+            <button class="showMoreLanguagesButtonIsActive">Show more languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
         </div>
-        <div id="showMoreLanguagesMenuBar">
+        <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
+            <div id="showMoreLanguagesContent">
+                <MoreLanguagesBox :term="getTerm"/>
+            </div>
+            <div id="showMoreLanguagesMenuBar">
 
+            </div>
         </div>
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
     </div>
 </template>
 
-<style scoped>
+<style>
 #showMoreLanguagesHub
 {
     margin: 50px 0px 0px 0px!important;
@@ -254,7 +256,7 @@ export default{
     }
 }
 
-button.b_isActive
+button.showMoreLanguagesButtonIsActive
 {
     display: inline;
     border-style: none;

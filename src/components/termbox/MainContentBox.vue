@@ -22,7 +22,7 @@ export default{
     </div>
 </template>
 
-<style scoped>
+<style>
     .page-title-id
     {
         color: #72777D;
