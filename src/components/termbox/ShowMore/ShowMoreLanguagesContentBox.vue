@@ -5,12 +5,12 @@ import SharedStore from '../../lib/SharedStoreStatic';
 export default {
 	name: 'MoreLanguagesBox',
 	props: {
-	    term: Object
+	    term: Object,
+        otherLanguages: Array
 	},
 	methods: {
 	    isActiveOtherLanguages: function ( Language ) {
-	        return true;
-			return -1 < SharedStore.get().otherLanguages.indexOf( Language );
+			return -1 < this.$props.otherLanguages.indexOf( Language );
 		}
 	}
 };

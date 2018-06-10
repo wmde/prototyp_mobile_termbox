@@ -6,7 +6,7 @@ import Termbox from './components/Termbox.vue';
 import SharedStore from './components/lib/SharedStore';
 
 function wrapTerm( Term ) {
-	let Key, Alias;
+	let Key, Alias, Index;
 	const NewTerms = {};
 	const Languages = [];
 	for ( Key in Term.labels ) {
@@ -16,7 +16,14 @@ function wrapTerm( Term ) {
 
 		NewTerms[ Key ].language = Key;
 		NewTerms[ Key ].id = Term.id;
-		Languages.push( Key );
+        Index = Utils.binaryInsertSearch( Languages, Key )
+        if( 0 > Index ) {
+            Languages.splice(
+            -(Index + 1),
+            0,
+            Key
+            )
+        }
 
 		if ( Key in Term.descriptions ) {
 			NewTerms[ Key ].description = Term.descriptions[ Key ].value;
@@ -46,27 +53,126 @@ export default {
 	components: { Termbox },
 	beforeCreate: function () {
 	    CurrentTerm.Wrapper = wrapTerm;
-		CurrentTerm.loadTerm( 'components/data/Q64_data.json' );
+        /**
+         *Should be work in future somehow
+        CurrentTerm.loadTerm( {
+		    url: `https://m.wikidata.org//w/api.php?action=wbgetentities&format=json&ids=Q64&props=aliases%7Clabels%7Cdescriptions`,
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example'
+            }
+		} );*/
+        CurrentTerm.loadTerm('./components/data/Q64_data.json')
 	},
 	mounted: function () {
+	    this.getClientLanguages()
 		setTimeout( this.refreshOnLoaded, 10 );
 	},
 	methods: {
-	    getCurrentLanguage: function () {
-			return 'de';
+	    getClientLanguages: function() {
+	        let Index, Index2, Value
+            if ( 'undefined' !== typeof window.navigator.language )
+            {
+                this.$data.defaultLanguage = window.navigator.language.toLowerCase()
+                this.$data.languages.push(this.$data.defaultLanguage)
+            }
+
+            if ( 'undefined' !== typeof window.navigator.languages )
+            {
+
+                for( Index in window.navigator.languages )
+                {
+                    Value = window.navigator.languages[Index].toLowerCase()//any formatter could putted here
+                    Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
+                    if( 0 > Index2 ) {
+                        this.$data.languages.splice(
+                            -(Index2 + 1),
+                            0,
+                            Value
+                        )
+                    }
+                }
+            }
+
+            if( 'undefined' !== typeof window.navigator.systemLanguage  )
+            {
+                Value = window.navigator.systemLanguage.toLowerCase()//any formatter could putted here
+                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
+                if( 0 > Index2 ) {
+                    this.$data.languages.splice(
+                        -(Index2 + 1),
+                        0,
+                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
+                    )
+                }
+                this.$data.defaultLanguage = Value
+            }
+
+            if( 'undefined' !== typeof window.navigator.browserLanguage  )
+            {
+                Value = window.navigator.browserLanguage.toLowerCase()//any formatter could putted here
+                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
+                if( 0 > Index2 ) {
+                    this.$data.languages.splice(
+                        -(Index2 + 1),
+                        0,
+                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
+                    )
+                }
+                this.$data.defaultLanguage = Value
+            }
+
+            if( 'undefined' !== typeof window.navigator.userLanguage  )
+            {
+                Value = window.navigator.userLanguage.toLowerCase()//any formatter could putted here
+                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
+                if( 0 > Index2 ) {
+                    this.$data.languages.splice(
+                        -(Index2 + 1),
+                        0,
+                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
+                    )
+                }
+                this.$data.defaultLanguage = Value
+            }
+        },
+	    getCurrentLanguage: function ( SupportedLanguages ) {
+	        let Index
+	        if (-1 === SupportedLanguages.indexOf(this.$data.defaultLanguage))
+            {
+                for (Index in this.$data.languages ) {
+                    if ( -1 < SupportedLanguages.indexOf(this.$data.languages[Index]) ) {
+                        return this.$data.languages[Index];
+                    }
+                }
+            }
+            else if (-1 < SupportedLanguages.indexOf(this.$data.defaultLanguage))
+            {
+                return this.$data.defaultLanguage;
+            }
+            else {
+	            if( -1 < SupportedLanguages.indexOf('en') )
+                {
+                    return 'en'
+                }
+                else {
+                    return SupportedLanguages[0]
+                }
+            }
 		},
 		getOtherLanguages: function () {
-			return [ 'de' ];
+			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.shared = new SharedStore();
 				this.$data.shared.multibleSets( [
 				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
-					[ 'currentLanguage', this.getCurrentLanguage() ],
+					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages) ],//TODO
 					[ 'otherLanguages', this.getOtherLanguages() ]
 				] );
-			    // Utils.debugObjectPrint(CurrentTerm.Term )
+
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
@@ -79,7 +185,9 @@ export default {
 	data: function () {
 		return {
 			termLoaded: false,
-			shared: null
+			shared: null,
+            defaultLanguage: null,
+            languages: []
 		};
 	},
 	computed: {

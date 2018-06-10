@@ -7,7 +7,7 @@ export default class CurrentTerm {
 
     static loadTerm( Term ) {
     	CurrentTerm.Term = '';
-    	Utils.get( Term, CurrentTerm.onLoadTerm );
+    	Utils.get( Term, CurrentTerm.onLoadTerm, true );
     	Utils.waitUntil( CurrentTerm.termIsLoaded );
     }
 

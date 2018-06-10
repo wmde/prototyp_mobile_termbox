@@ -12,7 +12,8 @@ export default{
 	name: 'ShowMoreLanguagesHub',
 	components: { MoreLanguagesBox },
 	props: {
-	    term: Object
+	    term: Object,
+        otherLanguages: Array
 	},
 	data: function () {
 	    return {};
@@ -157,7 +158,6 @@ export default{
 		},
 		shrinkContentBox() {
 			if ( 0 < this.$data.ContentBox.offsetHeight ) {
-				console.log( this.$data.ContentBox.offsetHeight );
 				this.$data.ContentBox.style.overflow = 'hidden';
 				if ( window.innerHeight <= this.$data.ContentBox.offsetHeight ) {
 					if ( 1 & window.innerHeight ) {
@@ -168,7 +168,6 @@ export default{
 				}
 
 				if ( 1 < this.$data.ContentBox.offsetHeight ) {
-					console.log( this.$data.ContentBox.offsetHeight >> 1 );
 					this.$data.ContentBox.style.height = `${this.$data.ContentBox.offsetHeight >> 1 }px`;
 					return false;
 				} else {
@@ -182,7 +181,12 @@ export default{
 	computed: {
 	    getTerm() {
 	        return this.$props.term;
-		}
+		},
+        getLanguagesSupport: function()
+        {
+            return this.$props.otherLanguages
+        }
+
 	}
 };
 
@@ -196,7 +200,7 @@ export default{
         </div>
         <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
             <div id="showMoreLanguagesContent">
-                <MoreLanguagesBox :term="getTerm"/>
+                <MoreLanguagesBox :term="getTerm" :otherLanguages="getLanguagesSupport"/>
             </div>
             <div id="showMoreLanguagesMenuBar">
 

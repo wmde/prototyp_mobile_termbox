@@ -33,7 +33,11 @@ export default {
 		},
 		hasAlias: function () {
 			return 0 < this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].aliases;
-		}
+		},
+		getLanguagesSupport: function()
+        {
+            return this.$props.shared.get( 'otherLanguages' )
+        }
 	},
 	data: function () {
 		return {
@@ -51,7 +55,7 @@ export default {
             :hasAlias="hasAlias"
             :aliases="aliases"
     />
-    <ShowMoreLanguagesBar :term="getTerm"/>
+    <ShowMoreLanguagesBar :term="getTerm" :otherLanguages="getLanguagesSupport"/>
 </div>
 </template>
 <style scoped>
