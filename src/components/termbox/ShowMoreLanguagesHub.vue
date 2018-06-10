@@ -121,6 +121,7 @@ export default{
 		},
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
+            this.$data.TroogelField.removeAttribute( 'class' );
 			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroogelField ) ) {
 				Scroll = this.scrollUp();
 				Shrink = this.shrinkContentBox();
@@ -133,11 +134,11 @@ export default{
 					this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 					this.$data.ContentBox.removeAttribute( 'style' );
 					this.$data.TroogelField.removeAttribute( 'style' );
+
 				}
 			} else {
 				this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 				this.$data.ContentBox.removeAttribute( 'style' );
-				this.$data.TroogelField.removeAttribute( 'style' );
 			}
 		},
 		scrollUp() {
