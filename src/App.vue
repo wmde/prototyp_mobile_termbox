@@ -57,6 +57,8 @@ export default {
 	template: '<div/>',
 	components: { Termbox },
 	beforeCreate: function () {
+		//dirty body overflow fix
+        document.getElementsByTagName('body')[0].setAttribute('style', `${window.innerWidth}px`)
 	    CurrentTerm.Wrapper = wrapTerm;
 		/**
          *Should be work in future somehow
