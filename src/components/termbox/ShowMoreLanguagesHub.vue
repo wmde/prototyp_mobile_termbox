@@ -83,19 +83,27 @@ export default{
 				}
 
 				if (
-					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() <= VisibilityChecker[ 1 ] ) ||
+					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() < VisibilityChecker[ 1 ] ) ||
                     true === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
 				) {
 					if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
-
 						this.$data.TroggelField.setAttribute( 'class', 'keepOnTheTop' );
 						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px` );
 						this.$data.TroggelField.style.top = `${window.pageYOffset }px`;
+						this.$data.TroogleFieldIsGone = false
 					} else {
 						this.$data.TroggelField.removeAttribute( 'class' );
 						this.$data.TroggelField.removeAttribute( 'style' );
 					}
 				} else {
+					if(
+                        false === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
+                    &&
+                        this.getWindowPositionY() > this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] ) + 100
+                    )
+					{
+						return
+					}
 					this.$data.TroggelField.removeAttribute( 'class' );
 					this.$data.TroggelField.removeAttribute( 'style' );
 				}
@@ -156,10 +164,9 @@ export default{
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
 			this.$data.TroggelField.removeAttribute( 'class' );
-			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroggelField ) ) {
+			if ( 0 !== window.pageYOffset ) {
 				Scroll = this.scrollUp();
 				Shrink = this.shrinkContentBox();
-
 				if ( false === Scroll || false === Shrink ) {
 					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
 				} else {
@@ -273,6 +280,7 @@ export default{
 
 .keepOnTheTop
 {
+    z-index:3;
     position: absolute!important;
     opacity: 0.9;
     background-color: #F8F9FA;

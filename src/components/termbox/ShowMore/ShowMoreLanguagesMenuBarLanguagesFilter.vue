@@ -27,7 +27,7 @@ export default {
             {
 				if( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf(this.$data.originLanguages[Index]))
                 {
-					this.$props.languagesSettings.get( 'otherLanguages' ).push(this.$data.originLanguages[Index])
+					this.$props.languagesSettings.get( 'otherLanguages' ).splice(Index ,0 ,this.$data.originLanguages[Index])
                 }
             }
 			this.$forceUpdate();
@@ -84,7 +84,7 @@ export default {
         </div>
         <div class="showMoreLanguagesLanguagesFilter">
             <button @click="close()"
-                    class="showMoreLanguagesMenuLanguageFilterDone" >Remember selected languages</button>
+                    class="showMoreLanguagesMenuLanguageFilterSave" >Remember selected languages</button>
             <div @click="activateTypeFilter()"
                     class="showMoreLanguagesMenuTypeFilterActivator">
                 <button><img src="../../../assets/Bars.png" /></button>
@@ -136,7 +136,7 @@ export default {
     border-bottom-style: solid;
 }
 
-.showMoreLanguagesMenuLanguageFilterDone
+.showMoreLanguagesMenuLanguageFilterSave
 {
     background-color: #3366cc;
     color: #ffffff;
@@ -167,8 +167,8 @@ export default {
     background-color: #f8f9fa;
     color: #696d71;
     padding-top: 12.5px;
-    margin-bottom: 12.5px;
-    width: 90%;
+    padding-bottom: 12.5px;
+    width: 100%;
     margin-left: 5%;
     padding-right: 5%;
     line-height: 1.5;
@@ -190,6 +190,7 @@ export default {
 {
     width: 100%;
     background-color:#eaecf0;
+    opacity: 1;
     color: #7a7e84;
 }
 
