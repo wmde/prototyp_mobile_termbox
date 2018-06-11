@@ -1,7 +1,7 @@
 <script>
 import Utils from '../../../Utils';
 export default {
-	name: 'MoreLanguagesBox',
+	name: 'ShowMoreLanguagesContentBox',
 	props: {
 		languagesSettings: Object,
 		directives: Object
@@ -11,9 +11,6 @@ export default {
 	},
 	mounted: function () {
 		this.$data.otherLanguages = this.$props.languagesSettings.get( 'otherLanguages' );
-	},
-	updated: function () {
-		this.$props.languagesSettings.set( 'forceUpdate', true );
 	},
 	computed: {
 		getTerm: function () {
@@ -35,17 +32,13 @@ export default {
 	methods: {
 		isNotDefaultLanguage: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language;
-		},
-		useTheForce: function () {
-
-			return this.$props.languagesSettings.get( 'forceUpdate' );
 		}
 	}
 };
 </script>
 
 <template>
-    <div id="moreContentBox" v-if="useTheForce">
+    <div id="moreContentBox">
         <div class="otherLanguages">
             <h2 class="page-title-language">{{ getTerm[currentLanguage].language }}</h2>
             <div class="otherLanguagesContainer">

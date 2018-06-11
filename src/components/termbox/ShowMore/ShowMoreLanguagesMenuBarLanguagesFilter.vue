@@ -11,12 +11,14 @@ export default {
 	mounted: function () {
 
 		this.$data.lastPosition = window.window.pageYOffset;
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'none'
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'inline';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'none';
 		document.getElementById( 'termbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
 		window.scrollTo( 0, 0 );
 	},
 	beforeDestroy: function () {
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'block'
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'none';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'inline';
 		document.getElementById( 'termbox' ).removeAttribute( 'style' );

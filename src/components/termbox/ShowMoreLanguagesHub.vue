@@ -44,7 +44,6 @@ export default{
 			this.$data.IsScrolledIntervall = null;
 			this.$data.WindowWidth = window.innerWidth;
 			this.$data.TroggleWidth = this.computeWidth( this.$data.TroggelField );
-			this.$data.lastCheck = 0;
 		},
 		computeWidth( Element ) {
 			let PaddingX = parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-left' ).replace( 'px', '' ) );
