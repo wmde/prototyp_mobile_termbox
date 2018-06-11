@@ -58,6 +58,12 @@ export default {
 	template: '<div/>',
 	components: { Termbox },
 	beforeCreate: function () {
+		// Detect item ID from URL, fallback to Q64
+		let itemId = document.URL.substr( document.URL.lastIndexOf( '/' ) + 1 );
+		if (!itemId || !itemId.match( /^[Qq][0-9].*$/ )) {
+			itemId = 'Q64';
+		}
+
 		//dirty body overflow fix
         document.getElementsByTagName('body')[0].setAttribute('style', `${window.innerWidth}px`)
 	    CurrentTerm.Wrapper = wrapTerm;
