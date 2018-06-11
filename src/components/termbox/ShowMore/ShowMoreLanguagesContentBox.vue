@@ -1,16 +1,26 @@
 <script>
+import Utils from '../../../Utils';
 export default {
 	name: 'MoreLanguagesBox',
 	props: {
-	    shared: Object,
+		languagesSettings: Object,
 		directives: Object
+	},
+	data: function () {
+    	return { otherLanguages: [] };
+	},
+	mounted: function () {
+		this.$data.otherLanguages = this.$props.languagesSettings.get( 'otherLanguages' );
+	},
+	updated: function () {
+		this.$props.languagesSettings.set( 'forceUpdate', true );
 	},
 	computed: {
 		getTerm: function () {
-			return this.$props.shared.get( 'term' );
+			return this.$props.languagesSettings.get( 'term' );
 		},
 		currentLanguage: function () {
-			return this.$props.shared.get( 'currentLanguage' );
+			return this.$props.languagesSettings.get( 'currentLanguage' );
 		},
 		displayLabels: function () {
 			return this.$props.directives.get( 'labels' );
@@ -23,18 +33,19 @@ export default {
 		}
 	},
 	methods: {
-	    isActiveOtherLanguages: function ( Language ) {
-			return -1 < this.$props.shared.get( 'otherLanguages' ).indexOf( Language );
-		},
 		isNotDefaultLanguage: function ( Language ) {
-			return this.$props.shared.get( 'currentLanguage' ) !== Language;
+			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language;
+		},
+		useTheForce: function () {
+
+			return this.$props.languagesSettings.get( 'forceUpdate' );
 		}
 	}
 };
 </script>
 
 <template>
-    <div id="moreContentBox">
+    <div id="moreContentBox" v-if="useTheForce">
         <div class="otherLanguages">
             <h2 class="page-title-language">{{ getTerm[currentLanguage].language }}</h2>
             <div class="otherLanguagesContainer">
@@ -45,13 +56,13 @@ export default {
                 </ul>
             </div>
         </div>
-        <div class="otherLanguages" v-bind:key="mterm" v-for="mterm in getTerm" v-if="isNotDefaultLanguage(mterm.language) && isActiveOtherLanguages(mterm.language)">
-            <h2 class="page-title-language">{{ mterm.language }}</h2>
+        <div class="otherLanguages" v-bind:key="language" v-for="language in otherLanguages" v-if="isNotDefaultLanguage(language)">
+            <h2 class="page-title-language">{{ getTerm[language].language }}</h2>
             <div  class="otherLanguagesContainer">
-                <h3 v-if="displayLabels"><span class="page-title-label">{{ mterm.title }}</span></h3>
-                <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ mterm.description }}</p>
-                <ul class="wikibase-entitytermsview-aliases" v-if="0 < mterm.aliases.length && displayAliases">
-                    <li class="listItem-extended" v-bind:key="alias" v-for="alias in mterm.aliases">{{ alias }}</li>
+                <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[language].title }}</span></h3>
+                <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ getTerm[language].description }}</p>
+                <ul class="wikibase-entitytermsview-aliases" v-if="0 < getTerm[language].aliases.length && displayAliases">
+                    <li class="listItem-extended" v-bind:key="alias" v-for="alias in getTerm[language].aliases">{{ alias }}</li>
                 </ul>
             </div>
         </div>

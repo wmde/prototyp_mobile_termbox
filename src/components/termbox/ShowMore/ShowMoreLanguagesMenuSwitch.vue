@@ -7,7 +7,8 @@ export default {
 	name: 'ShowMoreLanguagesMenuSwitch',
 	components: { LanguageFilter, TypeFilter },
 	props: {
-		directives: Object
+		directives: Object,
+		languagesSettings: Object
 	},
 	data: function () {
     	const State = new SharedStore();
@@ -15,6 +16,9 @@ export default {
 		return { menuSwitch: State };
 	},
 	computed: {
+		getLanguagesSettings: function () {
+			return this.$props.languagesSettings;
+		},
 		getSwitch: function () {
 			return this.$data.menuSwitch;
 		},
@@ -37,11 +41,11 @@ export default {
     <div id="showMoreLanguagesMenuSwitch">
         <div v-if="0===getSwitch.get('switch')" class="showMoreLanguagesMenuFilter">
             <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator">show more languages</button>
-            <button @click="activateTypeFilter()" id="showMoreLanguagesMenuTypeFilterActivator">
-                <img src="../../../assets/Bars.png"/>
-            </button>
+            <div @click="activateTypeFilter()" class="showMoreLanguagesMenuTypeFilterActivator">
+                <button><img src="../../../assets/Bars.png"/></button>
+            </div>
         </div>
-        <LanguageFilter v-if="-1===getSwitch.get('switch')" :menuSwitch="getSwitch"/>
+        <LanguageFilter v-if="-1===getSwitch.get('switch')" :languagesSettings="getLanguagesSettings" :menuSwitch="getSwitch"/>
         <TypeFilter v-if="1===getSwitch.get('switch')" :directives="getDirectives" :menuSwitch="getSwitch"/>
     </div>
 </template>
@@ -71,26 +75,35 @@ button.showMoreLanguagesMenuLanguageFilterActivator
     height: 50px;
 }
 
-button#showMoreLanguagesMenuTypeFilterActivator
+div.showMoreLanguagesMenuTypeFilterActivator
 {
     display: inline-block;
-    height: 50px;
+    height: 45px;
     border: 0px;
     background-color: inherit;
     border-left-style: solid;
     border-left-width: 2px;
     position: relative;
     top: -50px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 10px;
+    padding-left: 7px;
+    padding-top: 5px;
     border-left-color: #a2a9b1;
     float: right;
 }
 
-button#showMoreLanguagesMenuTypeFilterActivator > img
+div.showMoreLanguagesMenuTypeFilterActivator > button
 {
-    margin-top: 8px;
+    border:0px solid;
+    background: transparent;
+}
+
+div.showMoreLanguagesMenuTypeFilterActivator > button > img
+{
+    margin-top: 13px;
     display: inline-block;
-    width: 35px;
+    width: 20px;
+    margin-left:7.5px;
+    margin-right:7.5px;
 }
 </style>

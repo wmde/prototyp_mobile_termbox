@@ -67,7 +67,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .showMoreLanguagesTypeFilter
 {
     height: 50px;
@@ -88,13 +88,10 @@ div#showMoreLanguagesTypeFilterSave > button
     display: inline-block;
     height: 50px;
     border: 0px;
-    background-color: inherit;
-    border-left-style: solid;
-    border-left-width: 2px;
     position: relative;
     top: -50px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 16px;
+    padding-left: 16px;
     border-left-color: #a2a9b1;
     background-color: #3366cc;
     float: right;
@@ -127,9 +124,9 @@ div#showMoreLanguagesTypeFilterSave > button > img
 
 #showMoreLanguagesTypeFilterMenu > div > label
 {
-    display: block;
+    display: inline-block;
     color: #72777d;
-    font-size: 1em;
+    font-size: 1.3em;
 }
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]+label
@@ -139,7 +136,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
 
 #showMoreLanguagesTypeFilterMenu > div > input
 {
-    display: block;
+    display: inline-block;
     float: right;
     right: 35px;
     position: absolute;
@@ -148,10 +145,6 @@ div#showMoreLanguagesTypeFilterSave > button > img
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]
 {
-    display: block;
-    float: right;
-    right: 35px;
-    position: absolute;
     background:#3366cc;
 }
 </style>

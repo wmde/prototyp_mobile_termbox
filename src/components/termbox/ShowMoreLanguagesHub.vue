@@ -14,7 +14,7 @@ export default{
 	name: 'ShowMoreLanguagesHub',
 	components: { MoreLanguagesBox, ConfigurationBox },
 	props: {
-	    shared: Object
+		languagesSettings: Object
 	},
 	data: function () {
 		const Directives = new SharedStore();
@@ -42,16 +42,17 @@ export default{
 			this.$data.VisibilityCheckerNodes = document.getElementsByClassName( 'showMoreLanguagesBarVisibilityChecker' );
 			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesBox' );
 			this.$data.IsScrolledIntervall = null;
-            this.$data.WindowWidth = window.innerWidth
-			this.$data.TroggleWidth = this.computeWidth(this.$data.TroggelField)
-        },
-        computeWidth( Element ){
-			let PaddingX = parseInt(window.getComputedStyle(Element, null).getPropertyValue('padding-left').replace('px', ''))
-			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('padding-right').replace('px', ''))
-			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('border-right-width').replace('px', ''))
-			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('border-left-width').replace('px', ''))
-            return Element.offsetWidth-PaddingX
-        },
+			this.$data.WindowWidth = window.innerWidth;
+			this.$data.TroggleWidth = this.computeWidth( this.$data.TroggelField );
+			this.$data.lastCheck = 0;
+		},
+		computeWidth( Element ) {
+			let PaddingX = parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-left' ).replace( 'px', '' ) );
+			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-right' ).replace( 'px', '' ) );
+			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-right-width' ).replace( 'px', '' ) );
+			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-left-width' ).replace( 'px', '' ) );
+			return Element.offsetWidth - PaddingX;
+		},
 	    showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
@@ -65,22 +66,21 @@ export default{
 				this.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 			}
 		},
-        resize(){
+		resize() {
 			this.$data.TroggelField.removeAttribute( 'class' );
 			this.$data.TroggelField.removeAttribute( 'style' );
-			this.$data.WindowWidth = window.innerWidth
-            this.$data.TroggleWidth = this.computeWidth(this.$data.TroggelField)
-        },
-		keepButtonFieldVisible() {
+			this.$data.WindowWidth = window.innerWidth;
+			this.$data.TroggleWidth = this.computeWidth( this.$data.TroggelField );
+		},
+		keepButtonFieldVisible() { // it become a watchdog...I should rename it
 			const VisibilityChecker = [
 				this.getPositionY( this.$data.VisibilityCheckerNodes[ 0 ] ),
 				this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] )
 			];
-
 			if ( 'none' === this.$data.MoreImage.style.display ) {
-				if( window.innerWidth !== this.$data.WindowWidth )
-				{
-					this.resize()
+
+				if ( window.innerWidth !== this.$data.WindowWidth ) {
+					this.resize();
 				}
 
 				if (
@@ -90,14 +90,12 @@ export default{
 					if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
 
 						this.$data.TroggelField.setAttribute( 'class', 'keepOnTheTop' );
-						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px`);
+						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px` );
 						this.$data.TroggelField.style.top = `${window.pageYOffset }px`;
-						/*this.$data.TroggelField.style.width = `${window.innerWidth*this.$data.TroggleWidth}px!important`*/
-					}
-					else {
+					} else {
 						this.$data.TroggelField.removeAttribute( 'class' );
 						this.$data.TroggelField.removeAttribute( 'style' );
-                    }
+					}
 				} else {
 					this.$data.TroggelField.removeAttribute( 'class' );
 					this.$data.TroggelField.removeAttribute( 'style' );
@@ -217,8 +215,8 @@ export default{
 		}
 	},
 	computed: {
-	    getShared() {
-	        return this.$props.shared;
+	    getLanguagesSettings() {
+	        return this.$props.languagesSettings;
 		},
 		getDirectives() {
 	    	return this.$data.displayDirectives;
@@ -238,10 +236,10 @@ export default{
         </div>
         <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
             <div id="showMoreLanguagesContent">
-                <MoreLanguagesBox :shared="getShared" :directives="getDirectives" />
+                <MoreLanguagesBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
             <div id="showMoreLanguagesMenuBar">
-                <ConfigurationBox :directives="getDirectives" />
+                <ConfigurationBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
         </div>
         <div class="showMoreLanguagesBarVisibilityChecker"></div>

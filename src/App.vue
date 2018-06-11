@@ -71,8 +71,10 @@ export default {
 		CurrentTerm.loadTerm( './components/data/Q64_data.json' );
 	},
 	mounted: function () {
-	    this.getClientLanguages();
-		setTimeout( this.refreshOnLoaded, 10 );
+		if ( false === this.$data.termLoaded ) {
+			this.getClientLanguages();
+			setTimeout( this.refreshOnLoaded, 10 );
+		}
 	},
 	methods: {
 	    getClientLanguages: function () {
@@ -128,7 +130,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
 				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
-				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > this.$data.languages.indexOf( Value ) ) {
 					/* this.$data.languages.splice(
 						-( Index2 + 1 ),
@@ -165,11 +167,12 @@ export default {
 		},
 		refreshOnLoaded: function () {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
-				this.$data.shared = new SharedStore();
-				this.$data.shared.multibleSets( [
+				this.$data.languageSettings = new SharedStore();
+				this.$data.languageSettings.multibleSets( [
 				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
-					[ 'otherLanguages', this.getOtherLanguages() ]
+					[ 'otherLanguages', this.getOtherLanguages() ],
+					[ 'possibleLanguages', CurrentTerm.Term.en.languages ]
 				] );
 				/**
                  *  Put the following in the code to debug troggle button behavior
@@ -188,14 +191,14 @@ export default {
 	data: function () {
 		return {
 			termLoaded: false,
-			shared: null,
+			languageSettings: null,
 			defaultLanguage: null,
 			languages: []
 		};
 	},
 	computed: {
-	    getShared: function () {
-			return this.$data.shared;
+	    getLanguagesSettings: function () {
+			return this.$data.languageSettings;
 		}
 	}
 };
@@ -204,7 +207,7 @@ export default {
 
 <template>
     <section id="termboxSection">
-        <Termbox :shared="getShared" v-if="termLoaded"/>
+        <Termbox :languagesSettings="getLanguagesSettings" v-if="termLoaded"/>
     </section>
 </template>
 

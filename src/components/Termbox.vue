@@ -6,41 +6,37 @@ import ObjectHelper from './lib/ObjectHelper';
 export default {
 	name: 'Termbox',
 	props: {
-		shared: Object
+		languagesSettings: Object
 	},
 	components: { TermContentBox, ShowMoreLanguagesBar },
 	methods: {
 		getCurrentLanguage: function () {
-	        return this.$props.shared.get( 'currentLanguage' );
+	        return this.$props.languagesSettings.get( 'currentLanguage' );
 		}
 
 	},
 	computed: {
 		id: function () {
-			return this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].id;
+			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].id;
 		},
 		title: function () {
-			return this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].title;
+			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].title;
 		},
 		description: function () {
-			return this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].description;
+			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].description;
 		},
 		aliases: function () {
-			return this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].aliases;
+			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].aliases;
 		},
 		getTerm: function () {
-			return ObjectHelper.copyObj( this.$props.shared.get( 'term' ) );
+			return ObjectHelper.copyObj( this.$props.languagesSettings.get( 'term' ) );
 		},
 		hasAlias: function () {
-			return 0 < this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].aliases;
+			return 0 < this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].aliases;
 		},
-		getShared: function () {
-			return this.$props.shared;
+		getLanguagesSettings: function () {
+			return this.$props.languagesSettings;
 		}
-	},
-	data: function () {
-		return {
-		};
 	}
 };
 </script>
@@ -53,7 +49,7 @@ export default {
             :hasAlias="hasAlias"
             :aliases="aliases"
     />
-    <ShowMoreLanguagesBar :shared="getShared"/>
+    <ShowMoreLanguagesBar :languagesSettings="getLanguagesSettings"/>
 </div>
 </template>
 <style scoped>
