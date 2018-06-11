@@ -100,7 +100,7 @@ export default {
             </div>
             <div id="showMoreLanguagesLanguagesSelection">
                 <div v-if="1 === getLanguages.length" class="showMoreLanguagesLanguagesActiveLanguage">
-                    <input disabled checked type="checkbox"/><img src="../../../assets/Lupe.png"/>
+                    <input disabled checked type="checkbox"/>
                     <label>{{getLanguageNames[getLanguages[0]]}}</label>
                 </div>
                 <div v-else class="showMoreLanguagesLanguagesActiveLanguage"
