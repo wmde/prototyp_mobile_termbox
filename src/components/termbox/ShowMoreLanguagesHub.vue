@@ -67,8 +67,14 @@ export default{
 					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() <= VisibilityChecker[ 1 ] ) ||
                     true === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
 				) {
-					this.$data.TroogelField.style.top = `${window.pageYOffset }px`;
-					this.$data.TroogelField.setAttribute( 'class', 'keepOnTheTop' );
+					if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
+						this.$data.TroogelField.style.top = `${window.pageYOffset }px`;
+						this.$data.TroogelField.setAttribute( 'class', 'keepOnTheTop' );
+					}
+					else {
+						this.$data.TroogelField.removeAttribute( 'class' );
+						this.$data.TroogelField.removeAttribute( 'style' );
+                    }
 				} else {
 					this.$data.TroogelField.removeAttribute( 'class' );
 					this.$data.TroogelField.removeAttribute( 'style' );
