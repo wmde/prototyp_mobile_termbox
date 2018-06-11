@@ -171,7 +171,11 @@ export default {
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ]
 				] );
+				/**
+                 *  Put the following in the code to debug troggle button behavior
 
+                 Utils.debugObjectPrint(CurrentTerm)
+                 */
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
