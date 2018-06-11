@@ -4,11 +4,13 @@ import ObjectHelper from './components/lib/ObjectHelper';
 import CurrentTerm from './components/lib/CurrentTerm';
 import Termbox from './components/Termbox.vue';
 import SharedStore from './components/lib/SharedStore';
+import PatricaTrie from './components/lib/Patrica';
 
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
 	const NewTerms = {};
 	const Languages = [];
+	const Trie = new PatricaTrie();
 	for ( Key in Term.labels ) {
 		NewTerms[ Key ] = {
 			title: Term.labels[ Key ].value
@@ -16,14 +18,16 @@ function wrapTerm( Term ) {
 
 		NewTerms[ Key ].language = Key;
 		NewTerms[ Key ].id = Term.id;
-        Index = Utils.binaryInsertSearch( Languages, Key )
-        if( 0 > Index ) {
-            Languages.splice(
-            -(Index + 1),
-            0,
-            Key
-            )
-        }
+		Index = Utils.binaryInsertSearch( Languages, Key );
+		if ( 0 > Index ) {
+			Languages.splice(
+				-( Index + 1 ),
+				0,
+				Key
+			);
+		}
+
+		Trie.insert( Key );
 
 		if ( Key in Term.descriptions ) {
 			NewTerms[ Key ].description = Term.descriptions[ Key ].value;
@@ -44,6 +48,7 @@ function wrapTerm( Term ) {
 		NewTerms[ Key ].languages = ObjectHelper.copyObj( Languages );
 	}
 
+	// Utils.debugObjectPrint(Trie.getValues())
 	return NewTerms;
 }
 
@@ -53,7 +58,7 @@ export default {
 	components: { Termbox },
 	beforeCreate: function () {
 	    CurrentTerm.Wrapper = wrapTerm;
-        /**
+		/**
          *Should be work in future somehow
         CurrentTerm.loadTerm( {
 		    url: `https://m.wikidata.org//w/api.php?action=wbgetentities&format=json&ids=Q64&props=aliases%7Clabels%7Cdescriptions`,
@@ -63,103 +68,93 @@ export default {
                 'user-agent': 'Mozilla/4.0 MDN Example'
             }
 		} );*/
-        CurrentTerm.loadTerm('./components/data/Q64_data.json')
+		CurrentTerm.loadTerm( './components/data/Q64_data.json' );
 	},
 	mounted: function () {
-	    this.getClientLanguages()
+	    this.getClientLanguages();
 		setTimeout( this.refreshOnLoaded, 10 );
 	},
 	methods: {
-	    getClientLanguages: function() {
-	        let Index, Index2, Value
-            if ( 'undefined' !== typeof window.navigator.language )
-            {
-                this.$data.defaultLanguage = window.navigator.language.toLowerCase()
-                this.$data.languages.push(this.$data.defaultLanguage)
-            }
+	    getClientLanguages: function () {
+	        let Index, Index2, Value;
+			if ( 'undefined' !== typeof window.navigator.language ) {
+				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
+				this.$data.languages.push( this.$data.defaultLanguage );
+			}
 
-            if ( 'undefined' !== typeof window.navigator.languages )
-            {
+			if ( 'undefined' !== typeof window.navigator.languages ) {
 
-                for( Index in window.navigator.languages )
-                {
-                    Value = window.navigator.languages[Index].toLowerCase()//any formatter could putted here
-                    Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
-                    if( 0 > Index2 ) {
-                        this.$data.languages.splice(
-                            -(Index2 + 1),
-                            0,
-                            Value
-                        )
-                    }
-                }
-            }
+				for ( Index in window.navigator.languages ) {
+					Value = window.navigator.languages[ Index ].toLowerCase();// any formatter could putted here
+					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+					if ( 0 > Index2 ) {
+						this.$data.languages.splice(
+							-( Index2 + 1 ),
+							0,
+							Value
+						);
+					}
+				}
+			}
 
-            if( 'undefined' !== typeof window.navigator.systemLanguage  )
-            {
-                Value = window.navigator.systemLanguage.toLowerCase()//any formatter could putted here
-                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
-                if( 0 > Index2 ) {
-                    this.$data.languages.splice(
-                        -(Index2 + 1),
-                        0,
-                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
-                    )
-                }
-                this.$data.defaultLanguage = Value
-            }
+			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
+				Value = window.navigator.systemLanguage.toLowerCase();// any formatter could putted here
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
+						-( Index2 + 1 ),
+						0,
+						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
+					);
+				}
+				this.$data.defaultLanguage = Value;
+			}
 
-            if( 'undefined' !== typeof window.navigator.browserLanguage  )
-            {
-                Value = window.navigator.browserLanguage.toLowerCase()//any formatter could putted here
-                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
-                if( 0 > Index2 ) {
-                    this.$data.languages.splice(
-                        -(Index2 + 1),
-                        0,
-                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
-                    )
-                }
-                this.$data.defaultLanguage = Value
-            }
+			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
+				Value = window.navigator.browserLanguage.toLowerCase();// any formatter could putted here
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
+						-( Index2 + 1 ),
+						0,
+						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
+					);
+				}
+				this.$data.defaultLanguage = Value;
+			}
 
-            if( 'undefined' !== typeof window.navigator.userLanguage  )
-            {
-                Value = window.navigator.userLanguage.toLowerCase()//any formatter could putted here
-                Index2 = Utils.binaryInsertSearch( this.$data.languages, Value )
-                if( 0 > Index2 ) {
-                    this.$data.languages.splice(
-                        -(Index2 + 1),
-                        0,
-                        window.navigator.languages[Index].toLowerCase()//any formatter could putted here
-                    )
-                }
-                this.$data.defaultLanguage = Value
-            }
-        },
+			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
+				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
+						-( Index2 + 1 ),
+						0,
+						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
+					);
+				}
+				this.$data.defaultLanguage = Value;
+			}
+		},
 	    getCurrentLanguage: function ( SupportedLanguages ) {
-	        let Index
-	        if (-1 === SupportedLanguages.indexOf(this.$data.defaultLanguage))
-            {
-                this.$data.languages.splice(this.$data.languages.indexOf(this.$data.defaultLanguage), 1)
-                for (Index in this.$data.languages ) {
-                    if ( -1 < SupportedLanguages.indexOf(this.$data.languages[Index]) ) {
-                        this.$data.defaultLanguage = this.$data.languages[Index]
-                        break
-                    }
-                }
-            }
-            else {
-	            if( -1 < SupportedLanguages.indexOf('en') )
-                {
-                    this.$data.defaultLanguage = 'en'
-                }
-                else {
-                    this.$data.defaultLanguage = SupportedLanguages[0]
-                }
-            }
+	        let Index;
+	        if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
+				this.$data.languages.splice( this.$data.languages.indexOf( this.$data.defaultLanguage ), 1 );
+				for ( Index in this.$data.languages ) {
+					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) ) {
+						this.$data.defaultLanguage = this.$data.languages[ Index ];
+						break;
+					}
+				}
+			} else {
+	            if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
+					this.$data.defaultLanguage = 'en';
+				} else {
+					this.$data.defaultLanguage = SupportedLanguages[ 0 ];
+				}
+			}
 
-            return this.$data.defaultLanguage;
+			return this.$data.defaultLanguage;
 		},
 		getOtherLanguages: function () {
 			return this.$data.languages;
@@ -169,7 +164,7 @@ export default {
 				this.$data.shared = new SharedStore();
 				this.$data.shared.multibleSets( [
 				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
-					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages) ],//TODO
+					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ]
 				] );
 
@@ -186,8 +181,8 @@ export default {
 		return {
 			termLoaded: false,
 			shared: null,
-            defaultLanguage: null,
-            languages: []
+			defaultLanguage: null,
+			languages: []
 		};
 	},
 	computed: {

@@ -34,14 +34,12 @@ export default {
 		hasAlias: function () {
 			return 0 < this.$props.shared.get( 'term' )[ this.getCurrentLanguage() ].aliases;
 		},
-		getShared: function()
-        {
-            return this.$props.shared
-        }
+		getShared: function () {
+			return this.$props.shared;
+		}
 	},
 	data: function () {
 		return {
-			hasAlias: false
 		};
 	}
 };

@@ -1,27 +1,34 @@
 <script>
-import Utils from '../../../Utils';
-import SharedStore from '../../lib/SharedStoreStatic';
-
 export default {
 	name: 'MoreLanguagesBox',
 	props: {
-	    shared: Object
+	    shared: Object,
+		directives: Object
 	},
-    computed: {
-        getTerm: function(){
-            return this.$props.shared.get( 'term' )
-        },
-        currentLanguage: function(){
-            return this.$props.shared.get( 'currentLanguage' )
-        }
-    },
+	computed: {
+		getTerm: function () {
+			return this.$props.shared.get( 'term' );
+		},
+		currentLanguage: function () {
+			return this.$props.shared.get( 'currentLanguage' );
+		},
+		displayLabels: function () {
+			return this.$props.directives.get( 'labels' );
+		},
+		displayDescriptions: function () {
+			return this.$props.directives.get( 'descriptions' );
+		},
+		displayAliases: function () {
+			return this.$props.directives.get( 'aliases' );
+		}
+	},
 	methods: {
 	    isActiveOtherLanguages: function ( Language ) {
 			return -1 < this.$props.shared.get( 'otherLanguages' ).indexOf( Language );
 		},
-        isNotDefaultLanguage: function(Language) {
-            return this.$props.shared.get( 'currentLanguage' ) !== Language
-        }
+		isNotDefaultLanguage: function ( Language ) {
+			return this.$props.shared.get( 'currentLanguage' ) !== Language;
+		}
 	}
 };
 </script>
@@ -31,19 +38,19 @@ export default {
         <div class="otherLanguages">
             <h2 class="page-title-language">{{ getTerm[currentLanguage].language }}</h2>
             <div class="otherLanguagesContainer">
-                <h3><span class="page-title-label">{{ getTerm[currentLanguage].title }}</span></h3>
-                <p class="wikibase-entitytermsview-heading-description">{{ getTerm[currentLanguage].description }}</p>
-                <ul class="wikibase-entitytermsview-aliases" v-if="0 < getTerm[currentLanguage].aliases.length">
+                <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[currentLanguage].title }}</span></h3>
+                <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ getTerm[currentLanguage].description }}</p>
+                <ul class="wikibase-entitytermsview-aliases" v-if="0 < getTerm[currentLanguage].aliases.length && displayAliases">
                     <li class="listItem-extended" v-bind:key="alias" v-for="alias in getTerm[currentLanguage].aliases">{{ alias }}</li>
                 </ul>
             </div>
         </div>
         <div class="otherLanguages" v-bind:key="mterm" v-for="mterm in getTerm" v-if="isNotDefaultLanguage(mterm.language) && isActiveOtherLanguages(mterm.language)">
             <h2 class="page-title-language">{{ mterm.language }}</h2>
-            <div class="otherLanguagesContainer">
-                <h3><span class="page-title-label">{{ mterm.title }}</span></h3>
-                <p class="wikibase-entitytermsview-heading-description">{{ mterm.description }}</p>
-                <ul class="wikibase-entitytermsview-aliases" v-if="0 < mterm.aliases.length">
+            <div  class="otherLanguagesContainer">
+                <h3 v-if="displayLabels"><span class="page-title-label">{{ mterm.title }}</span></h3>
+                <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ mterm.description }}</p>
+                <ul class="wikibase-entitytermsview-aliases" v-if="0 < mterm.aliases.length && displayAliases">
                     <li class="listItem-extended" v-bind:key="alias" v-for="alias in mterm.aliases">{{ alias }}</li>
                 </ul>
             </div>

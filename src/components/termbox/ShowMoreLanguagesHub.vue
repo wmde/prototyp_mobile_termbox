@@ -1,5 +1,7 @@
 <script>
 import MoreLanguagesBox from './ShowMore/ShowMoreLanguagesContentBox';
+import ConfigurationBox from './ShowMore/ShowMoreLanguagesMenuSwitch';
+import SharedStore from '../lib/SharedStore';
 import Utils from '../../Utils';
 import StringHelper from '../lib/StringHelper';
 import { TypeErrorException } from '../lib/BaseExceptions';
@@ -10,14 +12,21 @@ const ErrorMessages = {
 
 export default{
 	name: 'ShowMoreLanguagesHub',
-	components: { MoreLanguagesBox },
+	components: { MoreLanguagesBox, ConfigurationBox },
 	props: {
 	    shared: Object
 	},
 	data: function () {
-	    return {};
+		const Directives = new SharedStore();
+		Directives.set( 'labels', true );
+		Directives.set( 'descriptions', true );
+		Directives.set( 'aliases', true );
+	    return {
+	    	displayDirectives: Directives
+		};
 	},
 	mounted: function () {
+
 		this.loadProperties();
 		this.$data.IsScrolledIntervall = setInterval( this.keepButtonFieldVisible, 1 );
 	},
@@ -120,7 +129,7 @@ export default{
 		},
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
-            this.$data.TroogelField.removeAttribute( 'class' );
+			this.$data.TroogelField.removeAttribute( 'class' );
 			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroogelField ) ) {
 				Scroll = this.scrollUp();
 				Shrink = this.shrinkContentBox();
@@ -181,6 +190,9 @@ export default{
 	computed: {
 	    getShared() {
 	        return this.$props.shared;
+		},
+		getDirectives() {
+	    	return this.$data.displayDirectives;
 		}
 	}
 };
@@ -191,21 +203,21 @@ export default{
     <div id="showMoreLanguagesHub">
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
         <div id="showMoreLanguagesBarTroggleField" v-on:click="showMoreLanguages">
-            <button class="showMoreLanguagesButtonIsActive">Show more languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
+            <button class="showMoreLanguagesButtonIsActive">other languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
         </div>
         <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
             <div id="showMoreLanguagesContent">
-                <MoreLanguagesBox :shared="getShared"/>
+                <MoreLanguagesBox :shared="getShared" :directives="getDirectives" />
             </div>
             <div id="showMoreLanguagesMenuBar">
-
+                <ConfigurationBox :directives="getDirectives" />
             </div>
         </div>
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
     </div>
 </template>
 
-<style>
+<style scoped>
 #showMoreLanguagesHub
 {
     margin: 50px 0px 0px 0px!important;
@@ -217,7 +229,7 @@ export default{
 
 #showMoreLanguagesContent, #showMoreLanguagesBarTroggleField, .keepOnTheTop
 {
-    padding-left: 15px;
+    padding-left: 30px;
     padding-right: 15px;
 }
 
@@ -297,4 +309,5 @@ div.showMoreLanguagesContentActive
 {
     display: block;
 }
+
 </style>
