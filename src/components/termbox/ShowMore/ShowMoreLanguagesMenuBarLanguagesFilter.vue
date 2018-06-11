@@ -1,4 +1,5 @@
 <script>
+import ObjectHelper from '../../lib/ObjectHelper'
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
 	props: {
@@ -6,10 +7,11 @@ export default {
 		menuSwitch: Object
 	},
 	data: function () {
-		return { lastPosition: 0 };
+		return { reset: true, originLanguages:[], lastPosition: 0 };
 	},
 	mounted: function () {
-
+		this.$data.reset = true
+		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ))
 		this.$data.lastPosition = window.window.pageYOffset;
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'none'
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'inline';
@@ -18,6 +20,18 @@ export default {
 		window.scrollTo( 0, 0 );
 	},
 	beforeDestroy: function () {
+		let Index
+		if ( true === this.$data.reset )
+        {
+        	for( Index in  this.$data.originLanguages )
+            {
+				if( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf(this.$data.originLanguages[Index]))
+                {
+					this.$props.languagesSettings.get( 'otherLanguages' ).push(this.$data.originLanguages[Index])
+                }
+            }
+			this.$forceUpdate();
+        }
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'block'
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'none';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'inline';
@@ -37,6 +51,7 @@ export default {
         	return -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language );
 		},
 		close: function () {
+			this.$data.reset = false
 			this.$props.menuSwitch.set( 'switch', 0 );
 		},
 		activateTypeFilter: function () {
