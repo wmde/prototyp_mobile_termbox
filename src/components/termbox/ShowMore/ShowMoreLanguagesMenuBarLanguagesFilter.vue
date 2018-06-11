@@ -44,6 +44,9 @@ export default {
 		},
 		getPossibleLanguages() {
 			return this.$props.languagesSettings.get( 'possibleLanguages' );
+		},
+		getLanguageNames: function () {
+			return this.$props.languagesSettings.get( 'languageNames' );
 		}
 	},
 	methods: {
@@ -77,7 +80,7 @@ export default {
 <template>
     <div id="showMoreLanguagesLanguagesFilterBox">
         <div id="showMoreLanguagesActiveLanguages">
-            <span v-bind:key="language" v-for="language in getLanguages">{{language}}</span>
+            <span v-bind:key="language" v-for="language in getLanguages">{{getLanguageNames[language]}}</span>
         </div>
         <div class="showMoreLanguagesLanguagesFilter">
             <button @click="close()"
@@ -93,14 +96,14 @@ export default {
             <div id="showMoreLanguagesLanguagesSelection">
                 <div v-if="1 === getLanguages.length" class="showMoreLanguagesLanguagesActiveLanguage">
                     <input disabled checked type="checkbox"/>
-                    <label>{{getLanguages[0]}}</label>
+                    <label>{{getLanguageNames[getLanguages[0]]}}</label>
                 </div>
                 <div v-else class="showMoreLanguagesLanguagesActiveLanguage"
                      v-bind:key="language"
                      v-for="language in getLanguages"
                      @click="unSelectLanguage(language)">
                     <input checked type="checkbox"/>
-                    <label>{{language}}</label>
+                    <label>{{getLanguageNames[language]}}</label>
                 </div>
                 <div class="showMoreLanguagesLanguagesInActiveLanguage"
                      v-if="isInActiveLanguage(language)"
@@ -108,7 +111,7 @@ export default {
                      v-for="language in getPossibleLanguages"
                      @click="selectLanguage(language)" >
                     <input type="checkbox"/>
-                    <label>{{language}}</label>
+                    <label>{{getLanguageNames[language]}}</label>
                 </div>
             </div>
         </form>
