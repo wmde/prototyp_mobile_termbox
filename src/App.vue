@@ -212,6 +212,7 @@ export default {
     body
     {
         overflow-x: hidden;
+        margin: 0px;
     }
 
     body > *

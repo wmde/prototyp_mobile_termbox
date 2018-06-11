@@ -36,13 +36,22 @@ export default{
 	methods: {
 	    loadProperties() {
 			this.$data.TroggleFieldStartPosition = this.getPositionY( document.getElementById( 'showMoreLanguagesBarTroggleField' ) );
-			this.$data.TroogelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
+			this.$data.TroggelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
 			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
 			this.$data.Repositioning = null;
 			this.$data.VisibilityCheckerNodes = document.getElementsByClassName( 'showMoreLanguagesBarVisibilityChecker' );
 			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesBox' );
 			this.$data.IsScrolledIntervall = null;
-		},
+            this.$data.WindowWidth = window.innerWidth
+			this.$data.TroggleWidth = this.computeWidth(this.$data.TroggelField)
+        },
+        computeWidth( Element ){
+			let PaddingX = parseInt(window.getComputedStyle(Element, null).getPropertyValue('padding-left').replace('px', ''))
+			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('padding-right').replace('px', ''))
+			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('border-right-width').replace('px', ''))
+			PaddingX += parseInt(window.getComputedStyle(Element, null).getPropertyValue('border-left-width').replace('px', ''))
+            return Element.offsetWidth-PaddingX
+        },
 	    showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
@@ -56,6 +65,12 @@ export default{
 				this.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 			}
 		},
+        resize(){
+			this.$data.TroggelField.removeAttribute( 'class' );
+			this.$data.TroggelField.removeAttribute( 'style' );
+			this.$data.WindowWidth = window.innerWidth
+            this.$data.TroggleWidth = this.computeWidth(this.$data.TroggelField)
+        },
 		keepButtonFieldVisible() {
 			const VisibilityChecker = [
 				this.getPositionY( this.$data.VisibilityCheckerNodes[ 0 ] ),
@@ -63,21 +78,29 @@ export default{
 			];
 
 			if ( 'none' === this.$data.MoreImage.style.display ) {
+				if( window.innerWidth !== this.$data.WindowWidth )
+				{
+					this.resize()
+				}
+
 				if (
 					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() <= VisibilityChecker[ 1 ] ) ||
                     true === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
 				) {
 					if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
-						this.$data.TroogelField.style.top = `${window.pageYOffset }px`;
-						this.$data.TroogelField.setAttribute( 'class', 'keepOnTheTop' );
+
+						this.$data.TroggelField.setAttribute( 'class', 'keepOnTheTop' );
+						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px`);
+						this.$data.TroggelField.style.top = `${window.pageYOffset }px`;
+						/*this.$data.TroggelField.style.width = `${window.innerWidth*this.$data.TroggleWidth}px!important`*/
 					}
 					else {
-						this.$data.TroogelField.removeAttribute( 'class' );
-						this.$data.TroogelField.removeAttribute( 'style' );
+						this.$data.TroggelField.removeAttribute( 'class' );
+						this.$data.TroggelField.removeAttribute( 'style' );
                     }
 				} else {
-					this.$data.TroogelField.removeAttribute( 'class' );
-					this.$data.TroogelField.removeAttribute( 'style' );
+					this.$data.TroggelField.removeAttribute( 'class' );
+					this.$data.TroggelField.removeAttribute( 'style' );
 				}
 			}
 		},
@@ -135,8 +158,8 @@ export default{
 		},
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
-			this.$data.TroogelField.removeAttribute( 'class' );
-			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroogelField ) ) {
+			this.$data.TroggelField.removeAttribute( 'class' );
+			if ( this.$data.TroggleFieldStartPosition < this.getPositionY( this.$data.TroggelField ) ) {
 				Scroll = this.scrollUp();
 				Shrink = this.shrinkContentBox();
 
@@ -147,7 +170,7 @@ export default{
 					this.$data.Repositioning = null;
 					this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 					this.$data.ContentBox.removeAttribute( 'style' );
-					this.$data.TroogelField.removeAttribute( 'style' );
+					this.$data.TroggelField.removeAttribute( 'style' );
 
 				}
 			} else {
@@ -163,7 +186,7 @@ export default{
 					window.scrollTo( 0, ScrollTo );
 					return false;
 				} else {
-					this.$data.TroogelField.removeAttribute( 'class' );
+					this.$data.TroggelField.removeAttribute( 'class' );
 					window.scrollTo( 0, 0 );
 					return true;
 				}
@@ -248,7 +271,7 @@ export default{
     border-width: 1px;
     border-bottom-color: #f4f4f4;
     border-style: solid;
-    padding-right: 15px!important;
+    padding-right: 4%!important;
 }
 
 .keepOnTheTop
@@ -257,7 +280,7 @@ export default{
     opacity: 0.9;
     background-color: #F8F9FA;
     top:0;
-    width: 85% ;
+    /*width: 85.4% ;*/
 }
 
 .keepOnTheTop>img
