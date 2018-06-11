@@ -203,7 +203,9 @@ export default{
     <div id="showMoreLanguagesHub">
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
         <div id="showMoreLanguagesBarTroggleField" v-on:click="showMoreLanguages">
-            <button class="showMoreLanguagesButtonIsActive">other languages</button><img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/><img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
+            <button class="showMoreLanguagesButtonIsActive">other languages</button>
+            <img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/>
+            <img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
         </div>
         <div id="showMoreLanguagesBox" class="showMoreLanguagesContentInactive">
             <div id="showMoreLanguagesContent">

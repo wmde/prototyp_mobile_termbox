@@ -76,7 +76,7 @@ export default {
 	},
 	methods: {
 	    getClientLanguages: function () {
-	        let Index, Index2, Value;
+	        let Index, Value;// , Index2, ;
 			if ( 'undefined' !== typeof window.navigator.language ) {
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
@@ -86,39 +86,42 @@ export default {
 
 				for ( Index in window.navigator.languages ) {
 					Value = window.navigator.languages[ Index ].toLowerCase();// any formatter could putted here
-					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-					if ( 0 > Index2 ) {
-						this.$data.languages.splice(
+					// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+					if ( 0 > this.$data.languages.indexOf( Value ) ) {
+						/* this.$data.languages.splice(
 							-( Index2 + 1 ),
 							0,
 							Value
-						);
+						);*/
+						this.$data.languages.push( Value );
 					}
 				}
 			}
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
 				Value = window.navigator.systemLanguage.toLowerCase();// any formatter could putted here
-				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
-					this.$data.languages.splice(
+				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				if ( 0 > this.$data.languages.indexOf( Value ) ) {
+					/* this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
-						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
-					);
+						Value// any formatter could putted here
+					);*/
+					this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
 				Value = window.navigator.browserLanguage.toLowerCase();// any formatter could putted here
-				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
-					this.$data.languages.splice(
+				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				if ( 0 > this.$data.languages.indexOf( Value ) ) {
+					/* this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
-						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
-					);
+						Value// any formatter could putted here
+					);*/
+					this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
@@ -126,12 +129,13 @@ export default {
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
 				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
-					this.$data.languages.splice(
+				if ( 0 > this.$data.languages.indexOf( Value ) ) {
+					/* this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
-						window.navigator.languages[ Index ].toLowerCase()// any formatter could putted here
-					);
+						Value// any formatter could putted here
+					);*/
+					this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}

@@ -54,7 +54,7 @@ class Utils {
 		Utils._evaluateRequest( Response, ResponseError, Hook );
 	}
 
-	static get( File, Hook, UseFetch = false ) {
+	static get( File, Hook ) {
 		if ( 'object' !== typeof File && 'string' !== typeof File && false === Array.isArray( File ) ) {
 			throw new TypeErrorException( `Unexpected type at File argument - expected string or object got ${typeof File}.` );
 		}
