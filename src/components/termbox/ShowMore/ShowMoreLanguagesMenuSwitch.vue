@@ -51,7 +51,7 @@ export default {
 </template>
 
 <style>
-#showMoreLanguagesMenuSwitch
+.showMoreLanguagesMenuFilter
 {
     height: 50px;
     background-color: #eaecf1;
