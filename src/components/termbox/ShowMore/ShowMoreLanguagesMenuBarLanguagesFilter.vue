@@ -84,18 +84,23 @@ export default {
         </div>
         <div class="showMoreLanguagesLanguagesFilter">
             <button @click="close()"
-                    class="showMoreLanguagesMenuLanguageFilterSave" >Remember selected languages</button>
+                    class="showMoreLanguagesMenuLanguageFilterSave"
+            >Remember selected languages</button>
             <div @click="activateTypeFilter()"
-                    class="showMoreLanguagesMenuTypeFilterActivator">
+                 class="showMoreLanguagesMenuTypeFilterActivator">
                 <button><img src="../../../assets/Bars.png" /></button>
             </div>
         </div>
         <form id="showMoreLanguagesLanguagesFilterMenu">
             <div id="showMoreLanguagesSearchBar">
+                <div>
+                    <input type="text" placeholder="Find language"/>
+                </div>
+                <button><img src="../../../assets/Lupe.png" /></button>
             </div>
             <div id="showMoreLanguagesLanguagesSelection">
                 <div v-if="1 === getLanguages.length" class="showMoreLanguagesLanguagesActiveLanguage">
-                    <input disabled checked type="checkbox"/>
+                    <input disabled checked type="checkbox"/><img src="../../../assets/Lupe.png"/>
                     <label>{{getLanguageNames[getLanguages[0]]}}</label>
                 </div>
                 <div v-else class="showMoreLanguagesLanguagesActiveLanguage"
@@ -190,8 +195,8 @@ export default {
 {
     width: 100%;
     background-color:#eaecf0;
-    opacity: 1;
     color: #7a7e84;
+    padding-top: 25px;
 }
 
 #showMoreLanguagesLanguagesSelection > div
@@ -234,5 +239,44 @@ export default {
 #showMoreLanguagesLanguagesSelection > div > input[checked]
 {
     background:#3366cc;
+}
+
+#showMoreLanguagesSearchBar
+{
+    margin: auto;
+    width: 80%;
+    background-color: #ffffff;
+    height:30px;
+    border: 1px solid #a2a9b1;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+}
+
+#showMoreLanguagesSearchBar > div
+{
+    width: 100%;
+}
+
+#showMoreLanguagesSearchBar > div > input
+{
+    width: 80%;
+    height: 27px;
+    border-width: 0px!important;
+    padding-left: 2px ;
+}
+
+#showMoreLanguagesSearchBar > button
+{
+    float: right;
+    border-width: 0px!important;
+    background:transparent;
+    top:-30px;
+    margin: auto;
+    position: relative;
+}
+
+#showMoreLanguagesSearchBar > button > img
+{
+    height: 30px;
 }
 </style>
