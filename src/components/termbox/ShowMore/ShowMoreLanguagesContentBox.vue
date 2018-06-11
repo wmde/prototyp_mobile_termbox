@@ -53,7 +53,7 @@ export default {
             </div>
         </div>
         <div class="otherLanguages" v-bind:key="language" v-for="language in otherLanguages" v-if="isNotDefaultLanguage(language)">
-            <h2 class="page-title-language">{{ getLanguageNames(getTerm[language].language) }}</h2>
+            <h2 class="page-title-language">{{ getLanguageNames[getTerm[language].language] }}</h2>
             <div  class="otherLanguagesContainer">
                 <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[language].title }}</span></h3>
                 <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ getTerm[language].description }}</p>
