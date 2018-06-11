@@ -19,6 +19,9 @@ export default {
 		getTerm: function () {
 			return this.$props.languagesSettings.get( 'term' );
 		},
+		getLanguageNames: function () {
+			return this.$props.languagesSettings.get( 'languageNames' );
+		},
 		currentLanguage: function () {
 			return this.$props.languagesSettings.get( 'currentLanguage' );
 		},
@@ -47,7 +50,7 @@ export default {
 <template>
     <div id="moreContentBox" v-if="useTheForce">
         <div class="otherLanguages">
-            <h2 class="page-title-language">{{ getTerm[currentLanguage].language }}</h2>
+            <h2 class="page-title-language">{{ getLanguageNames[getTerm[currentLanguage].language ]}}</h2>
             <div class="otherLanguagesContainer">
                 <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[currentLanguage].title }}</span></h3>
                 <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ getTerm[currentLanguage].description }}</p>
@@ -57,7 +60,7 @@ export default {
             </div>
         </div>
         <div class="otherLanguages" v-bind:key="language" v-for="language in otherLanguages" v-if="isNotDefaultLanguage(language)">
-            <h2 class="page-title-language">{{ getTerm[language].language }}</h2>
+            <h2 class="page-title-language">{{ getLanguageNames(getTerm[language].language) }}</h2>
             <div  class="otherLanguagesContainer">
                 <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[language].title }}</span></h3>
                 <p v-if="displayDescriptions" class="wikibase-entitytermsview-heading-description">{{ getTerm[language].description }}</p>

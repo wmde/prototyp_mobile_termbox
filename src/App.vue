@@ -2,6 +2,7 @@
 import Utils from './Utils.js';
 import ObjectHelper from './components/lib/ObjectHelper';
 import CurrentTerm from './components/lib/CurrentTerm';
+import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
 import SharedStore from './components/lib/SharedStore';
 import PatricaTrie from './components/lib/Patrica';
@@ -69,6 +70,10 @@ export default {
             }
 		} );*/
 		CurrentTerm.loadTerm( './components/data/Q64_data.json' );
+		/**
+		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
+		 */
+		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
 	mounted: function () {
 		if ( false === this.$data.termLoaded ) {
@@ -172,7 +177,8 @@ export default {
 				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
-					[ 'possibleLanguages', CurrentTerm.Term.en.languages ]
+					[ 'possibleLanguages', CurrentTerm.Term.en.languages ],
+                    [ 'languageNames', CurrentLanguageNames.LanguageNames ]
 				] );
 				/**
                  *  Put the following in the code to debug troggle button behavior
