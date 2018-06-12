@@ -9,6 +9,9 @@ export default {
 </script>
 <template>
 	<div id="statementbox">
+
+		<h2 class="wb-section-heading section-heading wikibase-statements" dir="auto"><span class="mw-headline" id="claims">Statements</span></h2>
+
 		<div class="wikibase-statementgrouplistview">
 			<div class="wikibase-listview">
 				<!-- This contains a selection of HTML pulled straight from the Q64 mobile view -->
