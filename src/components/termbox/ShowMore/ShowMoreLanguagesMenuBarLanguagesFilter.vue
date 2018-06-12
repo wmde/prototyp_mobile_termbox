@@ -128,7 +128,7 @@ export default {
 {
     position: absolute;
     top:0;
-    width: 100%;
+    overflow: hidden;
 }
 
 .showMoreLanguagesLanguagesFilter
@@ -174,6 +174,7 @@ export default {
     padding-top: 12.5px;
     padding-bottom: 12.5px;
     width: 100%;
+    overflow:hidden;
     margin-left: 5%;
     padding-right: 5%;
     line-height: 1.5;
