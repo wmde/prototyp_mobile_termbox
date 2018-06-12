@@ -213,7 +213,7 @@ export default {
     display: inline-block;
     color: #72777d;
     font-size: 1.3em;
-    padding-right:70px;
+    padding-right:90px;
 }
 
 #showMoreLanguagesLanguagesSelection > div > input[checked]+label
@@ -232,7 +232,9 @@ export default {
     float: right;
     right: 35px;
     position: absolute;
-    background:transparent;
+    background:blue;
+	width:20px;
+	height:20px;
 }
 
 #showMoreLanguagesLanguagesSelection > div > input[checked]
@@ -262,6 +264,7 @@ export default {
     height: 27px;
     border-width: 0px!important;
     padding-left: 2px ;
+	font-size:1.3em;
 }
 
 #showMoreLanguagesSearchBar > button
