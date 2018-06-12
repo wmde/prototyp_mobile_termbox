@@ -4,6 +4,7 @@ import ObjectHelper from './components/lib/ObjectHelper';
 import CurrentTerm from './components/lib/CurrentTerm';
 import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
+import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
 import PatricaTrie from './components/lib/Patrica';
 
@@ -56,7 +57,10 @@ function wrapTerm( Term ) {
 export default {
 	name: 'mainHub',
 	template: '<div/>',
-	components: { Termbox },
+	components: {
+		Termbox,
+		Statementbox
+	},
 	beforeCreate: function () {
 		// Detect item ID from URL, fallback to Q64
 		let itemId = document.URL.substr( document.URL.lastIndexOf( '/' ) + 1 );
@@ -235,6 +239,7 @@ export default {
 <template>
     <section id="termboxSection">
         <Termbox :languagesSettings="getLanguagesSettings" v-if="termLoaded"/>
+        <Statementbox/>
     </section>
 </template>
 
