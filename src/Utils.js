@@ -14,10 +14,6 @@ class Utils {
 	}
 
 	static async _getExternComplex( Request, Hook ) {
-		const ResponseError = '';
-		const Response = '';
-		let Url, Configuration;
-
 		if (
 			false === ( 'url' in Request ) ||
 			'string' !== typeof Request.url		||
@@ -26,8 +22,8 @@ class Utils {
 			throw new TypeErrorException( `Expected non empty string and got ${ typeof Request.url }.` );
 		}
 
-		Url = Request.url;
-		Configuration = ObjectHelper.copyObj( Request );
+		const Url = Request.url;
+		const Configuration = ObjectHelper.copyObj( Request );
 		delete Configuration.url;
 
 		Axios.get( Url, Configuration )
@@ -40,8 +36,6 @@ class Utils {
 	}
 
 	static async _getExternSimple( File, Hook ) {
-		const ResponseError = '';
-		const Response = '';
 		Axios.get( File )
 			.then( function ( Response ) {
 				Hook( Response, undefined );
