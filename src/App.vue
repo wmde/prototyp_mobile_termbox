@@ -85,7 +85,7 @@ export default {
 					// We only requested a single entity, so get it
 					return data.entities[name];
 				}
-			}],
+			}]
 		} );
 
 		/**
