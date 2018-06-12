@@ -206,9 +206,8 @@ export default class PatricaTrie {
 	}
 
 	delete( Key ) {
-		let ToDel;
 		Key = `${Key}`;
-		ToDel = this.find( Key );
+		const ToDel = this.find( Key );
 
 		if ( null === ToDel ) {
 			return;
