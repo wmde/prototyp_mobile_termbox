@@ -64,24 +64,37 @@ export default {
 			itemId = 'Q64';
 		}
 
-		//dirty body overflow fix
-        document.getElementsByTagName('body')[0].setAttribute('style', `${window.innerWidth}px`)
-	    CurrentTerm.Wrapper = wrapTerm;
-		/**
-         *Should be work in future somehow
-        CurrentTerm.loadTerm( {
-		    url: `https://m.wikidata.org//w/api.php?action=wbgetentities&format=json&ids=Q64&props=aliases%7Clabels%7Cdescriptions`,
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-                'user-agent': 'Mozilla/4.0 MDN Example'
-            }
-		} );*/
-		CurrentTerm.loadTerm( './components/data/Q64_data.json' );
+		CurrentTerm.Wrapper = wrapTerm;
+		CurrentTerm.loadTerm( {
+			baseURL: window.location.origin + '/wikidata',
+			url: '/w/api.php',
+			params: {
+				action: 'wbgetentities',
+				format: 'json',
+				ids: itemId,
+				props: 'aliases|labels|descriptions'
+			},
+			cache: 'no-cache',
+			//credentials: 'same-origin',
+			headers: {
+				//'user-agent': 'Wikidata Mobile Term Box Prototype'
+			},
+			transformResponse: [function (data) {
+				data = JSON.parse(data);
+				for (let name in data.entities ){
+					// We only requested a single entity, so get it
+					return data.entities[name];
+				}
+			}],
+		} );
+
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
 		 */
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
+
+		//dirty body overflow fix
+        document.getElementsByTagName('body')[0].setAttribute('style', `${window.innerWidth}px`)
 	},
 	mounted: function () {
 		if ( false === this.$data.termLoaded ) {

@@ -10,7 +10,6 @@ class Utils {
 		while ( true === Utils.isEmpty( Response ) ) {
 			await Utils.sleep( 10 );
 		}
-
 		Hook( Response, ResponseError );
 	}
 
@@ -32,19 +31,24 @@ class Utils {
 		delete Configuration.url;
 
 		Axios.get( Url, Configuration )
-			.then( response => ( Response = response ) )
-			.catch( error => ( ResponseError = error ) );
-
-		Utils._evaluateRequest( Response, ResponseError, Hook );
+			.then( function(Response){
+				Hook(Response, undefined);
+			} )
+			.catch( function(ResponseError){
+				Hook(undefined, ResponseError);
+		} );
 	}
 
 	static async _getExternSimple( File, Hook ) {
 		let ResponseError = '';
 		let Response = '';
 		Axios.get( File )
-			.then( response => ( Response = response ) )
-			.catch( error => ( ResponseError = error ) );
-		Utils._evaluateRequest( Response, ResponseError, Hook );
+			.then( function(Response){
+				Hook(Response, undefined);
+			} )
+			.catch( function(ResponseError){
+				Hook(undefined, ResponseError);
+			} );
 	}
 
 	static async _getIntern( File, Hook ) {
