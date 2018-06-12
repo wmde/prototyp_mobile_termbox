@@ -1,5 +1,4 @@
 <script>
-import Utils from '../../../Utils';
 export default {
 	name: 'ShowMoreLanguagesContentBox',
 	props: {
