@@ -7,7 +7,7 @@ export default {
 		directives: Object
 	},
 	data: function () {
-    	return { otherLanguages: [] };
+		return { otherLanguages: [] };
 	},
 	mounted: function () {
 		this.$data.otherLanguages = this.$props.languagesSettings.get( 'otherLanguages' );

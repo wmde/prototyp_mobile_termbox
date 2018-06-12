@@ -1,5 +1,5 @@
 <script>
-import ObjectHelper from '../../lib/ObjectHelper'
+import ObjectHelper from '../../lib/ObjectHelper';
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
 	props: {
@@ -7,32 +7,29 @@ export default {
 		menuSwitch: Object
 	},
 	data: function () {
-		return { reset: true, originLanguages:[], lastPosition: 0 };
+		return { reset: true, originLanguages: [], lastPosition: 0 };
 	},
 	mounted: function () {
-		this.$data.reset = true
-		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ))
+		this.$data.reset = true;
+		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ) );
 		this.$data.lastPosition = window.window.pageYOffset;
-		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'none'
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'none';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'inline';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'none';
 		document.getElementById( 'termbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
 		window.scrollTo( 0, 0 );
 	},
 	beforeDestroy: function () {
-		let Index
-		if ( true === this.$data.reset )
-        {
-        	for( Index in  this.$data.originLanguages )
-            {
-				if( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf(this.$data.originLanguages[Index]))
-                {
-					this.$props.languagesSettings.get( 'otherLanguages' ).splice(Index ,0 ,this.$data.originLanguages[Index])
-                }
-            }
+		let Index;
+		if ( true === this.$data.reset ) {
+			for ( Index in this.$data.originLanguages ) {
+				if ( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( this.$data.originLanguages[ Index ] ) ) {
+					this.$props.languagesSettings.get( 'otherLanguages' ).splice( Index, 0, this.$data.originLanguages[ Index ] );
+				}
+			}
 			this.$forceUpdate();
-        }
-		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'block'
+		}
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'block';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'none';
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'inline';
 		document.getElementById( 'termbox' ).removeAttribute( 'style' );
@@ -51,10 +48,10 @@ export default {
 	},
 	methods: {
 		isInActiveLanguage: function ( Language ) {
-        	return -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language );
+			return -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language );
 		},
 		close: function () {
-			this.$data.reset = false
+			this.$data.reset = false;
 			this.$props.menuSwitch.set( 'switch', 0 );
 		},
 		activateTypeFilter: function () {
@@ -66,7 +63,7 @@ export default {
 		},
 		unSelectLanguage: function ( Language ) {
 			if ( 1 < this.$props.languagesSettings.get( 'otherLanguages' ).length ) {
-            	this.$props.languagesSettings.get( 'otherLanguages' ).splice(
+				this.$props.languagesSettings.get( 'otherLanguages' ).splice(
 					this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language ),
 					1
 				);

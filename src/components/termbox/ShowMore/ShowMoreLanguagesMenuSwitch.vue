@@ -11,7 +11,7 @@ export default {
 		languagesSettings: Object
 	},
 	data: function () {
-    	const State = new SharedStore();
+		const State = new SharedStore();
 		State.set( 'switch', 0 );
 		return { menuSwitch: State };
 	},

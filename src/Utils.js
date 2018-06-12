@@ -14,12 +14,12 @@ class Utils {
 	}
 
 	static async _getExternComplex( Request, Hook ) {
-		let ResponseError = '';
-		let Response = '';
+		const ResponseError = '';
+		const Response = '';
 		let Url, Configuration;
 
 		if (
-        	false === ( 'url' in Request )		||
+			false === ( 'url' in Request ) ||
 			'string' !== typeof Request.url		||
 			null === Request.url		||
 			0 === Request.url.length ) {
@@ -31,23 +31,23 @@ class Utils {
 		delete Configuration.url;
 
 		Axios.get( Url, Configuration )
-			.then( function(Response){
-				Hook(Response, undefined);
+			.then( function ( Response ) {
+				Hook( Response, undefined );
 			} )
-			.catch( function(ResponseError){
-				Hook(undefined, ResponseError);
-		} );
+			.catch( function ( ResponseError ) {
+				Hook( undefined, ResponseError );
+			} );
 	}
 
 	static async _getExternSimple( File, Hook ) {
-		let ResponseError = '';
-		let Response = '';
+		const ResponseError = '';
+		const Response = '';
 		Axios.get( File )
-			.then( function(Response){
-				Hook(Response, undefined);
+			.then( function ( Response ) {
+				Hook( Response, undefined );
 			} )
-			.catch( function(ResponseError){
-				Hook(undefined, ResponseError);
+			.catch( function ( ResponseError ) {
+				Hook( undefined, ResponseError );
 			} );
 	}
 

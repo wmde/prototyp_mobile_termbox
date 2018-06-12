@@ -21,8 +21,8 @@ export default{
 		Directives.set( 'labels', true );
 		Directives.set( 'descriptions', true );
 		Directives.set( 'aliases', true );
-	    return {
-	    	displayDirectives: Directives
+		return {
+			displayDirectives: Directives
 		};
 	},
 	mounted: function () {
@@ -34,7 +34,7 @@ export default{
 		clearInterval( this.$data.IsScrolledIntervall );
 	},
 	methods: {
-	    loadProperties() {
+		loadProperties() {
 			this.$data.TroggleFieldStartPosition = this.getPositionY( document.getElementById( 'showMoreLanguagesBarTroggleField' ) );
 			this.$data.TroggelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
 			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
@@ -52,7 +52,7 @@ export default{
 			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-left-width' ).replace( 'px', '' ) );
 			return Element.offsetWidth - PaddingX;
 		},
-	    showMoreLanguages() {
+		showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
 			if ( 'inline' === More.style.display ) {
@@ -90,19 +90,17 @@ export default{
 						this.$data.TroggelField.setAttribute( 'class', 'keepOnTheTop' );
 						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px` );
 						this.$data.TroggelField.style.top = `${window.pageYOffset }px`;
-						this.$data.TroogleFieldIsGone = false
+						this.$data.TroogleFieldIsGone = false;
 					} else {
 						this.$data.TroggelField.removeAttribute( 'class' );
 						this.$data.TroggelField.removeAttribute( 'style' );
 					}
 				} else {
-					if(
-                        false === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
-                    &&
+					if (
+						false === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] ) &&
                         this.getWindowPositionY() > this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] ) + 100
-                    )
-					{
-						return
+					) {
+						return;
 					}
 					this.$data.TroggelField.removeAttribute( 'class' );
 					this.$data.TroggelField.removeAttribute( 'style' );
@@ -221,11 +219,11 @@ export default{
 		}
 	},
 	computed: {
-	    getLanguagesSettings() {
-	        return this.$props.languagesSettings;
+		getLanguagesSettings() {
+			return this.$props.languagesSettings;
 		},
 		getDirectives() {
-	    	return this.$data.displayDirectives;
+			return this.$data.displayDirectives;
 		}
 	}
 };

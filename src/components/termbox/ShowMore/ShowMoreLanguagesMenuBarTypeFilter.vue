@@ -18,7 +18,7 @@ export default {
 	},
 	methods: {
 		doSwitch: function ( Key ) {
-        	this.$props.directives.set( Key, !this.$props.directives.get( Key ) );
+			this.$props.directives.set( Key, !this.$props.directives.get( Key ) );
 		},
 		doLabel: function () {
 			this.doSwitch( 'labels' );
@@ -33,7 +33,7 @@ export default {
 			this.$props.menuSwitch.set( 'switch', -1 );
 		},
 		close: function () {
-        	this.$props.menuSwitch.set( 'switch', 0 );
+			this.$props.menuSwitch.set( 'switch', 0 );
 		}
 	}
 };

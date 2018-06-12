@@ -38,7 +38,7 @@ function wrapTerm( Term ) {
 
 		NewTerms[ Key ].aliases = [];
 		if ( Key in Term.aliases ) {
-		    for ( Alias in Term.aliases[ Key ] ) {
+			for ( Alias in Term.aliases[ Key ] ) {
 				NewTerms[ Key ].aliases.push( Term.aliases[ Key ][ Alias ].value );
 			}
 		}
@@ -60,13 +60,13 @@ export default {
 	beforeCreate: function () {
 		// Detect item ID from URL, fallback to Q64
 		let itemId = document.URL.substr( document.URL.lastIndexOf( '/' ) + 1 );
-		if (!itemId || !itemId.match( /^[Qq][0-9].*$/ )) {
+		if ( !itemId || !itemId.match( /^[Qq][0-9].*$/ ) ) {
 			itemId = 'Q64';
 		}
 
 		CurrentTerm.Wrapper = wrapTerm;
 		CurrentTerm.loadTerm( {
-			baseURL: window.location.origin + '/wikidata',
+			baseURL: `${window.location.origin }/wikidata`,
 			url: '/w/api.php',
 			params: {
 				action: 'wbgetentities',
@@ -75,17 +75,17 @@ export default {
 				props: 'aliases|labels|descriptions'
 			},
 			cache: 'no-cache',
-			//credentials: 'same-origin',
+			// credentials: 'same-origin',
 			headers: {
-				//'user-agent': 'Wikidata Mobile Term Box Prototype'
+				// 'user-agent': 'Wikidata Mobile Term Box Prototype'
 			},
-			transformResponse: [function (data) {
-				data = JSON.parse(data);
-				for (let name in data.entities ){
+			transformResponse: [ function ( data ) {
+				data = JSON.parse( data );
+				for ( const name in data.entities ) {
 					// We only requested a single entity, so get it
-					return data.entities[name];
+					return data.entities[ name ];
 				}
-			}]
+			} ]
 		} );
 
 		/**
@@ -93,8 +93,8 @@ export default {
 		 */
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 
-		//dirty body overflow fix
-        document.getElementsByTagName('body')[0].setAttribute('style', `${window.innerWidth}px`)
+		// dirty body overflow fix
+		document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `${window.innerWidth}px` );
 	},
 	mounted: function () {
 		if ( false === this.$data.termLoaded ) {
@@ -103,8 +103,8 @@ export default {
 		}
 	},
 	methods: {
-	    getClientLanguages: function () {
-	        let Index, Value;// , Index2, ;
+		getClientLanguages: function () {
+			let Index, Value;// , Index2, ;
 			if ( 'undefined' !== typeof window.navigator.language ) {
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
@@ -168,9 +168,9 @@ export default {
 				this.$data.defaultLanguage = Value;
 			}
 		},
-	    getCurrentLanguage: function ( SupportedLanguages ) {
-	        let Index;
-	        if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
+		getCurrentLanguage: function ( SupportedLanguages ) {
+			let Index;
+			if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
 				this.$data.languages.splice( this.$data.languages.indexOf( this.$data.defaultLanguage ), 1 );
 				for ( Index in this.$data.languages ) {
 					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) ) {
@@ -179,7 +179,7 @@ export default {
 					}
 				}
 			} else {
-	            if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
+				if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
 					this.$data.defaultLanguage = 'en';
 				} else {
 					this.$data.defaultLanguage = SupportedLanguages[ 0 ];
@@ -195,11 +195,11 @@ export default {
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
 				this.$data.languageSettings.multibleSets( [
-				    [ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
+					[ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term.en.languages ],
-                    [ 'languageNames', CurrentLanguageNames.LanguageNames ]
+					[ 'languageNames', CurrentLanguageNames.LanguageNames ]
 				] );
 				/**
                  *  Put the following in the code to debug troggle button behavior
@@ -224,7 +224,7 @@ export default {
 		};
 	},
 	computed: {
-	    getLanguagesSettings: function () {
+		getLanguagesSettings: function () {
 			return this.$data.languageSettings;
 		}
 	}

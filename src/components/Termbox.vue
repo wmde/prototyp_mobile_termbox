@@ -11,7 +11,7 @@ export default {
 	components: { TermContentBox, ShowMoreLanguagesBar },
 	methods: {
 		getCurrentLanguage: function () {
-	        return this.$props.languagesSettings.get( 'currentLanguage' );
+			return this.$props.languagesSettings.get( 'currentLanguage' );
 		}
 
 	},
