@@ -32,8 +32,9 @@ export default {
 		}
 	},
 	methods: {
-		isNotDefaultLanguage: function ( Language ) {
-			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language;
+		shouldDisplayInOtherLanguages: function ( Language ) {
+			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
+				this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
 		}
 	}
 };
@@ -51,7 +52,7 @@ export default {
                 </ul>
             </div>
         </div>
-        <div class="otherLanguages" v-bind:key="language" v-for="language in otherLanguages" v-if="isNotDefaultLanguage(language)">
+        <div class="otherLanguages" v-bind:key="language" v-for="language in otherLanguages" v-if="shouldDisplayInOtherLanguages(language)">
             <h2 class="page-title-language">{{ getLanguageNames[getTerm[language].language] }}</h2>
             <div  class="otherLanguagesContainer">
                 <h3 v-if="displayLabels"><span class="page-title-label">{{ getTerm[language].title }}</span></h3>
