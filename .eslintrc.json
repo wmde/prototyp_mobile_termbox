@@ -25,7 +25,7 @@
 		"one-var": 0,
 		"max-len": [ 1, {
 			"tabWidth": 4,
-			"code": 100,
+			"code": 150,
 			"ignorePattern": "^// eslint-.+",
 			"ignoreUrls": true,
 			"ignoreComments": false,
