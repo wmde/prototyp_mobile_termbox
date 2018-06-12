@@ -216,6 +216,7 @@ export default {
     display: inline-block;
     color: #72777d;
     font-size: 1.3em;
+    padding-right:70px;
 }
 
 #showMoreLanguagesLanguagesSelection > div > input[checked]+label
