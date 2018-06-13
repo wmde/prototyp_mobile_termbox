@@ -84,11 +84,27 @@ export default {
 			this.$props.menuSwitch.set( 'switch', 1 );
 		},
 		selectLanguage: function ( Language ) {
+			var Reload
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( Language );
 			this.$data.isDiabled = false;
+			if( 0 < this.$data.include.length )
+			{
+				Reload = this.$data.include
+				this.$data.include = ''
+				this.$data.include = Reload
+			}
+
 			this.$forceUpdate();
 		},
 		unSelectLanguage: function ( Language ) {
+			var Reload
+			if( 0 < this.$data.include.length )
+			{
+				Reload = this.$data.include
+				this.$data.include = ''
+				this.$data.include = Reload
+			}
+
 			if ( 1 < this.$props.languagesSettings.get( 'otherLanguages' ).length ) {
 				this.$props.languagesSettings.get( 'otherLanguages' ).splice(
 					this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language ),
