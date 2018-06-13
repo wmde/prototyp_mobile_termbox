@@ -63,7 +63,7 @@ export default {
 			}	else {
 				for ( Index in this.$props.languagesSettings.get( Key ) ) {
 					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
-						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].startsWith( this.$data.include )
+						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.include.toLowerCase() )
 					) {
 						Output.push( this.$props.languagesSettings.get( Key )[ Index ] );
 					}
