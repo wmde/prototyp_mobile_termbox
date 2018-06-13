@@ -390,13 +390,6 @@ export default {
 		font-size: 1.2em;
 	}
 
-	.wikibase-toolbar-container {
-		position: absolute;
-		top: 5px;
-		right: 5px;
-		font-size: 0;
-	}
-
 	.wikibase-statementview-references-container, .wikibase-statementview-qualifiers {
 		font-size: 0.8em;
 	}
