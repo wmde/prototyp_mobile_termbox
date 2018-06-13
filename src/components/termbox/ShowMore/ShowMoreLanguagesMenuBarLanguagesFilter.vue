@@ -7,16 +7,17 @@ export default {
 		menuSwitch: Object
 	},
 	data: function () {
-		return { reset: true, originLanguages: [], lastPosition: 0 };
+		return { reset: true, originLanguages: [], lastPosition: 0, include:'', isDiabled: false };
 	},
 	mounted: function () {
 		this.$data.reset = true;
 		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ) );
 		this.$data.lastPosition = window.window.pageYOffset;
-		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'none';
-		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'inline';
-		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'none';
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:none;' );
+		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).setAttribute( 'style', 'display:inline;' );
+		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:none;' );
 		document.getElementById( 'termbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
+		document.getElementById( 'statementbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
 		window.scrollTo( 0, 0 );
 	},
 	beforeDestroy: function () {
@@ -29,24 +30,57 @@ export default {
 			}
 			this.$forceUpdate();
 		}
-		document.getElementById( 'showMoreLanguagesBarTroggleField' ).style.display = 'block';
-		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).style.display = 'none';
-		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).style.display = 'inline';
+		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:block;' );
+		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).setAttribute( 'style', 'display:none;' );
+		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:inline;' );
 		document.getElementById( 'termbox' ).removeAttribute( 'style' );
+		document.getElementById( 'statementbox' ).removeAttribute( 'style' );
 		window.scrollTo( 0, this.$data.lastPosition );
 	},
 	computed: {
 		getLanguages() {
-			return this.$props.languagesSettings.get( 'otherLanguages' );
+			return this.pushVisibleLanguages( 'otherLanguages' );
+		},
+		getTopLanguages() {
+			return this.$props.languagesSettings.get( 'otherLanguages' )
 		},
 		getPossibleLanguages() {
-			return this.$props.languagesSettings.get( 'possibleLanguages' );
+			return this.pushVisibleLanguages( 'possibleLanguages' );
 		},
 		getLanguageNames: function () {
 			return this.$props.languagesSettings.get( 'languageNames' );
-		}
+		},
 	},
 	methods: {
+		shouldBeDisabled: function ( Language ) {
+			return this.$props.languagesSettings.get( 'currentLanguage' ) === Language
+		},
+		pushVisibleLanguages(Key)
+		{
+			var Index
+			const Output = []
+			if( 0 === this.$data.include.length )
+			{
+				return this.$props.languagesSettings.get( Key );
+			}
+			else
+			{
+				for( Index in this.$props.languagesSettings.get( Key ) )
+				{
+					if( this.$props.languagesSettings.get( Key )[Index] in this.$props.languagesSettings.get( 'languageNames' )
+					&&
+						true === this.$props.languagesSettings.get( 'languageNames' )[
+							this.$props.languagesSettings.get( Key )[Index]
+							].startsWith( this.$data.include )
+					)
+					{
+						Output.push( this.$props.languagesSettings.get( Key )[Index] )
+					}
+				}
+
+				return Output
+			}
+		},
 		isInActiveLanguage: function ( Language ) {
 			return -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language );
 		},
@@ -55,10 +89,12 @@ export default {
 			this.$props.menuSwitch.set( 'switch', 0 );
 		},
 		activateTypeFilter: function () {
+			this.$data.reset = false;
 			this.$props.menuSwitch.set( 'switch', 1 );
 		},
 		selectLanguage: function ( Language ) {
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( Language );
+			this.$data.isDiabled = false
 			this.$forceUpdate();
 		},
 		unSelectLanguage: function ( Language ) {
@@ -67,6 +103,15 @@ export default {
 					this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( Language ),
 					1
 				);
+				if( 1 === this.$props.languagesSettings.get( 'otherLanguages' ).length )
+				{
+					this.$data.isDiabled = true
+				}
+				this.$forceUpdate();
+			}
+			else
+			{
+				this.$data.isDiabled = true
 				this.$forceUpdate();
 			}
 		}
@@ -77,7 +122,7 @@ export default {
 <template>
     <div id="showMoreLanguagesLanguagesFilterBox">
         <div id="showMoreLanguagesActiveLanguages">
-            <span v-bind:key="language" v-for="language in getLanguages">{{getLanguageNames[language]}}</span>
+            <span v-bind:key="language" v-for="language in getTopLanguages">{{getLanguageNames[language]}}</span>
         </div>
         <div class="showMoreLanguagesLanguagesFilter">
             <button @click="close()"
@@ -91,29 +136,33 @@ export default {
         <form id="showMoreLanguagesLanguagesFilterMenu">
             <div id="showMoreLanguagesSearchBar">
                 <div>
-                    <input type="text" placeholder="Find language"/>
+                    <input type="text" v-model="include" placeholder="Find language"/>
                 </div>
                 <button><img src="../../../assets/Lupe.png" /></button>
             </div>
             <div id="showMoreLanguagesLanguagesSelection">
-                <div v-if="1 === getLanguages.length" class="showMoreLanguagesLanguagesActiveLanguage">
-                    <input disabled checked type="checkbox"/>
-                    <label>{{getLanguageNames[getLanguages[0]]}}</label>
-                </div>
-                <div v-else class="showMoreLanguagesLanguagesActiveLanguage"
-                     v-bind:key="language"
-                     v-for="language in getLanguages"
-                     @click="unSelectLanguage(language)">
-                    <input checked type="checkbox"/>
-                    <label>{{getLanguageNames[language]}}</label>
+                <div v-bind:key="language"
+					 v-for="language in getLanguages"
+					 class="showMoreLanguagesLanguagesActiveLanguage">
+					<div v-if="shouldBeDisabled(language)">
+                    	<input id="lastStanding" disabled checked type="checkbox"/>
+                    	<label>{{getLanguageNames[getLanguages[0]]}}</label>
+					</div>
+					<div v-else
+						 @click="unSelectLanguage(language)">
+                    	<input checked type="checkbox"/>
+                    	<label>{{getLanguageNames[language]}}</label>
+					</div>
                 </div>
                 <div class="showMoreLanguagesLanguagesInActiveLanguage"
                      v-if="isInActiveLanguage(language)"
                      v-bind:key="language"
                      v-for="language in getPossibleLanguages"
                      @click="selectLanguage(language)" >
-                    <input type="checkbox"/>
-                    <label>{{getLanguageNames[language]}}</label>
+					<div>
+                    	<input type="checkbox"/>
+                    	<label>{{getLanguageNames[language]}}</label>
+					</div>
                 </div>
             </div>
         </form>
@@ -125,8 +174,10 @@ export default {
 {
     position: absolute;
     top:0;
-    overflow: hidden;
+    overflow-x: hidden;
     width:100%;
+	height: 100%;
+	background-color:#eaecf0;
 }
 
 .showMoreLanguagesLanguagesFilter
@@ -192,23 +243,27 @@ export default {
 #showMoreLanguagesLanguagesFilterMenu
 {
     width: 100%;
-    background-color:#eaecf0;
     color: #7a7e84;
     padding-top: 25px;
 }
 
-#showMoreLanguagesLanguagesSelection > div
+#showMoreLanguagesLanguagesSelection > div > div
 {
-    padding: 30px 0px 0px 30px;
+    padding: 25px 0px 0px 25px;
     margin-bottom: 0px;
 }
 
-#showMoreLanguagesLanguagesSelection > div:last-child
+#showMoreLanguagesLanguagesSelection > div:first-child
+{
+	padding-top: 15px;
+}
+
+#showMoreLanguagesLanguagesSelection > div > div:last-child
 {
     padding-bottom: 30px;
 }
 
-#showMoreLanguagesLanguagesSelection > div > label
+#showMoreLanguagesLanguagesSelection > div > div > label
 {
     display: inline-block;
     color: #72777d;
@@ -216,28 +271,27 @@ export default {
     padding-right:90px;
 }
 
-#showMoreLanguagesLanguagesSelection > div > input[checked]+label
+#showMoreLanguagesLanguagesSelection > div > div > input[checked]+label
 {
     color:#000000 !important;
 }
 
-#showMoreLanguagesLanguagesSelection > div > input[disabled]+label
+#showMoreLanguagesLanguagesSelection > div > div > input[disabled]+label
 {
-    color:#3366cc !important;
+	color:#3366cc !important;
 }
 
-#showMoreLanguagesLanguagesSelection > div > input
+#showMoreLanguagesLanguagesSelection > div > div > input
 {
     display: inline-block;
     float: right;
     right: 35px;
     position: absolute;
-    background:blue;
 	width:20px;
 	height:20px;
 }
 
-#showMoreLanguagesLanguagesSelection > div > input[checked]
+#showMoreLanguagesLanguagesSelection > div > div > input[checked]
 {
     background:#3366cc;
 }

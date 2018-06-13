@@ -142,6 +142,8 @@ div#showMoreLanguagesTypeFilterSave > button > img
     right: 35px;
     position: absolute;
     background:transparent;
+	width:20px;
+	height:20px;
 }
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]
