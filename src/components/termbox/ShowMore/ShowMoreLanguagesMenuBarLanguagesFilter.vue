@@ -228,6 +228,10 @@ export default {
 	padding-top: 25px;
 }
 
+input:focus {
+   outline:none;
+ }
+
 #showMoreLanguagesLanguagesSelection > div > div {
 	padding: 25px 0px 0px 25px;
 	margin-bottom: 0px;
@@ -284,7 +288,7 @@ export default {
 }
 
 #showMoreLanguagesSearchBar > div > input {
-	width: 80%;
+	width: 100%;
 	height: 27px;
 	border-width: 0px !important;
 	padding-left: 2px;
