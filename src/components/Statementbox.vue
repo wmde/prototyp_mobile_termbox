@@ -9,8 +9,7 @@ export default {
 			// Each statement group was pulled directly from wikidata mobile web view html (with some elements removed)
 			// 2 simple statements
 			if ( PropertyId == 'P361' ) {
-				return "<div class=\"wikibase-statementgroupview\" id=\"P361\">\n" +
-					"\t\t\t\t\t<div class=\"wikibase-statementgroupview-property\">\n" +
+				return "<div class=\"wikibase-statementgroupview-property\">\n" +
 					"\t\t\t\t\t\t<div class=\"wikibase-statementgroupview-property-label\" dir=\"auto\"><a title=\"Property:P361\" href=\"/wiki/Property:P361\">part of</a></div>\n" +
 					"\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t<div class=\"wikibase-statementlistview\">\n" +
@@ -56,13 +55,11 @@ export default {
 					"\t\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t</div>\n" +
-					"\t\t\t\t\t</div>\n" +
-					"\t\t\t\t</div>";
+					"\t\t\t\t\t</div>";
 			}
 			// 1 statement with a reference
 			if ( PropertyId == 'P571' ) {
-				return "<div class=\"wikibase-statementgroupview\" id=\"P571\">\n" +
-					"\t\t\t\t\t<div class=\"wikibase-statementgroupview-property\">\n" +
+				return "<div class=\"wikibase-statementgroupview-property\">\n" +
 					"\t\t\t\t\t\t<div class=\"wikibase-statementgroupview-property-label\" dir=\"auto\"><a title=\"Property:P571\" href=\"/wiki/Property:P571\">inception</a></div>\n" +
 					"\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t<div class=\"wikibase-statementlistview\">\n" +
@@ -105,13 +102,11 @@ export default {
 					"\t\t\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t</div>\n" +
-					"\t\t\t\t\t</div>\n" +
-					"\t\t\t\t</div>";
+					"\t\t\t\t\t</div>";
 			}
 			// a larger group of statements
 			if ( PropertyId == 'P1367' ) {
-				return "<div class=\"wikibase-statementgroupview\" id=\"P1376\">\n" +
-					"\t\t\t\t\t<div class=\"wikibase-statementgroupview-property\">\n" +
+				return "<div class=\"wikibase-statementgroupview-property\">\n" +
 					"\t\t\t\t\t\t<div class=\"wikibase-statementgroupview-property-label\" dir=\"auto\"><a title=\"Property:P1376\" href=\"/wiki/Property:P1376\">capital of</a></div>\n" +
 					"\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t<div class=\"wikibase-statementlistview\">\n" +
@@ -299,8 +294,7 @@ export default {
 					"\t\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t</div>\n" +
 					"\t\t\t\t\t\t</div>\n" +
-					"\t\t\t\t\t</div>\n" +
-					"\t\t\t\t</div>";
+					"\t\t\t\t\t</div>";
 			}
 		}
 	},
@@ -314,9 +308,9 @@ export default {
 
 		<div class="wikibase-statementgrouplistview">
 			<div class="wikibase-listview">
-				{{getStatementGroupHtml("P361")}}
-				{{getStatementGroupHtml("P571")}}
-				{{getStatementGroupHtml("P1367")}}
+				<div class="wikibase-statementgroupview" id="P361" v-html="getStatementGroupHtml('P361')"></div>
+				<div class="wikibase-statementgroupview" id="P571" v-html="getStatementGroupHtml('P571')"></div>
+				<div class="wikibase-statementgroupview" id="P1376" v-html="getStatementGroupHtml('P1367')"></div>
 			</div>
 		</div>
 	</div>
