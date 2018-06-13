@@ -40,7 +40,7 @@ export default {
 <template>
     <div id="showMoreLanguagesMenuSwitch">
         <div v-if="0===getSwitch.get('switch')" class="showMoreLanguagesMenuFilter">
-            <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator">show more languages</button>
+            <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator">Show more languages</button>
             <div @click="activateTypeFilter()" class="showMoreLanguagesMenuTypeFilterActivator">
                 <button><img src="../../../assets/Bars.png"/></button>
             </div>

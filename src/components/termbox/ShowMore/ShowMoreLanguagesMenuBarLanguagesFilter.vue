@@ -223,7 +223,7 @@ export default {
 }
 
 #showMoreLanguagesLanguagesFilterMenu {
-	width: 100%;
+	width: 80%;
 	color: #7a7e84;
 	padding-top: 25px;
 }

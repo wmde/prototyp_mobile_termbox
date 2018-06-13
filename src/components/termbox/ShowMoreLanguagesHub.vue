@@ -234,7 +234,7 @@ export default{
     <div id="showMoreLanguagesHub">
         <div class="showMoreLanguagesBarVisibilityChecker"></div>
         <div id="showMoreLanguagesBarTroggleField" v-on:click="showMoreLanguages">
-            <button class="showMoreLanguagesButtonIsActive">other languages</button>
+            <button class="showMoreLanguagesButtonIsActive">In other languages</button>
             <img id="showMoreLanguagesBarTroggleFieldMoreImage" src="../../assets/Arror1.png"/>
             <img id="showMoreLanguagesBarTroggleFieldLessImage" src="../../assets/Arror2.png"/>
         </div>
@@ -253,7 +253,7 @@ export default{
 <style scoped>
 #showMoreLanguagesHub
 {
-    margin: 50px 0px 0px 0px!important;
+    margin: 1em 0 0 0!important;
     padding-left: 0px!important;
     /*width: 102.5%;*/
     width: 100%;
@@ -262,7 +262,7 @@ export default{
 
 #showMoreLanguagesContent, #showMoreLanguagesBarTroggleField, .keepOnTheTop
 {
-    padding-left: 30px;
+    padding-left: 0.5em;
     padding-right: 15px;
 }
 

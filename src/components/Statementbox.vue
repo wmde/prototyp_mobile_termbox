@@ -305,7 +305,6 @@ export default {
 	<div id="statementbox">
 
 		<h2 class="wb-section-heading section-heading wikibase-statements" dir="auto"><span class="mw-headline" id="claims">Statements</span></h2>
-
 		<div class="wikibase-statementgrouplistview">
 			<div class="wikibase-listview">
 				<div class="wikibase-statementgroupview" id="P361" v-html="getStatementGroupHtml('P361')"></div>

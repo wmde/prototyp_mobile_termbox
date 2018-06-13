@@ -74,7 +74,7 @@ export default {
 
     div.otherLanguages
     {
-        margin-left: 15px;
+        margin-left: 0.5em;
         border-bottom-width: 1px;
         border-bottom-color: #A2A9B1;
         border-bottom-style: solid;
@@ -89,9 +89,10 @@ export default {
     div.otherLanguages h2
     {
         font-weight: 300;
-        font-size: 1em;
+        font-size: 0.8em;
         color: #72777D;
-        margin-left: 10px;
+        margin-left: 0.5em;
+        margin-bottom: 0;
     }
 
     div.otherLanguages h3
@@ -100,7 +101,8 @@ export default {
         margin-left: 0px;
         padding-bottom: 0px;
         margin-bottom: 0px;
-        font-size: 1em;
+        margin-top: 0.2em;
+        font-size: 0.9em;
         font-family: 'Linux Libertine','Georgia','Times',serif !important;
     }
 
@@ -114,9 +116,12 @@ export default {
         content: '';
     }
 
-    div.otherLanguagesContainer > .wikibase-entitytermsview-heading-description, div.otherLanguagesContainer > .wikibase-entitytermsview-aliases
+    div.otherLanguagesContainer > .wikibase-entitytermsview-heading-description,
+    div.otherLanguagesContainer > .wikibase-entitytermsview-aliases
     {
-        margin-left: 0px;
-        margin-top: 15px;
+        font-size: 0.9em;
+        margin-left: 0;
+        margin-top: 0;
+        margin-bottom: 0.8em;
     }
 </style>

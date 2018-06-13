@@ -27,7 +27,11 @@ export default{
     {
         color: #72777D;
         display: block;
-        font-size:0.5em;
+        font-size:0.7em;
+    }
+    .page-title-label
+    {
+        font-size:1.2em;
     }
 
     .wikibase-entitytermsview-heading-description, .wikibase-entitytermsview-aliases
