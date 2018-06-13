@@ -42,7 +42,7 @@ export default {
 <template>
     <div>
         <div class="showMoreLanguagesTypeFilter">
-            <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator" >show more languages</button>
+            <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator" >Show more languages</button>
             <div @click="close()" id="showMoreLanguagesTypeFilterSave">
                 <button><img src="../../../assets/DoneType.png" /></button>
             </div>
