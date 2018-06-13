@@ -114,20 +114,20 @@ div#showMoreLanguagesTypeFilterSave > button > img
 
 #showMoreLanguagesTypeFilterMenu > div
 {
-    padding: 30px 0px 0px 30px;
+    padding:1em;
     margin-bottom: 0px;
 }
 
 #showMoreLanguagesTypeFilterMenu > div:last-child
 {
-    padding-bottom: 30px;
+    padding-bottom: 1.5em;
 }
 
 #showMoreLanguagesTypeFilterMenu > div > label
 {
     display: inline-block;
     color: #72777d;
-    font-size: 1.3em;
+    font-size: 1em;
 }
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]+label

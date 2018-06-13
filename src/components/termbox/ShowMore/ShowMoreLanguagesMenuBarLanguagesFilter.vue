@@ -127,7 +127,7 @@ export default {
 				<div>
 					<input type="text" v-model="include" placeholder="Find language"/>
 				</div>
-				<button><img src="../../../assets/Lupe.png"/></button>
+				<button @click="" disabled><img src="../../../assets/Lupe.png"/></button>
 			</div>
 			<div id="showMoreLanguagesLanguagesSelection">
 				<div v-bind:key="language"
@@ -222,7 +222,6 @@ export default {
 }
 
 #showMoreLanguagesLanguagesFilterMenu {
-	width: 80%;
 	color: #7a7e84;
 	padding-top: 25px;
 }
@@ -232,16 +231,16 @@ input:focus {
  }
 
 #showMoreLanguagesLanguagesSelection > div > div {
-	padding: 25px 0px 0px 25px;
+	padding: 0.8em;
 	margin-bottom: 0px;
 }
 
 #showMoreLanguagesLanguagesSelection > div:first-child {
-	padding-top: 15px;
+	padding-top: 1.5em;
 }
 
 #showMoreLanguagesLanguagesSelection > div > div:last-child {
-	padding-bottom: 30px;
+	padding-bottom: 1.5em;
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > label {
@@ -274,36 +273,32 @@ input:focus {
 
 #showMoreLanguagesSearchBar {
 	margin: auto;
-	width: 80%;
 	background-color: #ffffff;
 	height: 30px;
 	border: 1px solid #a2a9b1;
 	border-radius: 5px;
 	padding: 5px 5px 5px 5px;
-}
-
-#showMoreLanguagesSearchBar > div {
-	width: 100%;
+	margin: 0.5em;
 }
 
 #showMoreLanguagesSearchBar > div > input {
-	width: 100%;
+	width: 80%;
 	height: 27px;
 	border-width: 0px !important;
-	padding-left: 2px;
-	font-size: 1.3em;
+	padding-left: 1em;
+	font-size: 1em;
 }
 
 #showMoreLanguagesSearchBar > button {
 	float: right;
 	border-width: 0px !important;
 	background: transparent;
-	top: -30px;
+	top: -1.8em;
 	margin: auto;
 	position: relative;
 }
 
 #showMoreLanguagesSearchBar > button > img {
-	height: 30px;
+	height: 1.5em;
 }
 </style>
