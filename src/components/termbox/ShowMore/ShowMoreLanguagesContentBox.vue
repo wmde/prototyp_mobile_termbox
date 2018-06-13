@@ -74,16 +74,16 @@ export default {
 
     div.otherLanguages
     {
-        margin-left: 0.5em;
+        margin-left: 1em;
         border-bottom-width: 1px;
         border-bottom-color: #A2A9B1;
         border-bottom-style: solid;
-        max-width: 85%;
     }
 
     div.otherLanguages:last-child
     {
         border-width: 0px;
+        margin-bottom: 1em;
     }
 
     div.otherLanguages h2
@@ -91,7 +91,7 @@ export default {
         font-weight: 300;
         font-size: 0.8em;
         color: #72777D;
-        margin-left: 0.5em;
+        margin-left: 0;
         margin-bottom: 0;
     }
 
@@ -108,7 +108,7 @@ export default {
 
     div.otherLanguagesContainer
     {
-        padding-left: 15px;
+        padding-left: 0.5em;
     }
 
     div.otherLanguages > ul.wikibase-entitytermsview-aliases > li:last-child.listItem-extended::after
@@ -122,6 +122,6 @@ export default {
         font-size: 0.9em;
         margin-left: 0;
         margin-top: 0;
-        margin-bottom: 0.8em;
+        margin-bottom: 0.5em;
     }
 </style>
