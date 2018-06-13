@@ -60,8 +60,7 @@ export default {
 			const Output = [];
 			if ( 0 === this.$data.include.length ) {
 				return this.$props.languagesSettings.get( Key );
-			}
-			else {
+			}	else {
 				for ( Index in this.$props.languagesSettings.get( Key ) ) {
 					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
 						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].startsWith( this.$data.include )
