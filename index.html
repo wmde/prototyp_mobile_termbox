@@ -6,6 +6,76 @@
     <title>ptermb</title>
   </head>
   <body>
+  <style>
+    .wikibase-statementgrouplistview, .wikibase-sitelinklistview {
+      -webkit-column-width: 280px;
+      -moz-column-width: 280px;
+      column-width: 280px;
+    }
+
+    .wikibase-statementgroupview {
+      background-color: #f8f9fa;
+      border: 1px solid #eaecf0;
+      display: inline-block;
+      margin: 0 0 10px;
+      width: 100%;
+    }
+
+    .wikibase-statementgroupview > div {
+      padding: 2px 5px;
+    }
+
+    .wikibase-statementgroupview-property-label a, .wikibase-snakview-property a {
+      color: #54595d;
+    }
+
+    .wikibase-statementview {
+      margin-bottom: 10px;
+    }
+
+    .wikibase-rankselector.ui-state-disabled {
+      cursor: default;
+    }
+
+    .wikibase-rankselector {
+      border: 0;
+      background: none transparent;
+      cursor: pointer;
+    }
+
+    .wikibase-rankselector.ui-state-disabled .ui-icon.wikibase-rankselector-normal, .wb-edit.wikibase-rankselector.ui-state-active .ui-icon.wikibase-rankselector-normal {
+      background-position: -36px;
+    }
+
+    .wikibase-statementview-rankselector .ui-icon.ui-icon-rankselector {
+      display: block;
+      float: left;
+      margin: 5px 5px 0 0;
+    }
+
+    .wikibase-rankselector .ui-icon.wikibase-rankselector-normal {
+      background-position: -9px;
+    }
+
+    .wikibase-rankselector .ui-icon.ui-icon-rankselector {
+      background-image: url(https://www.wikidata.org/w/extensions/Wikibase/view/resources/jquery/wikibase/themes/default/images/rankselector.png);
+      background-image: linear-gradient(transparent,transparent),url(data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 xmlns:xlin…=%22%23447ff5%22 x=%2281%22 y=%220%22 xlink:href=%22%23b%22/%3E %3C/svg%3E);
+      width: 8px;
+      height: 20px;
+    }
+
+    .wikibase-snakview div {
+      display: inline;
+    }
+
+    .wikibase-statementview-mainsnak .wikibase-snakview-value {
+      font-size: 1.2em;
+    }
+
+    .wikibase-statementview-references-container, .wikibase-statementview-qualifiers {
+      font-size: 0.8em;
+    }
+  </style>
       <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
