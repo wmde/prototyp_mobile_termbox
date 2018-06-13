@@ -251,6 +251,11 @@ export default{
 </template>
 
 <style scoped>
+#showMoreLanguagesMenuBar
+{
+	max-width: 100vw;
+	overflow: hidden;
+}
 #showMoreLanguagesHub
 {
     margin: 1em 0 0 0!important;
