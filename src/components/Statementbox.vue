@@ -33,19 +33,15 @@ export default {
 											<div class="wikibase-snakview-property" dir="auto"></div>
 										</div>
 										<div class="wikibase-snakview-value-container" dir="auto">
-											<div class="wikibase-snakview-typeselector"></div>
+											
 											<div class="wikibase-snakview-body">
 												<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q648102" href="/wiki/Q648102">Berlin/Brandenburg Metropolitan Region</a></div>
-												<div class="wikibase-snakview-indicators"></div>
 											</div>
 										</div>
 									</div></div>
-									<div class="wikibase-statementview-qualifiers"></div>
 								</div>
-								<span class="wikibase-toolbar-container"></span>
 								<div class="wikibase-statementview-references-container">
 									<div class="wikibase-statementview-references-heading">0 references</div>
-									<div class="wikibase-statementview-references "></div>
 								</div>
 							</div><div class="wikibase-statementview wikibase-statement-Q64$2ffffad0-4008-dc30-a1a3-b61d3b43b2de wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -57,23 +53,17 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q15781847" href="/wiki/Q15781847">agglomeration of Berlin</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div>
 						</div>
-						<span class="wikibase-toolbar-container"></span>
 					</div>
 				</div>
 				<!-- 1 statement with a reference -->
@@ -93,16 +83,13 @@ export default {
 											<div class="wikibase-snakview-property" dir="auto"></div>
 										</div>
 										<div class="wikibase-snakview-value-container" dir="auto">
-											<div class="wikibase-snakview-typeselector"></div>
+											
 											<div class="wikibase-snakview-body">
 												<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak">1237</div>
-												<div class="wikibase-snakview-indicators"></div>
 											</div>
 										</div>
 									</div></div>
-									<div class="wikibase-statementview-qualifiers"></div>
 								</div>
-								<span class="wikibase-toolbar-container"></span>
 								<div class="wikibase-statementview-references-container">
 									<div class="wikibase-statementview-references-heading">1 reference</div>
 									<div class="wikibase-statementview-references wikibase-initially-collapsed"><div class="wikibase-listview"><div class="wikibase-referenceview wikibase-referenceview-a9980e823c98f6dd9b7c8d4ca28319c510b4250a">
@@ -113,10 +100,9 @@ export default {
 													<div class="wikibase-snakview-property" dir="auto"><a title="Property:P854" href="/wiki/Property:P854">reference URL</a></div>
 												</div>
 												<div class="wikibase-snakview-value-container" dir="auto">
-													<div class="wikibase-snakview-typeselector"></div>
+													
 													<div class="wikibase-snakview-body">
 														<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a rel="nofollow" class="external free" href="https://www.berlin.de/berlin-im-ueberblick/geschichte/die-mittelalterliche-handelsstadt/">https://www.berlin.de/berlin-im-ueberblick/geschichte/die-mittelalterliche-handelsstadt/</a></div>
-														<div class="wikibase-snakview-indicators"></div>
 													</div>
 												</div>
 											</div></div>
@@ -125,10 +111,9 @@ export default {
 								</div>
 							</div>
 						</div>
-						<span class="wikibase-toolbar-container"></span>
 					</div>
 				</div>
-				<!-- a larrger group of statements -->
+				<!-- a larger group of statements -->
 				<div class="wikibase-statementgroupview" id="P1376">
 					<div class="wikibase-statementgroupview-property">
 						<div class="wikibase-statementgroupview-property-label" dir="auto"><a title="Property:P1376" href="/wiki/Property:P1376">capital of</a></div>
@@ -145,16 +130,12 @@ export default {
 											<div class="wikibase-snakview-property" dir="auto"></div>
 										</div>
 										<div class="wikibase-snakview-value-container" dir="auto">
-											<div class="wikibase-snakview-typeselector"></div>
 											<div class="wikibase-snakview-body">
 												<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q183" href="/wiki/Q183">Germany</a></div>
-												<div class="wikibase-snakview-indicators"></div>
 											</div>
 										</div>
 									</div></div>
-									<div class="wikibase-statementview-qualifiers"></div>
 								</div>
-								<span class="wikibase-toolbar-container"></span>
 								<div class="wikibase-statementview-references-container">
 									<div class="wikibase-statementview-references-heading">1 reference</div>
 									<div class="wikibase-statementview-references wikibase-initially-collapsed"><div class="wikibase-listview"><div class="wikibase-referenceview wikibase-referenceview-05890ab5086b34c28bd1707bfa6432bf270f3e9c">
@@ -165,10 +146,8 @@ export default {
 													<div class="wikibase-snakview-property" dir="auto"><a title="Property:P248" href="/wiki/Property:P248">stated in</a></div>
 												</div>
 												<div class="wikibase-snakview-value-container" dir="auto">
-													<div class="wikibase-snakview-typeselector"></div>
 													<div class="wikibase-snakview-body">
 														<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q451546" href="/wiki/Q451546">Einigungsvertrag</a></div>
-														<div class="wikibase-snakview-indicators"></div>
 													</div>
 												</div>
 											</div></div>
@@ -178,10 +157,8 @@ export default {
 													<div class="wikibase-snakview-property" dir="auto"><a title="Property:P958" href="/wiki/Property:P958">section, verse, or paragraph</a></div>
 												</div>
 												<div class="wikibase-snakview-value-container" dir="auto">
-													<div class="wikibase-snakview-typeselector"></div>
 													<div class="wikibase-snakview-body">
 														<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak">Artikel 2 (1)</div>
-														<div class="wikibase-snakview-indicators"></div>
 													</div>
 												</div>
 											</div></div>
@@ -198,19 +175,14 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q7318" href="/wiki/Q7318">Nazi Germany</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$646047ED-3B4F-4AB7-BAD4-7EF9B81B7BCD wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -222,19 +194,15 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
+										
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q27306" href="/wiki/Q27306">Kingdom of Prussia</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$166D612D-B270-4F14-BBE1-584540BE46F8 wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -246,19 +214,14 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q41304" href="/wiki/Q41304">Weimar Republic</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$45C51BF2-C595-49A7-981E-78709BE1FB6E wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -270,19 +233,14 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q157367" href="/wiki/Q157367">Brandenburg-Prussia</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$A19006DC-B074-4761-AE71-FC0474066DFF wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -294,19 +252,14 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q161036" href="/wiki/Q161036">Free State of Prussia</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$84B41B39-3DE3-4DDB-A6F1-CE53C75C035B wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -318,19 +271,16 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
+										
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q2415901" href="/wiki/Q2415901">Allied-occupied Germany</a></div>
-											<div class="wikibase-snakview-indicators"></div>
+											
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div><div class="wikibase-statementview wikibase-statement-Q64$252ca848-443e-21b3-f2c1-39230a37ac0d wb-normal">
 							<div class="wikibase-statementview-rankselector"><div class="wikibase-rankselector ui-state-disabled">
@@ -342,23 +292,17 @@ export default {
 										<div class="wikibase-snakview-property" dir="auto"></div>
 									</div>
 									<div class="wikibase-snakview-value-container" dir="auto">
-										<div class="wikibase-snakview-typeselector"></div>
 										<div class="wikibase-snakview-body">
 											<div class="wikibase-snakview-value wikibase-snakview-variation-valuesnak"><a title="Q43287" href="/wiki/Q43287">German Empire</a></div>
-											<div class="wikibase-snakview-indicators"></div>
 										</div>
 									</div>
 								</div></div>
-								<div class="wikibase-statementview-qualifiers"></div>
 							</div>
-							<span class="wikibase-toolbar-container"></span>
 							<div class="wikibase-statementview-references-container">
 								<div class="wikibase-statementview-references-heading">0 references</div>
-								<div class="wikibase-statementview-references "></div>
 							</div>
 						</div>
 						</div>
-						<span class="wikibase-toolbar-container"></span>
 					</div>
 				</div>
 			</div>
@@ -370,7 +314,7 @@ export default {
 	{
 		width: 100%;
 		left:0;
-		/*margin-left:-10px;*/
+		/* margin-left:-10px;*/
 		padding-top: 10px;
 	}
 
