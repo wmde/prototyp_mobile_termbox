@@ -127,7 +127,7 @@ export default {
 				<div>
 					<input type="text" v-model="include" placeholder="Find language"/>
 				</div>
-				<button @click="" disabled><img src="../../../assets/Lupe.png"/></button>
+				<button disabled><img src="../../../assets/Lupe.png"/></button>
 			</div>
 			<div id="showMoreLanguagesLanguagesSelection">
 				<div v-bind:key="language"
@@ -282,7 +282,7 @@ input:focus {
 }
 
 #showMoreLanguagesSearchBar > div > input {
-	width: 80%;
+	width: 70%;
 	height: 27px;
 	border-width: 0px !important;
 	padding-left: 1em;
