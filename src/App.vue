@@ -62,6 +62,7 @@ export default {
 		Statementbox
 	},
 	beforeCreate: function () {
+
 		// Detect item ID from URL, fallback to Q64
 		let itemId = document.URL.substr( document.URL.lastIndexOf( '/' ) + 1 );
 		if ( !itemId || !itemId.match( /^[Qq][0-9].*$/ ) ) {
@@ -96,17 +97,33 @@ export default {
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
 		 */
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
-
-		// dirty body overflow fix
-		document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `${window.innerWidth}px` );
 	},
 	mounted: function () {
+		this.$data.reframeIntervall = window.setInterval(this.reframe, 10)
 		if ( false === this.$data.termLoaded ) {
 			this.getClientLanguages();
 			setTimeout( this.refreshOnLoaded, 10 );
 		}
 	},
 	methods: {
+		reframe: function()
+		{
+			let UserScreen
+			if(this.$data.lastWidth !== window.innerWidth) {
+				if (800 < window.innerWidth) {
+					UserScreen = ( 800 / window.innerWidth ) * 100
+					document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `width:${ UserScreen }%; margin:auto;` );
+					//document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', 'width:800px; margin:auto;' );
+				}
+				else {
+					if (null !== document.getElementsByTagName( 'body' )[ 0 ].style) {
+						document.getElementsByTagName( 'body' )[ 0 ].removeAttribute( 'style' )
+					}
+					// dirty body overflow fix
+					//document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `width:${window.innerWidth}px` );
+				}
+			}
+		},
 		getClientLanguages: function () {
 			let Index, Value;// , Index2, ;
 			if ( 'undefined' !== typeof window.navigator.language ) {
@@ -224,7 +241,9 @@ export default {
 			termLoaded: false,
 			languageSettings: null,
 			defaultLanguage: null,
-			languages: []
+			languages: [],
+			reframeIntervall: null,
+			lastWidth: ''
 		};
 	},
 	computed: {

@@ -125,17 +125,19 @@ export default {
 
 <template>
 	<div id="showMoreLanguagesLanguagesFilterBox">
-		<div id="showMoreLanguagesActiveLanguages">
-			<span v-bind:key="language" v-for="language in getTopLanguages">{{getLanguageNames[language]}}</span>
-		</div>
-		<div class="showMoreLanguagesLanguagesFilter">
-			<button @click="close()"
-					class="showMoreLanguagesMenuLanguageFilterSave"
-			>Remember selected languages
-			</button>
-			<div @click="activateTypeFilter()"
-				class="showMoreLanguagesMenuTypeFilterActivator">
-				<button><img src="../../../assets/Bars.png"/></button>
+		<div id="showMoreLanguagesLanguagesFilterFixedTop">
+			<div id="showMoreLanguagesActiveLanguages">
+				<span v-bind:key="language" v-for="language in getTopLanguages">{{getLanguageNames[language]}}</span>
+			</div>
+			<div class="showMoreLanguagesLanguagesFilter">
+				<button @click="close()"
+						class="showMoreLanguagesMenuLanguageFilterSave"
+				>Remember selected languages
+				</button>
+				<div @click="activateTypeFilter()"
+					class="showMoreLanguagesMenuTypeFilterActivator">
+					<button><img src="../../../assets/Bars.png"/></button>
+				</div>
 			</div>
 		</div>
 		<form id="showMoreLanguagesLanguagesFilterMenu">
@@ -191,6 +193,13 @@ export default {
 	border-bottom-width: 2px;
 	border-bottom-color: #a2a9b1;
 	border-bottom-style: solid;
+}
+
+#showMoreLanguagesLanguagesFilterFixedTop
+{
+	position: fixed;
+	width: 100%;
+	z-index:3;
 }
 
 .showMoreLanguagesMenuLanguageFilterSave {

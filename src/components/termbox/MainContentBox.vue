@@ -38,7 +38,8 @@ export default{
     {
         margin-left: 30px;
         margin-top: 15px;
-    }
+		padding-right: 10px;
+	}
 
     .wikibase-entitytermsview-aliases > *
     {

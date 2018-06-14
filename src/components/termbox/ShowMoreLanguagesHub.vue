@@ -5,6 +5,7 @@ import SharedStore from '../lib/SharedStore';
 import Utils from '../../Utils';
 import StringHelper from '../lib/StringHelper';
 import { TypeErrorException } from '../lib/BaseExceptions';
+import { DomHelper, DomEffects } from '../lib/DomHelpers'
 
 const ErrorMessages = {
 	INVALID_ELEMENT_CLASS: 'Expected non empty string as parameter got {}.'
@@ -26,7 +27,6 @@ export default{
 		};
 	},
 	mounted: function () {
-
 		this.loadProperties();
 		this.$data.IsScrolledIntervall = setInterval( this.keepButtonFieldVisible, 1 );
 	},
@@ -35,187 +35,62 @@ export default{
 	},
 	methods: {
 		loadProperties() {
-			this.$data.TroggleFieldStartPosition = this.getPositionY( document.getElementById( 'showMoreLanguagesBarTroggleField' ) );
 			this.$data.TroggelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
 			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
 			this.$data.Repositioning = null;
 			this.$data.VisibilityCheckerNodes = document.getElementsByClassName( 'showMoreLanguagesBarVisibilityChecker' );
 			this.$data.ContentBox = document.getElementById( 'showMoreLanguagesBox' );
 			this.$data.IsScrolledIntervall = null;
-			this.$data.WindowWidth = window.innerWidth;
-			this.$data.TroggleWidth = this.computeWidth( this.$data.TroggelField );
-		},
-		computeWidth( Element ) {
-			let PaddingX = parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-left' ).replace( 'px', '' ) );
-			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-right' ).replace( 'px', '' ) );
-			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-right-width' ).replace( 'px', '' ) );
-			PaddingX += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-left-width' ).replace( 'px', '' ) );
-			return Element.offsetWidth - PaddingX;
+			this.$data.DomEffects = new DomEffects(
+				this.$data.TroggelField,
+				this.$data.VisibilityCheckerNodes,
+				null,
+				[ 'keepOnTheTop' ]
+			)
 		},
 		showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
-			if ( 'inline' === More.style.display ) {
+			if ('inline' === More.style.display) {
 				this.$data.MoreImage.style.display = 'inline';
 				More.style.display = 'none';
 				this.goBackToStartPositionTroggleField();
 			} else {
 				More.style.display = 'inline';
 				this.$data.MoreImage.style.display = 'none';
-				this.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+				DomHelper.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 			}
-		},
-		resize() {
-			this.$data.TroggelField.removeAttribute( 'class' );
-			this.$data.TroggelField.removeAttribute( 'style' );
-			this.$data.WindowWidth = window.innerWidth;
-			this.$data.TroggleWidth = this.computeWidth( this.$data.TroggelField );
 		},
 		keepButtonFieldVisible() { // it become a watchdog...I should rename it
-			const VisibilityChecker = [
-				this.getPositionY( this.$data.VisibilityCheckerNodes[ 0 ] ),
-				this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] )
-			];
-			if ( 'none' === this.$data.MoreImage.style.display ) {
 
-				if ( window.innerWidth !== this.$data.WindowWidth ) {
-					this.resize();
-				}
-
-				if (
-					( window.pageYOffset > VisibilityChecker[ 0 ] && this.getWindowPositionY() < VisibilityChecker[ 1 ] ) ||
-                    true === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] )
-				) {
-					if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
-						this.$data.TroggelField.setAttribute( 'class', 'keepOnTheTop' );
-						this.$data.TroggelField.setAttribute( 'style', `width:${this.$data.TroggleWidth}px` );
-						this.$data.TroggelField.style.top = `${window.pageYOffset }px`;
-						this.$data.TroogleFieldIsGone = false;
-					} else {
-						this.$data.TroggelField.removeAttribute( 'class' );
-						this.$data.TroggelField.removeAttribute( 'style' );
-					}
-				} else {
-					if (
-						false === this.isElementInVertical( this.$data.VisibilityCheckerNodes[ 1 ] ) &&
-                        this.getWindowPositionY() > this.getPositionY( this.$data.VisibilityCheckerNodes[ 1 ] ) + 100
-					) {
-						return;
-					}
-					this.$data.TroggelField.removeAttribute( 'class' );
-					this.$data.TroggelField.removeAttribute( 'style' );
-				}
-			}
-		},
-		getWindowPositionY() {
-			return window.pageYOffset + window.innerHeight;
-		},
-		getPositionY( Element ) {
-			let Top = Element.offsetTop;
-			const Height = Element.offsetHeight;
-
-			while ( Element.offsetParent ) {
-				Element = Element.offsetParent;
-				Top += Element.offsetTop;
-			}
-
-			return ( Top + Height );
-		},
-		isElementInVertical( Element ) {
-			let Top = Element.offsetTop;
-			const Height = Element.offsetHeight;
-			while ( Element.offsetParent ) {
-				Element = Element.offsetParent;
-				Top += Element.offsetTop;
-			}
-			return (
-				window.pageYOffset <= Top &&
-                ( window.pageYOffset + window.innerHeight ) >= ( Top + Height )
-			);
-		},
-		removeClass( Element, ElementClass ) {
-			const ElementClasses = Element.getAttribute( 'class' );
-			if ( 'string' !== typeof ElementClass || 0 === ElementClass.length ) {
-				throw new TypeErrorException( StringHelper.format( ErrorMessages.INVALID_ELEMENT_CLASS, typeof ElementClass ) );
-			}
-			if ( null !== ElementClasses ) {
-				ElementClass = ElementClasses.replace( ElementClass, '' ).trim();
-				Element.setAttribute( 'class', ElementClass );
-				if ( 0 === ElementClass.length ) {
-					Element.removeAttribute( 'class' );
-					return;
-				}
-			}
-		},
-		addClass( Element, ElementClass ) {
-			const ElementClasses = Element.getAttribute( 'class' );
-			if ( 'string' !== typeof ElementClass || 0 === ElementClass.length ) {
-				throw new TypeErrorException( StringHelper.format( ErrorMessages.INVALID_ELEMENT_CLASS, typeof ElementClass ) );
-			}
-			if ( true !== Utils.isEmpty( ElementClasses ) ) {
-				ElementClass = `${ElementClasses } ${ ElementClass}`;
-				Element.setAttribute( 'class', ElementClass );
-			} else {
-				Element.setAttribute( 'class', ElementClass );
+			if ('none' === this.$data.MoreImage.style.display) {
+				this.$data.DomEffects.sticky()
 			}
 		},
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
 			this.$data.TroggelField.removeAttribute( 'class' );
-			if ( 0 !== window.pageYOffset ) {
-				Scroll = this.scrollUp();
-				Shrink = this.shrinkContentBox();
-				if ( false === Scroll || false === Shrink ) {
+			if (0 !== window.pageYOffset) {
+				Scroll = DomEffects.scrollToY( 0, this.scrollHook );
+				Shrink = DomEffects.shrink( this.$data.ContentBox, 0, window.innerWidth );
+				if (false === Scroll || false === Shrink) {
 					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
 				} else {
 					clearTimeout( this.$data.Repositioning );
 					this.$data.Repositioning = null;
-					this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+					DomHelper.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 					this.$data.ContentBox.removeAttribute( 'style' );
 					this.$data.TroggelField.removeAttribute( 'style' );
 
 				}
 			} else {
-				this.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
+				DomHelper.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 				this.$data.ContentBox.removeAttribute( 'style' );
 			}
 		},
-		scrollUp() {
-			let ScrollTo;
-			if ( 0 < window.pageYOffset ) {
-				if ( 1 < window.pageYOffset ) {
-					ScrollTo = window.pageYOffset >> 1;
-					window.scrollTo( 0, ScrollTo );
-					return false;
-				} else {
-					this.$data.TroggelField.removeAttribute( 'class' );
-					window.scrollTo( 0, 0 );
-					return true;
-				}
-			} else {
-				return true;
-			}
-		},
-		shrinkContentBox() {
-			if ( 0 < this.$data.ContentBox.offsetHeight ) {
-				this.$data.ContentBox.style.overflow = 'hidden';
-				if ( window.innerHeight <= this.$data.ContentBox.offsetHeight ) {
-					if ( 1 & window.innerHeight ) {
-						this.$data.ContentBox.style.height = `${window.innerHeight - 1 }px`;
-					} else {
-						this.$data.ContentBox.style.height = `${window.innerHeight }px`;
-					}
-				}
-
-				if ( 1 < this.$data.ContentBox.offsetHeight ) {
-					this.$data.ContentBox.style.height = `${this.$data.ContentBox.offsetHeight >> 1 }px`;
-					return false;
-				} else {
-					return true;
-				}
-			} else {
-				return true;
-			}
+		scrollHook()
+		{
+			this.$data.TroggelField.removeAttribute( 'class' );
 		}
 	},
 	computed: {
