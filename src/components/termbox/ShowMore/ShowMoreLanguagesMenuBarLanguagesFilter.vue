@@ -167,6 +167,7 @@ export default {
 				DomHelper.reframeToElement( this.$data.toReframe, this.$data.documentBody )
 				DomHelper.reframeToElement( this.$data.reAdjust[0], this.$data.documentBody )
 				this.$data.lastWidth = window.innerWidth
+				this.$forceUpdate()
 			}
 		}
 	}

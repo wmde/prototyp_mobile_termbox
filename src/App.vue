@@ -117,6 +117,7 @@ export default {
 				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 )
 				this.$data.documentBody.style.margin = 'auto'
 				this.$data.lastWidth = window.innerWidth
+				this.$forceUpdate()
 			}
 		},
 		getClientLanguages: function () {
