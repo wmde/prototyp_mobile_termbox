@@ -11,6 +11,14 @@ class DomHelper {
 		return Element.offsetWidth - PaddingX;
 	}
 
+	static computeHeight( Element ) {
+		let PaddingY = parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-top' ).replace( 'px', '' ) );
+		PaddingY += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'padding-bottom' ).replace( 'px', '' ) );
+		PaddingY += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-top-width' ).replace( 'px', '' ) );
+		PaddingY += parseInt( window.getComputedStyle( Element, null ).getPropertyValue( 'border-bottom-width' ).replace( 'px', '' ) );
+		return Element.offsetHeight - PaddingY;
+	}
+
 	static getWindowPositionY() {
 		return window.pageYOffset + window.innerHeight;
 	}
@@ -79,6 +87,35 @@ class DomHelper {
 
 	static removeStyle( Element, Style ) {
 		DomHelper.removeFromAttribute( Element, 'style', Style)
+	}
+
+	static reframe( Element, Factor, Maximum )
+	{
+		let UserScreen
+		if ( Maximum < Factor )
+		{
+			UserScreen = ( Maximum / Factor ) * 100
+			Element.setAttribute( 'style', `width:${ UserScreen }%;` );
+		}
+		else
+		{
+			if ( null !== Element.getAttribute('style' ) )
+			{
+				Element.removeAttribute( 'style' )
+			}
+		}
+	}
+
+	static reframeToElement( Element, Template )
+	{
+		if ( null !== Element.getAttribute('style' ) )
+		{
+			Element.style.width = `width:${ Template.offsetWidth }px`
+		}
+		else
+		{
+			Element.setAttribute( 'style', `width:${ Template.offsetWidth }px;` )
+		}
 	}
 }
 

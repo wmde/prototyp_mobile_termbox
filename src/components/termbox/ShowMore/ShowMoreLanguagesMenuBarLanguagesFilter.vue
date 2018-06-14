@@ -1,5 +1,7 @@
 <script>
 import ObjectHelper from '../../lib/ObjectHelper';
+import { DomHelper } from "../../lib/DomHelpers";
+
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
 	props: {
@@ -7,10 +9,32 @@ export default {
 		menuSwitch: Object
 	},
 	data: function () {
-		return { reset: true, originLanguages: [], lastPosition: 0, include: '', isDiabled: false };
+		return {
+			reframe: '',
+			reframeIntervall: '',
+			reAdjust: '',
+			reset: true,
+			originLanguages: [],
+			lastPosition: 0,
+			include: '',
+			isDiabled: false,
+			lastWidth: 0,
+			documentBody: null,
+			toReframe: null
+		};
 	},
 	mounted: function () {
 		this.$data.reset = true;
+		this.$data.reAdjust = [
+			document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' ),
+			document.getElementById( 'showMoreLanguagesLanguagesFilterMenu' )
+			]
+		this.adjustForm()
+		this.$data.documentBody = document.getElementsByTagName( 'body' )[0]
+		this.$data.toReframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' )
+		this.$data.reframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' )
+		this.$data.reframeIntervall = window.setInterval( this.reframeComponent, 10 )
+
 		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ) );
 		this.$data.lastPosition = window.window.pageYOffset;
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:none;' );
@@ -93,7 +117,7 @@ export default {
 				this.$data.include = ''
 				this.$data.include = Reload
 			}
-
+			this.adjustForm()
 			this.$forceUpdate();
 		},
 		unSelectLanguage: function ( Language ) {
@@ -104,6 +128,8 @@ export default {
 				this.$data.include = ''
 				this.$data.include = Reload
 			}
+
+			this.adjustForm()
 
 			if ( 1 < this.$props.languagesSettings.get( 'otherLanguages' ).length ) {
 				this.$props.languagesSettings.get( 'otherLanguages' ).splice(
@@ -117,6 +143,30 @@ export default {
 			} else {
 				this.$data.isDiabled = true;
 				this.$forceUpdate();
+			}
+		},
+		adjustForm: function()
+		{
+			if( null === this.$data.reAdjust[1].getAttribute('style') )
+			{
+				this.$data.reAdjust[1].setAttribute('style', `margin-top:${
+					( DomHelper.computeHeight( this.$data.reAdjust[0] ) - 50 )
+				}px;`)
+			}
+			else
+			{
+				this.$data.reAdjust[1].style.marginTop = `${
+					( DomHelper.computeHeight( this.$data.reAdjust[0] ) - 50 )
+					}px;`
+			}
+		},
+		reframeComponent: function()
+		{
+			if( this.$data.lastWidth !== window.innerWidth )
+			{
+				DomHelper.reframeToElement( this.$data.toReframe, this.$data.documentBody )
+				DomHelper.reframeToElement( this.$data.reAdjust[0], this.$data.documentBody )
+				this.$data.lastWidth = window.innerWidth
 			}
 		}
 	}
@@ -181,7 +231,6 @@ export default {
 	position: absolute;
 	top: 0;
 	overflow-x: hidden;
-	width: 100%;
 	height: 100%;
 	background-color: #eaecf0;
 }
@@ -198,7 +247,6 @@ export default {
 #showMoreLanguagesLanguagesFilterFixedTop
 {
 	position: fixed;
-	width: 100%;
 	z-index:3;
 }
 
@@ -249,10 +297,6 @@ export default {
 	color: #7a7e84;
 	padding-top: 25px;
 }
-
-input:focus {
-   outline:none;
- }
 
 #showMoreLanguagesLanguagesSelection > div > div {
 	padding: 0.8em;

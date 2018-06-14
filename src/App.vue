@@ -7,6 +7,7 @@ import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
 import PatricaTrie from './components/lib/Patrica';
+import {DomHelper} from "./components/lib/DomHelpers";
 
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
@@ -70,7 +71,8 @@ export default {
 		}
 
 		CurrentTerm.Wrapper = wrapTerm;
-		CurrentTerm.loadTerm( {
+		CurrentTerm.loadTerm( './components/data/Q64_data.json' )
+		/*CurrentTerm.loadTerm( {
 			baseURL: `${window.location.origin }/wikidata`,
 			url: '/w/api.php',
 			params: {
@@ -91,7 +93,7 @@ export default {
 					return data.entities[ name ];
 				}
 			} ]
-		} );
+		} );*/
 
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
@@ -99,7 +101,9 @@ export default {
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
 	mounted: function () {
+		this.$data.documentBody = document.getElementsByTagName( 'body' )[0]
 		this.$data.reframeIntervall = window.setInterval(this.reframe, 10)
+
 		if ( false === this.$data.termLoaded ) {
 			this.getClientLanguages();
 			setTimeout( this.refreshOnLoaded, 10 );
@@ -108,20 +112,11 @@ export default {
 	methods: {
 		reframe: function()
 		{
-			let UserScreen
-			if(this.$data.lastWidth !== window.innerWidth) {
-				if (800 < window.innerWidth) {
-					UserScreen = ( 800 / window.innerWidth ) * 100
-					document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `width:${ UserScreen }%; margin:auto;` );
-					//document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', 'width:800px; margin:auto;' );
-				}
-				else {
-					if (null !== document.getElementsByTagName( 'body' )[ 0 ].style) {
-						document.getElementsByTagName( 'body' )[ 0 ].removeAttribute( 'style' )
-					}
-					// dirty body overflow fix
-					//document.getElementsByTagName( 'body' )[ 0 ].setAttribute( 'style', `width:${window.innerWidth}px` );
-				}
+			if( this.$data.lastWidth !== window.innerWidth )
+			{
+				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 )
+				this.$data.documentBody.style.margin = 'auto'
+				this.$data.lastWidth = window.innerWidth
 			}
 		},
 		getClientLanguages: function () {
@@ -243,7 +238,8 @@ export default {
 			defaultLanguage: null,
 			languages: [],
 			reframeIntervall: null,
-			lastWidth: ''
+			lastWidth: 0,
+			documentBody: null
 		};
 	},
 	computed: {
@@ -299,5 +295,11 @@ export default {
         margin-bottom: 0px;
         font-family: 'Linux Libertine','Georgia','Times',serif !important;
     }
+
+	input:focus
+	{
+		outline:none;
+	}
+
 
 </style>

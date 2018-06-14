@@ -2,7 +2,6 @@ import Axios from 'axios';
 import Path from 'path';
 import ObjectHelper from './components/lib/ObjectHelper';
 import { ValueErrorException, TypeErrorException } from './components/lib/BaseExceptions';
-// import 'whatwg-fetch'
 
 class Utils {
 	static async _evaluateRequest( Response, ResponseError, Hook ) {
