@@ -63,6 +63,11 @@ export default {
     width: 100%;
 }
 
+#showMoreLanguagesMenuSwitch
+{
+    overflow-y: hidden;
+}
+
 button.showMoreLanguagesMenuLanguageFilterActivator
 {
     display: inline;
