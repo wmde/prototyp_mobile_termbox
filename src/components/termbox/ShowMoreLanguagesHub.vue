@@ -2,14 +2,7 @@
 import MoreLanguagesBox from './ShowMore/ShowMoreLanguagesContentBox';
 import ConfigurationBox from './ShowMore/ShowMoreLanguagesMenuSwitch';
 import SharedStore from '../lib/SharedStore';
-import Utils from '../../Utils';
-import StringHelper from '../lib/StringHelper';
-import { TypeErrorException } from '../lib/BaseExceptions';
-import { DomHelper, DomEffects } from '../lib/DomHelpers'
-
-const ErrorMessages = {
-	INVALID_ELEMENT_CLASS: 'Expected non empty string as parameter got {}.'
-};
+import { DomHelper, DomEffects } from '../lib/DomHelpers';
 
 export default{
 	name: 'ShowMoreLanguagesHub',
@@ -46,12 +39,12 @@ export default{
 				this.$data.VisibilityCheckerNodes,
 				null,
 				[ 'keepOnTheTop' ]
-			)
+			);
 		},
 		showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
-			if ('inline' === More.style.display) {
+			if ( 'inline' === More.style.display ) {
 				this.$data.MoreImage.style.display = 'inline';
 				More.style.display = 'none';
 				this.goBackToStartPositionTroggleField();
@@ -63,17 +56,17 @@ export default{
 		},
 		keepButtonFieldVisible() { // it become a watchdog...I should rename it
 
-			if ('none' === this.$data.MoreImage.style.display) {
-				this.$data.DomEffects.sticky()
+			if ( 'none' === this.$data.MoreImage.style.display ) {
+				this.$data.DomEffects.sticky();
 			}
 		},
 		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
 			this.$data.TroggelField.removeAttribute( 'class' );
-			if (0 !== window.pageYOffset) {
+			if ( 0 !== window.pageYOffset ) {
 				Scroll = DomEffects.scrollToMinusY( 0, this.scrollHook );
 				Shrink = DomEffects.shrink( this.$data.ContentBox, 0, window.innerWidth );
-				if (false === Scroll || false === Shrink) {
+				if ( false === Scroll || false === Shrink ) {
 					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
 				} else {
 					clearTimeout( this.$data.Repositioning );
@@ -88,8 +81,7 @@ export default{
 				this.$data.ContentBox.removeAttribute( 'style' );
 			}
 		},
-		scrollHook()
-		{
+		scrollHook() {
 			this.$data.TroggelField.removeAttribute( 'class' );
 		}
 	},

@@ -1,5 +1,4 @@
-import Utils from '../../Utils'
-import { TypeErrorException } from './BaseExceptions'
+import Utils from '../../Utils';
 
 class DomHelper {
 
@@ -55,16 +54,14 @@ class DomHelper {
 			AttributeValue = Attribute.replace( AttributeValue, '' ).trim();
 			if ( 0 === AttributeValue.length ) {
 				Element.removeAttribute( AttributeLabel );
-			}
-			else {
+			} else {
 				Element.setAttribute( AttributeLabel, AttributeValue );
 			}
 
 		}
 	}
 
-	static addAttribute( Element, AttributeLabel, AttributeValue )
-	{
+	static addAttribute( Element, AttributeLabel, AttributeValue ) {
 		const Attribute = Element.getAttribute( AttributeLabel );
 
 		if ( true !== Utils.isEmpty( Attribute ) ) {
@@ -75,47 +72,38 @@ class DomHelper {
 	}
 
 	static addClass( Element, ElementClass ) {
-		DomHelper.addAttribute( Element, 'class', ElementClass)
+		DomHelper.addAttribute( Element, 'class', ElementClass );
 	}
 
 	static removeClass( Element, ElementClass ) {
-		DomHelper.removeFromAttribute(Element, 'class', ElementClass)
+		DomHelper.removeFromAttribute( Element, 'class', ElementClass );
 	}
 
 	static addStyle( Element, Style ) {
-		DomHelper.addAttribute( Element, 'style', Style)
+		DomHelper.addAttribute( Element, 'style', Style );
 	}
 
 	static removeStyle( Element, Style ) {
-		DomHelper.removeFromAttribute( Element, 'style', Style)
+		DomHelper.removeFromAttribute( Element, 'style', Style );
 	}
 
-	static reframe( Element, Factor, Maximum )
-	{
-		let UserScreen
-		if ( Maximum < Factor )
-		{
-			UserScreen = ( Maximum / Factor ) * 100
+	static reframe( Element, Factor, Maximum ) {
+		let UserScreen;
+		if ( Maximum < Factor ) {
+			UserScreen = ( Maximum / Factor ) * 100;
 			Element.setAttribute( 'style', `width:${ UserScreen }%;` );
-		}
-		else
-		{
-			if ( null !== Element.getAttribute('style' ) )
-			{
-				Element.removeAttribute( 'style' )
+		} else {
+			if ( null !== Element.getAttribute( 'style' ) ) {
+				Element.removeAttribute( 'style' );
 			}
 		}
 	}
 
-	static reframeToElement( Element, Template )
-	{
-		if ( null !== Element.getAttribute('style' ) )
-		{
-			DomHelper.addStyle( Element, `width:${ Template.offsetWidth }px;` )
-		}
-		else
-		{
-			Element.setAttribute( 'style', `width:${ Template.offsetWidth }px;` )
+	static reframeToElement( Element, Template ) {
+		if ( null !== Element.getAttribute( 'style' ) ) {
+			DomHelper.addStyle( Element, `width:${ Template.offsetWidth }px;` );
+		} else {
+			Element.setAttribute( 'style', `width:${ Template.offsetWidth }px;` );
 		}
 	}
 }
@@ -125,18 +113,17 @@ class DomEffectsStatics {
 	static scrollToMinusY( To, Hook ) {
 		let ScrollTo;
 		if ( To < window.pageYOffset ) {
-			if ( To-1 < window.pageYOffset ) {
-				ScrollTo = window.pageYOffset >> 1
-				if( To > ScrollTo ) {
+			if ( To - 1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset >> 1;
+				if ( To > ScrollTo ) {
 					window.scrollTo( 0, ScrollTo - 1 );
-				}
-				else {
-					window.scrollTo( 0, ScrollTo )
+				} else {
+					window.scrollTo( 0, ScrollTo );
 				}
 				return false;
 			} else {
-				if( false === Utils.isEmpty(Hook) ) {
-					Hook()
+				if ( false === Utils.isEmpty( Hook ) ) {
+					Hook();
 				}
 				window.scrollTo( 0, To );
 				return true;
@@ -149,18 +136,17 @@ class DomEffectsStatics {
 	static scrollToPlusY( To, Hook ) {
 		let ScrollTo;
 		if ( To > window.pageYOffset ) {
-			if ( To+1 < window.pageYOffset ) {
-				ScrollTo = window.pageYOffset << 1
-				if( To < ScrollTo ) {
+			if ( To + 1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset << 1;
+				if ( To < ScrollTo ) {
 					window.scrollTo( 0, ScrollTo + 1 );
-				}
-				else {
-					window.scrollTo( 0, ScrollTo )
+				} else {
+					window.scrollTo( 0, ScrollTo );
 				}
 				return false;
 			} else {
-				if( false === Utils.isEmpty(Hook) ) {
-					Hook()
+				if ( false === Utils.isEmpty( Hook ) ) {
+					Hook();
 				}
 				window.scrollTo( 0, To );
 				return true;
@@ -173,35 +159,33 @@ class DomEffectsStatics {
 	static scrollToY( To, Hook ) {
 		let ScrollTo;
 		if ( To > window.pageYOffset ) {
-			if ( To+1 < window.pageYOffset ) {
-				ScrollTo = window.pageYOffset << 1
-				if( To < ScrollTo ) {
+			if ( To + 1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset << 1;
+				if ( To < ScrollTo ) {
 					window.scrollTo( 0, ScrollTo + 1 );
-				}
-				else {
-					window.scrollTo( 0, ScrollTo )
+				} else {
+					window.scrollTo( 0, ScrollTo );
 				}
 				return false;
 			} else {
-				if( false === Utils.isEmpty(Hook) ) {
-					Hook()
+				if ( false === Utils.isEmpty( Hook ) ) {
+					Hook();
 				}
 				window.scrollTo( 0, To );
 				return true;
 			}
 		} else if ( To < window.pageYOffset ) {
-			if ( To-1 < window.pageYOffset ) {
-				ScrollTo = window.pageYOffset >> 1
-				if( To > ScrollTo ) {
+			if ( To - 1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset >> 1;
+				if ( To > ScrollTo ) {
 					window.scrollTo( 0, ScrollTo - 1 );
-				}
-				else {
-					window.scrollTo( 0, ScrollTo )
+				} else {
+					window.scrollTo( 0, ScrollTo );
 				}
 				return false;
 			} else {
-				if( false === Utils.isEmpty(Hook) ) {
-					Hook()
+				if ( false === Utils.isEmpty( Hook ) ) {
+					Hook();
 				}
 				window.scrollTo( 0, To );
 				return true;
@@ -212,7 +196,7 @@ class DomEffectsStatics {
 	}
 
 	static shrink( Element, To, Maximum ) {
-		var Start, Halfed
+		let Start, Halfed;
 		if ( 0 < Element.offsetHeight ) {
 			if ( Maximum <= Element.offsetHeight ) {
 				if ( 1 & Maximum ) {
@@ -220,26 +204,19 @@ class DomEffectsStatics {
 				} else {
 					Start = Maximum;
 				}
-			}
-			else
-			{
-				Start = Element.offsetHeight
+			} else {
+				Start = Element.offsetHeight;
 			}
 
 			if ( To < Start ) {
-				Halfed = Start >> 1
-				if( Halfed < To)
-				{
+				Halfed = Start >> 1;
+				if ( Halfed < To ) {
 					DomHelper.addStyle( Element, `height:${ Start - 1 }px; overflow:hidden;` );
-				}
-				else
-				{
+				} else {
 					DomHelper.addStyle( Element, `height:${ Halfed }px; overflow:hidden;` );
 				}
 				return false;
-			}
-			else
-			{
+			} else {
 				return true;
 			}
 		} else {
@@ -260,87 +237,71 @@ class DomEffects extends DomEffectsStatics {
 	__LastComputedElementWidth;
 	__LastComputedElementTop;
 
-	constructor( Element, VisibilityRangeElements, Root=null, AuxilaryClasses = [] )
-	{
-		super()
-		this.setField( Element, VisibilityRangeElements, Root, AuxilaryClasses )
+	constructor( Element, VisibilityRangeElements, Root = null, AuxilaryClasses = [] ) {
+		super();
+		this.setField( Element, VisibilityRangeElements, Root, AuxilaryClasses );
 		this.__ResetClasses = '';
-		this.__ResetStyle = ''
+		this.__ResetStyle = '';
 	}
 
-	setResetStyle( Style )
-	{
-		this.__ResetStyle = Style.join('; ')
+	setResetStyle( Style ) {
+		this.__ResetStyle = Style.join( '; ' );
 	}
 
-	setResetClasses( Classes )
-	{
-		this.__ResetClasses = Classes.join(' ')
+	setResetClasses( Classes ) {
+		this.__ResetClasses = Classes.join( ' ' );
 	}
 
-	setField( Element, VisibilityRangeElements, Root=null, AuxilaryClasses = [] )
-	{
-		this.__Element = Element
-		this.__VisibilityRangeElements = VisibilityRangeElements
-		this.__RootElement = Root
-		this.__getCurrentWidth()
-		this.__AuxilaryClasses = ''
-		if( 0 < AuxilaryClasses.length )
-		{
-			this.__AuxilaryClasses = AuxilaryClasses.join(' ')
+	setField( Element, VisibilityRangeElements, Root = null, AuxilaryClasses = [] ) {
+		this.__Element = Element;
+		this.__VisibilityRangeElements = VisibilityRangeElements;
+		this.__RootElement = Root;
+		this.__getCurrentWidth();
+		this.__AuxilaryClasses = '';
+		if ( 0 < AuxilaryClasses.length ) {
+			this.__AuxilaryClasses = AuxilaryClasses.join( ' ' );
 		}
 	}
 
-	__getCurrentWidth()
-	{
-		if( true === Utils.isEmpty( this.__RootElement ) ) {
+	__getCurrentWidth() {
+		if ( true === Utils.isEmpty( this.__RootElement ) ) {
 			this.__RootWidth = window.innerWidth;
-		}
-		else {
+		} else {
 			this.__RootWidth = DomHelper.computeWidth( this.__RootElement );
 		}
 		this.__ElementWidth = DomHelper.computeWidth( this.__Element );
 	}
 
-	__removeStyleAndClass()
-	{
-		if( 0 < this.__ResetStyle )
-		{
-			this.__Element.setAttribute( 'style', this.__ResetStyle )
-		}
-		else
-		{
-			this.__Element.removeAttribute('style')
+	__removeStyleAndClass() {
+		if ( 0 < this.__ResetStyle ) {
+			this.__Element.setAttribute( 'style', this.__ResetStyle );
+		} else {
+			this.__Element.removeAttribute( 'style' );
 		}
 
-		if( 0 < this.__ResetClasses.length ) {
-			this.__Element.setAttribute( 'class', this.__ResetClasses )
-		}
-		else
-		{
-			this.__Element.removeAttribute('class')
+		if ( 0 < this.__ResetClasses.length ) {
+			this.__Element.setAttribute( 'class', this.__ResetClasses );
+		} else {
+			this.__Element.removeAttribute( 'class' );
 		}
 	}
 
 	sticky() {
-		var CurrentRootElementWidth;
+		let CurrentRootElementWidth;
 		const VisibilityChecker = [
 			DomHelper.getPositionY( this.__VisibilityRangeElements[ 0 ] ),
 			DomHelper.getPositionY( this.__VisibilityRangeElements[ 1 ] )
 		];
 
-		if( true === Utils.isEmpty( this.__RootElement ))
-		{
-			CurrentRootElementWidth = window.innerWidth
-		}
-		else
-		{
+		if ( true === Utils.isEmpty( this.__RootElement ) ) {
+			CurrentRootElementWidth = window.innerWidth;
+		} else {
 			CurrentRootElementWidth = DomHelper.computeWidth( this.__RootElement );
 		}
 
 		if ( CurrentRootElementWidth !== this.__RootWidth ) {
-			this.__removeStyleAndClass()
-			this.__getCurrentWidth()
+			this.__removeStyleAndClass();
+			this.__getCurrentWidth();
 		}
 
 		if (
@@ -348,11 +309,10 @@ class DomEffects extends DomEffectsStatics {
 			true === DomHelper.isElementInVertical( this.__VisibilityRangeElements[ 1 ] )
 		) {
 			if ( window.pageYOffset > VisibilityChecker[ 0 ] ) {
-				if( 0 < this.__AuxilaryClasses.length )
-				{
-					this.__Element.setAttribute( 'class', this.__AuxilaryClasses )
+				if ( 0 < this.__AuxilaryClasses.length ) {
+					this.__Element.setAttribute( 'class', this.__AuxilaryClasses );
 				}
-				this.__LastComputedElementWidth = `width:${ this.__ElementWidth }px;`
+				this.__LastComputedElementWidth = `width:${ this.__ElementWidth }px;`;
 				this.__LastComputedElementTop = `top:${ window.pageYOffset }px;`;
 				this.__Element.setAttribute(
 					'style',
@@ -360,7 +320,7 @@ class DomEffects extends DomEffectsStatics {
 				);
 
 			} else {
-				this.__removeStyleAndClass()
+				this.__removeStyleAndClass();
 			}
 		} else {
 			if (
@@ -369,9 +329,9 @@ class DomEffects extends DomEffectsStatics {
 			) {
 				return;
 			}
-			this.__removeStyleAndClass()
+			this.__removeStyleAndClass();
 		}
 	}
 }
 
-export { DomHelper, DomEffects }
+export { DomHelper, DomEffects };

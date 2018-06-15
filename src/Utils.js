@@ -127,7 +127,7 @@ class Utils {
 			}
 		}
 
-		return -( Start+1 );
+		return -( Start + 1 );
 	}
 
 	static binarySearch( Where, What ) {

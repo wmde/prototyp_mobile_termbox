@@ -7,7 +7,7 @@ import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
 import PatricaTrie from './components/lib/Patrica';
-import {DomHelper} from "./components/lib/DomHelpers";
+import { DomHelper } from './components/lib/DomHelpers';
 
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
@@ -71,7 +71,7 @@ export default {
 		}
 
 		CurrentTerm.Wrapper = wrapTerm;
-		CurrentTerm.loadTerm({
+		CurrentTerm.loadTerm( {
 			baseURL: `${window.location.origin }/wikidata`,
 			url: '/w/api.php',
 			params: {
@@ -85,14 +85,14 @@ export default {
 			headers: {
 				// 'user-agent': 'Wikidata Mobile Term Box Prototype'
 			},
-			transformResponse: [function (data) {
-				data = JSON.parse(data);
-				for (const name in data.entities) {
+			transformResponse: [ function ( data ) {
+				data = JSON.parse( data );
+				for ( const name in data.entities ) {
 					// We only requested a single entity, so get it
-					return data.entities[name];
+					return data.entities[ name ];
 				}
-			}]
-		});
+			} ]
+		} );
 
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
@@ -100,8 +100,8 @@ export default {
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
 	mounted: function () {
-		this.$data.documentBody = document.getElementsByTagName( 'body' )[0]
-		this.$data.reframeIntervall = window.setInterval(this.reframe, 10)
+		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
+		this.$data.reframeIntervall = window.setInterval( this.reframe, 10 );
 
 		if ( false === this.$data.termLoaded ) {
 			this.getClientLanguages();
@@ -109,92 +109,84 @@ export default {
 		}
 	},
 	methods: {
-		reframe: function()
-		{
-			if( this.$data.lastWidth !== window.innerWidth )
-			{
-				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 )
-				if( false === Utils.isEmpty( this.$data.documentBody.getAttribute('style') ) ) {
-					this.$data.documentBody.style.margin = 'auto'
+		reframe: function () {
+			if ( this.$data.lastWidth !== window.innerWidth ) {
+				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 );
+				if ( false === Utils.isEmpty( this.$data.documentBody.getAttribute( 'style' ) ) ) {
+					this.$data.documentBody.style.margin = 'auto';
+				} else {
+					this.$data.documentBody.removeAttribute( 'style' );
 				}
-				else
-				{
-					this.$data.documentBody.removeAttribute('style')
-				}
-				this.$data.lastWidth = window.innerWidth
+				this.$data.lastWidth = window.innerWidth;
 				this.$nextTick( function () {
 					this.$forceUpdate();
 				} );
 			}
 		},
 		getClientLanguages: function () {
-			let Index, Value;// , Index2, ;
+			let Index, Value, Index2;
 			if ( 'undefined' !== typeof window.navigator.language ) {
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
 			}
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
-				var Index2
 				for ( Index in window.navigator.languages ) {
 					Value = window.navigator.languages[ Index ].toLowerCase();// any formatter could putted here
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-					//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+					// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 					if ( 0 > Index2 ) {
 						this.$data.languages.splice(
 							-( Index2 + 1 ),
 							0,
 							Value
 						);
-						//this.$data.languages.push( Value );
+						// this.$data.languages.push( Value );
 					}
 				}
 			}
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
-				var Index2
 				Value = window.navigator.systemLanguage.toLowerCase();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					//this.$data.languages.push( Value );
+					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
-				var Index2
 				Value = window.navigator.browserLanguage.toLowerCase();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					//this.$data.languages.push( Value );
+					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
-				var Index2
 				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					//this.$data.languages.push( Value );
+					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
@@ -220,26 +212,25 @@ export default {
 			return this.$data.defaultLanguage;
 		},
 		getOtherLanguages: function () {
-			/*let Languages = ObjectHelper.copyObj(this.$data.languages)
+			/* let Languages = ObjectHelper.copyObj(this.$data.languages)
 			return Languages.splice(
 				Languages.indexOf(this.$data.defaultLanguage),
 				1
 			);*/
-			return this.$data.languages
+			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
-			let Key = 'en'
+			let Key = 'en';
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
-				if( false === ( Key in CurrentTerm.Term ) )
-				{
-					Key = Object.keys( CurrentTerm.Term )[0]
+				if ( false === ( Key in CurrentTerm.Term ) ) {
+					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
 				this.$data.languageSettings.multibleSets( [
 					[ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
-					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[Key].languages ) ], // TODO
+					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
-					[ 'possibleLanguages', CurrentTerm.Term[Key].languages ],
+					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
 					[ 'languageNames', CurrentLanguageNames.LanguageNames ]
 				] );
 				/**
@@ -325,6 +316,5 @@ export default {
 	{
 		outline:none;
 	}
-
 
 </style>

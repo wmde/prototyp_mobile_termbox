@@ -14,13 +14,13 @@ export default class CurrentTerm {
 
 	static onLoadTerm( Response, ResponseError ) {
 		if ( 'object' === typeof ResponseError ) {
-			if( 2 === CurrentTerm.__Dept) {
-				throw new RuntimeErrorException(ResponseError);
+			if ( 2 === CurrentTerm.__Dept ) {
+				throw new RuntimeErrorException( ResponseError );
 			}
-			CurrentTerm.__Dept++
+			CurrentTerm.__Dept++;
 			Utils.get( './components/data/Q1332193_data.json', CurrentTerm.onLoadTerm, true );
 			Utils.waitUntil( CurrentTerm.termIsLoaded );
-			return
+			return;
 		}
 
 		// If this was a web request the response objects data is in the data property

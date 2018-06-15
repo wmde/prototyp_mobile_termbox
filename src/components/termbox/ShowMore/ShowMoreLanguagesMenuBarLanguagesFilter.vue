@@ -1,7 +1,7 @@
 <script>
 import ObjectHelper from '../../lib/ObjectHelper';
-import { DomHelper } from "../../lib/DomHelpers";
-import Utils from '../../../Utils'
+import { DomHelper } from '../../lib/DomHelpers';
+import Utils from '../../../Utils';
 
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
@@ -26,19 +26,19 @@ export default {
 		};
 	},
 	mounted: function () {
-		let TopBar = document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' )
+		const TopBar = document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' );
 		this.$data.reset = true;
 		this.$data.reAdjust = [
 			TopBar,
 			document.getElementById( 'showMoreLanguagesLanguagesFilterMenu' ),
 			TopBar.firstChild,
 			TopBar.lastChild
-			]
+		];
 
-		this.$data.documentBody = document.getElementsByTagName( 'body' )[0]
-		this.$data.toReframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' )
-		this.$data.reframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' )
-		this.$data.reframeIntervall = window.setInterval( this.reframeComponent, 10 )
+		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
+		this.$data.toReframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' );
+		this.$data.reframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' );
+		this.$data.reframeIntervall = window.setInterval( this.reframeComponent, 10 );
 
 		this.$data.originLanguages = ObjectHelper.copyObj( this.$props.languagesSettings.get( 'otherLanguages' ) );
 		this.$data.lastPosition = window.window.pageYOffset;
@@ -47,24 +47,23 @@ export default {
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:none;' );
 		document.getElementById( 'termbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
 		document.getElementById( 'statementbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
-		this.$data.searchField = document.getElementById( 'showMoreLanguagesSearchField' )
+		this.$data.searchField = document.getElementById( 'showMoreLanguagesSearchField' );
 
 		window.scrollTo( 0, 0 );
-		this.reframeTop()
+		this.reframeTop();
 	},
-	updated: function() {
-		this.$data.reAdjust[0].removeAttribute('style')
-		this.$data.reAdjust[1].removeAttribute('style')
-		this.reframeTop()
+	updated: function () {
+		this.$data.reAdjust[ 0 ].removeAttribute( 'style' );
+		this.$data.reAdjust[ 1 ].removeAttribute( 'style' );
+		this.reframeTop();
 	},
 	beforeDestroy: function () {
 		let Index;
-		this.$props.languagesSettings.get( 'otherLanguages' ).length = 0
-		for ( Index in this.$data.otherLanguages )
-		{
-			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.otherLanguages[Index] )
+		this.$props.languagesSettings.get( 'otherLanguages' ).length = 0;
+		for ( Index in this.$data.otherLanguages ) {
+			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.otherLanguages[ Index ] );
 		}
-		//this.$props.languagesSettings.set( 'otherLanguages', this.$data.otherLanguages )
+		// this.$props.languagesSettings.set( 'otherLanguages', this.$data.otherLanguages )
 		if ( true === this.$data.reset ) {
 			for ( Index in this.$data.originLanguages ) {
 				if ( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( this.$data.originLanguages[ Index ] ) ) {
@@ -82,11 +81,10 @@ export default {
 	},
 	computed: {
 		getTopLanguages() {
-			if( 0 === this.$data.otherLanguages.length )
-			{
-				this.getOtherLanguages()
+			if ( 0 === this.$data.otherLanguages.length ) {
+				this.getOtherLanguages();
 			}
-			return this.$data.otherLanguages
+			return this.$data.otherLanguages;
 		},
 		getLanguageNames: function () {
 			return this.$props.languagesSettings.get( 'languageNames' );
@@ -95,51 +93,45 @@ export default {
 			return this.pushVisibleLanguages( 'possibleLanguages' );
 		},
 		getCurrentLanguage() {
-			return this.$props.languagesSettings.get('currentLanguage')
+			return this.$props.languagesSettings.get( 'currentLanguage' );
 		}
 	},
 	methods: {
-		showCurrentLanguage: function(){
+		showCurrentLanguage: function () {
 			if ( 0 === this.$data.include.length ) {
-				return this.$props.languagesSettings.get( 'currentLanguage' )
+				return this.$props.languagesSettings.get( 'currentLanguage' );
 			}
 
 			if ( true === this.$props.languagesSettings.get( 'languageNames' )[
-				this.$props.languagesSettings.get( 'currentLanguage' )]
+				this.$props.languagesSettings.get( 'currentLanguage' ) ]
 				.toLowerCase()
 				.startsWith( this.$data.include.toLowerCase() )
-			)
-			{
-				return true
+			) {
+				return true;
 			}
 			return false;
 		},
-		getOtherLanguages: function(){
-			var Index
-			for( Index in this.$props.languagesSettings.get( 'otherLanguages' ) )
-			{
-				if( -1 < Utils.binarySearch(
+		getOtherLanguages: function () {
+			let Index;
+			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) ) {
+				if ( -1 < Utils.binarySearch(
 					this.$props.languagesSettings.get( 'possibleLanguages' ),
-					this.$props.languagesSettings.get( 'otherLanguages' )[Index]
-				) )
-				{
-					this.$data.otherLanguages.push(this.$props.languagesSettings.get( 'otherLanguages' )[Index]);
+					this.$props.languagesSettings.get( 'otherLanguages' )[ Index ]
+				) ) {
+					this.$data.otherLanguages.push( this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] );
 				}
 			}
 		},
-		focusSearchField: function() {
-			this.$data.searchField.focus()
+		focusSearchField: function () {
+			this.$data.searchField.focus();
 		},
 		ignoreLanguage: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) === Language;
 		},
-		isSelected:function( Language ){
-			if( -1 < Utils.binarySearch( this.$data.otherLanguages, Language ) )
-			{
+		isSelected: function ( Language ) {
+			if ( -1 < Utils.binarySearch( this.$data.otherLanguages, Language ) ) {
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		},
@@ -147,37 +139,32 @@ export default {
 			let Index;
 			const Output = [];
 			if ( 0 === this.$data.include.length ) {
-				for (Index in this.$props.languagesSettings.get(Key))
-				{
-					if (this.$props.languagesSettings.get(Key)[Index] in this.$props.languagesSettings.get('languageNames') )
-					{
+				for ( Index in this.$props.languagesSettings.get( Key ) ) {
+					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) ) {
 						Output.push(
 							[
-								this.$props.languagesSettings.get('languageNames')
-									[this.$props.languagesSettings.get(Key)[Index]],
-								this.$props.languagesSettings.get(Key)[Index]
+								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
+								this.$props.languagesSettings.get( Key )[ Index ]
 							]
-						)
+						);
 					}
 				}
-			}
-			else {
-				for (Index in this.$props.languagesSettings.get(Key)) {
-					if (this.$props.languagesSettings.get(Key)[Index] in this.$props.languagesSettings.get('languageNames') &&
-						true === this.$props.languagesSettings.get('languageNames')[this.$props.languagesSettings.get(Key)[Index]].toLowerCase().startsWith(this.$data.include.toLowerCase())
+			} else {
+				for ( Index in this.$props.languagesSettings.get( Key ) ) {
+					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
+						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.include.toLowerCase() )
 					) {
 						Output.push(
 							[
-								this.$props.languagesSettings.get('languageNames')
-									[this.$props.languagesSettings.get(Key)[Index]],
-								this.$props.languagesSettings.get(Key)[Index]
+								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
+								this.$props.languagesSettings.get( Key )[ Index ]
 							]
-						)
+						);
 					}
 				}
 			}
 
-			return Output.sort(function(A, B){ return A[0].localeCompare( B[0] ) });
+			return Output.sort( function ( A, B ) { return A[ 0 ].localeCompare( B[ 0 ] ); } );
 		},
 		close: function () {
 			this.$data.reset = false;
@@ -188,91 +175,77 @@ export default {
 			this.$props.menuSwitch.set( 'switch', 1 );
 		},
 		selectLanguage: function ( Language ) {
-			let Index = Utils.binaryInsertSearch(
+			const Index = Utils.binaryInsertSearch(
 				this.$data.otherLanguages,
 				Language
-			)
-			if( 0 > Index)
-			{
+			);
+			if ( 0 > Index ) {
 				this.$data.otherLanguages.splice(
-					-(Index+1),
+					-( Index + 1 ),
 					0,
 					Language
-				)
+				);
 			}
 
-			this.renderTextInput()
+			this.renderTextInput();
 			this.$forceUpdate();
 		},
 		unSelectLanguage: function ( Language ) {
-			let Index = Utils.binarySearch(
+			const Index = Utils.binarySearch(
 				this.$data.otherLanguages,
 				Language
-			)
-			if( -1 < Index)
-			{
+			);
+			if ( -1 < Index ) {
 				this.$data.otherLanguages.splice(
 					Index,
 					1
-				)
+				);
 			}
 
-			this.renderTextInput()
+			this.renderTextInput();
 			this.$forceUpdate();
 		},
-		renderTextInput: function() {
-			var Reload
-			if( 0 < this.$data.include.length )
-			{
-				Reload = this.$data.include
-				this.$data.include = ''
-				this.$data.include = Reload
+		renderTextInput: function () {
+			let Reload;
+			if ( 0 < this.$data.include.length ) {
+				Reload = this.$data.include;
+				this.$data.include = '';
+				this.$data.include = Reload;
 			}
 		},
-		reframeTop: function()
-		{
+		reframeTop: function () {
 
-			let TopHeight = DomHelper.computeHeight( this.$data.reAdjust[2] )
-				+
-				DomHelper.computeHeight( this.$data.reAdjust[3] )
+			const TopHeight = DomHelper.computeHeight( this.$data.reAdjust[ 2 ] )				+
+				DomHelper.computeHeight( this.$data.reAdjust[ 3 ] );
 
-			if( null === this.$data.reAdjust[0] || null === this.$data.documentBody )
-			{
-				return
+			if ( null === this.$data.reAdjust[ 0 ] || null === this.$data.documentBody ) {
+				return;
 			}
 
-			if( null === this.$data.reAdjust[0].getAttribute('style') )
-			{
-				this.$data.reAdjust[0].setAttribute('style', `height:${ TopHeight }px;`)
-			}
-			else
-			{
-				this.$data.reAdjust[0].style.height = `${ TopHeight }px;`
+			if ( null === this.$data.reAdjust[ 0 ].getAttribute( 'style' ) ) {
+				this.$data.reAdjust[ 0 ].setAttribute( 'style', `height:${ TopHeight }px;` );
+			} else {
+				this.$data.reAdjust[ 0 ].style.height = `${ TopHeight }px;`;
 			}
 
-			if( null === this.$data.reAdjust[1].getAttribute('style') )
-			{
-				this.$data.reAdjust[1].setAttribute('style', `margin-top:${
+			if ( null === this.$data.reAdjust[ 1 ].getAttribute( 'style' ) ) {
+				this.$data.reAdjust[ 1 ].setAttribute( 'style', `margin-top:${
 					( TopHeight + 25 )
-				}px;`)
-			}
-			else
-			{
-				this.$data.reAdjust[1].style.marginTop = `${
+				}px;` );
+			} else {
+				this.$data.reAdjust[ 1 ].style.marginTop = `${
 					( TopHeight + 25 )
-				}px;`
+				}px;`;
 			}
-			DomHelper.reframeToElement( this.$data.reAdjust[0], this.$data.documentBody )
+			DomHelper.reframeToElement( this.$data.reAdjust[ 0 ], this.$data.documentBody );
 		},
-		reframeComponent: function()
-		{
-			if( this.$data.lastWidth !== window.innerWidth )
-			{
-				DomHelper.reframeToElement( this.$data.toReframe, this.$data.documentBody )
-				this.$data.reAdjust[0].removeAttribute('style')
-				this.reframeTop()
-				this.$data.lastWidth = window.innerWidth
-				this.$forceUpdate()
+		reframeComponent: function () {
+			if ( this.$data.lastWidth !== window.innerWidth ) {
+				DomHelper.reframeToElement( this.$data.toReframe, this.$data.documentBody );
+				this.$data.reAdjust[ 0 ].removeAttribute( 'style' );
+				this.reframeTop();
+				this.$data.lastWidth = window.innerWidth;
+				this.$forceUpdate();
 			}
 		}
 	}
@@ -298,7 +271,7 @@ export default {
 		</div>
 		<form id="showMoreLanguagesLanguagesFilterMenu">
 			<div @click="focusSearchField()"
-				 id="showMoreLanguagesSearchBar">
+				id="showMoreLanguagesSearchBar">
 				<div @click="focusSearchField()">
 					<input id="showMoreLanguagesSearchField" type="text" v-model="include" placeholder="Find language"/>
 				</div>
@@ -311,18 +284,18 @@ export default {
 						<label>{{getLanguageNames[getCurrentLanguage]}}</label>
 					</div>
 				</div>
-				<!-- just stupido you are forced to do that //--><div v-bind:key="index"
-					 v-for="(language, index) in getLanguages"
-					 >
+				<!-- just stupido you are forced to do that //-->
+				<div v-bind:key="index"
+					v-for="(language, index) in getLanguages">
 					<div v-if="false === ignoreLanguage(language[1]) && false === isSelected(language[1])"
-						 @click="selectLanguage(language[1])"
-						 class="showMoreLanguagesLanguagesInActiveLanguage">
+						@click="selectLanguage(language[1])"
+						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
 						<label>{{language[0]}}</label>
 					</div>
 					<div v-else-if="false === ignoreLanguage(language[1]) && true === isSelected(language[1])"
-						 @click="unSelectLanguage(language[1])"
-						 class="showMoreLanguagesLanguagesActiveLanguage">
+						@click="unSelectLanguage(language[1])"
+						class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
 						<label>{{language[0]}}</label>
 					</div>
