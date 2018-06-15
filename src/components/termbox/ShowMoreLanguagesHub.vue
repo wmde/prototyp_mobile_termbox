@@ -117,7 +117,7 @@ export default{
             <div id="showMoreLanguagesContent">
                 <MoreLanguagesBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
-            <div id="showMoreLanguagesMenuBar">
+            <div id="showMoreLanguagesMenuBar" style="height:55px;">
                 <ConfigurationBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
         </div>
@@ -129,7 +129,7 @@ export default{
 #showMoreLanguagesMenuBar
 {
 	max-width: 100vw;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 #showMoreLanguagesHub
 {

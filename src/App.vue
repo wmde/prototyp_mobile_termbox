@@ -71,8 +71,7 @@ export default {
 		}
 
 		CurrentTerm.Wrapper = wrapTerm;
-		CurrentTerm.loadTerm( './components/data/Q64_data.json' )
-		/*CurrentTerm.loadTerm( {
+		CurrentTerm.loadTerm({
 			baseURL: `${window.location.origin }/wikidata`,
 			url: '/w/api.php',
 			params: {
@@ -86,14 +85,14 @@ export default {
 			headers: {
 				// 'user-agent': 'Wikidata Mobile Term Box Prototype'
 			},
-			transformResponse: [ function ( data ) {
-				data = JSON.parse( data );
-				for ( const name in data.entities ) {
+			transformResponse: [function (data) {
+				data = JSON.parse(data);
+				for (const name in data.entities) {
 					// We only requested a single entity, so get it
-					return data.entities[ name ];
+					return data.entities[name];
 				}
-			} ]
-		} );*/
+			}]
+		});
 
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
@@ -117,7 +116,9 @@ export default {
 				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 )
 				this.$data.documentBody.style.margin = 'auto'
 				this.$data.lastWidth = window.innerWidth
-				this.$forceUpdate()
+				this.$nextTick( function () {
+					this.$forceUpdate();
+				} );
 			}
 		},
 		getClientLanguages: function () {
@@ -209,13 +210,18 @@ export default {
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
+			let Key = 'en'
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
+				if( false === ( Key in CurrentTerm.Term ) )
+				{
+					Key = Object.keys( CurrentTerm.Term )[0]
+				}
 				this.$data.languageSettings.multibleSets( [
 					[ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
-					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term.en.languages ) ], // TODO
+					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[Key].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
-					[ 'possibleLanguages', CurrentTerm.Term.en.languages ],
+					[ 'possibleLanguages', CurrentTerm.Term[Key].languages ],
 					[ 'languageNames', CurrentLanguageNames.LanguageNames ]
 				] );
 				/**

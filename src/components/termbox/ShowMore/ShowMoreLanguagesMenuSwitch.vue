@@ -51,6 +51,7 @@ export default {
 </template>
 
 <style>
+
 .showMoreLanguagesMenuFilter
 {
     height: 50px;
