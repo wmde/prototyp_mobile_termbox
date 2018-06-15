@@ -1,5 +1,4 @@
 <script>
-console.log(SarfariFix);
 export default{
 	name: 'contentBox',
 	props: {
