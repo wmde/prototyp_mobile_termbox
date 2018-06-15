@@ -30,8 +30,10 @@ export default class CurrentTerm {
 
 		if ( 'function' !== typeof CurrentTerm.Wrapper ) {
 			CurrentTerm.Term = Response;
+            SarfariFix = Response;
 		} else {
 			CurrentTerm.Term = CurrentTerm.Wrapper( Response );
+            SarfariFix = CurrentTerm.Wrapper( Response );
 		}
 	}
 

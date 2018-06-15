@@ -223,6 +223,7 @@ export default {
 			let Key = 'en';
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
                 console.log( CurrentTerm.Term )
+                console.log( SarfariFix )
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
