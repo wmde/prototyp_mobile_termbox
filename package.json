@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
-    "vue": "^2.5.2",
+    "vue": "^2.5.16",
     "vue-i18n": "^7.7.0",
     "whatwg-fetch": "^2.0.4"
   },
