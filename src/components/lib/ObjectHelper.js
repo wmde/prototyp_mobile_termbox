@@ -82,6 +82,12 @@ class ObjectHelper {
 
 		return MergedObject;
 	}
+
+	static unique( array ) {
+		return array.filter( function ( Element, Position, InnerArray ) {
+			return InnerArray.indexOf( Element ) === Position;
+		} );
+	}
 }
 
 export default ObjectHelper;

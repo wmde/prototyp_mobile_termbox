@@ -135,59 +135,66 @@ export default {
 			}
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
-
+				var Index2
 				for ( Index in window.navigator.languages ) {
 					Value = window.navigator.languages[ Index ].toLowerCase();// any formatter could putted here
-					// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-					if ( 0 > this.$data.languages.indexOf( Value ) ) {
-						/* this.$data.languages.splice(
+					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+					//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+					if ( 0 > Index2 ) {
+						this.$data.languages.splice(
 							-( Index2 + 1 ),
 							0,
 							Value
-						);*/
-						this.$data.languages.push( Value );
+						);
+						//this.$data.languages.push( Value );
 					}
 				}
 			}
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
+				var Index2
 				Value = window.navigator.systemLanguage.toLowerCase();// any formatter could putted here
-				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > this.$data.languages.indexOf( Value ) ) {
-					/* this.$data.languages.splice(
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
-					);*/
-					this.$data.languages.push( Value );
+					);
+					//this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
+				var Index2
 				Value = window.navigator.browserLanguage.toLowerCase();// any formatter could putted here
-				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > this.$data.languages.indexOf( Value ) ) {
-					/* this.$data.languages.splice(
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
-					);*/
-					this.$data.languages.push( Value );
+					);
+					//this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
+				var Index2
 				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
-				// Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > this.$data.languages.indexOf( Value ) ) {
-					/* this.$data.languages.splice(
+				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
+				//if ( 0 > this.$data.languages.indexOf( Value ) ) {
+				if ( 0 > Index2 ) {
+					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
-					);*/
-					this.$data.languages.push( Value );
+					);
+					//this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
@@ -213,7 +220,12 @@ export default {
 			return this.$data.defaultLanguage;
 		},
 		getOtherLanguages: function () {
-			return this.$data.languages;
+			/*let Languages = ObjectHelper.copyObj(this.$data.languages)
+			return Languages.splice(
+				Languages.indexOf(this.$data.defaultLanguage),
+				1
+			);*/
+			return this.$data.languages
 		},
 		refreshOnLoaded: function () {
 			let Key = 'en'

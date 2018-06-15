@@ -63,7 +63,8 @@ class DomHelper {
 		}
 	}
 
-	static addAttribute( Element, AttributeLabel, AttributeValue ) {
+	static addAttribute( Element, AttributeLabel, AttributeValue )
+	{
 		const Attribute = Element.getAttribute( AttributeLabel );
 
 		if ( true !== Utils.isEmpty( Attribute ) ) {
@@ -82,7 +83,7 @@ class DomHelper {
 	}
 
 	static addStyle( Element, Style ) {
-		DomHelper.addAttribute( Element, 'Style', Style)
+		DomHelper.addAttribute( Element, 'style', Style)
 	}
 
 	static removeStyle( Element, Style ) {
@@ -110,7 +111,7 @@ class DomHelper {
 	{
 		if ( null !== Element.getAttribute('style' ) )
 		{
-			Element.style.width = `width:${ Template.offsetWidth }px`
+			DomHelper.addStyle( Element, `width:${ Template.offsetWidth }px;` )
 		}
 		else
 		{
