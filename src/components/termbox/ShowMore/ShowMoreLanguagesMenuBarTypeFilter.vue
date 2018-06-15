@@ -135,7 +135,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
 #showMoreLanguagesTypeFilterMenu
 {
     background-color: #eaecf0;
-    border-bottom: 5px solid #a2a9b1;
+    border-bottom: 2px solid #a2a9b1;
     padding: 0px 0px 0px 0px;
     position: relative;
 }
