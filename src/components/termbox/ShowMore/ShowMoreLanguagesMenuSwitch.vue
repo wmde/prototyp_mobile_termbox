@@ -65,7 +65,7 @@ export default {
 
 #showMoreLanguagesMenuSwitch
 {
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 button.showMoreLanguagesMenuLanguageFilterActivator

@@ -121,7 +121,7 @@ export default{
 #showMoreLanguagesMenuBar
 {
 	max-width: 100vw;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 #showMoreLanguagesHub
 {
