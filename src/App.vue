@@ -222,7 +222,7 @@ export default {
 		refreshOnLoaded: function () {
 			let Key = 'en';
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
-                console.log( CurrentTerm )
+                console.log( CurrentTerm.Term )
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
