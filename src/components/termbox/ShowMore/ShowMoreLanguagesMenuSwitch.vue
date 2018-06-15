@@ -51,6 +51,7 @@ export default {
 </template>
 
 <style>
+
 .showMoreLanguagesMenuFilter
 {
     height: 50px;
@@ -60,6 +61,11 @@ export default {
     border-bottom-color: #a2a9b1;
     border-bottom-style: solid;
     width: 100%;
+}
+
+#showMoreLanguagesMenuSwitch
+{
+    overflow: hidden;
 }
 
 button.showMoreLanguagesMenuLanguageFilterActivator

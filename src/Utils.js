@@ -130,10 +130,28 @@ class Utils {
 		return -( Start + 1 );
 	}
 
-	static unique( array ) {
-		return array.filter( function ( Element, Position, InnerArray ) {
-			return InnerArray.indexOf( Element ) === Position;
-		} );
+	static binarySearch( Where, What ) {
+		let Start, Mid, End;
+
+		if ( true === Utils.isEmpty( Where ) ) {
+			return -1;
+		}
+
+		Start = 0;
+		End = Where.length - 1;
+
+		while ( Start <= End ) {
+			Mid = ( ( Start + End ) >> 1 );
+			if ( What > Where[ Mid ] ) {
+				Start = Mid + 1;
+			} else if ( What < Where[ Mid ] ) {
+				End = Mid - 1;
+			} else {
+				return Mid;
+			}
+		}
+
+		return -1;
 	}
 }
 
