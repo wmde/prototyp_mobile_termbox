@@ -71,7 +71,7 @@ export default{
 			let Scroll, Shrink;
 			this.$data.TroggelField.removeAttribute( 'class' );
 			if (0 !== window.pageYOffset) {
-				Scroll = DomEffects.scrollToY( 0, this.scrollHook );
+				Scroll = DomEffects.scrollToMinusY( 0, this.scrollHook );
 				Shrink = DomEffects.shrink( this.$data.ContentBox, 0, window.innerWidth );
 				if (false === Scroll || false === Shrink) {
 					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
@@ -117,7 +117,7 @@ export default{
             <div id="showMoreLanguagesContent">
                 <MoreLanguagesBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
-            <div id="showMoreLanguagesMenuBar" style="height:55px;">
+            <div id="showMoreLanguagesMenuBar" style="height:54px;">
                 <ConfigurationBox :languagesSettings="getLanguagesSettings" :directives="getDirectives" />
             </div>
         </div>

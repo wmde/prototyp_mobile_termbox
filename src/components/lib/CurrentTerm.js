@@ -13,7 +13,6 @@ export default class CurrentTerm {
 	}
 
 	static onLoadTerm( Response, ResponseError ) {
-		console.log(Response)
 		if ( 'object' === typeof ResponseError ) {
 			if( 2 === CurrentTerm.__Dept) {
 				throw new RuntimeErrorException(ResponseError);

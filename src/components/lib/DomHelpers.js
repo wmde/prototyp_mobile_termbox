@@ -121,7 +121,7 @@ class DomHelper {
 
 class DomEffectsStatics {
 
-	static scrollToY( To, Hook ) {
+	static scrollToMinusY( To, Hook ) {
 		let ScrollTo;
 		if ( To < window.pageYOffset ) {
 			if ( To-1 < window.pageYOffset ) {
@@ -134,8 +134,75 @@ class DomEffectsStatics {
 				}
 				return false;
 			} else {
-				Hook()
-				window.scrollTo( 0, 0 );
+				if( false === Utils.isEmpty(Hook) ) {
+					Hook()
+				}
+				window.scrollTo( 0, To );
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	static scrollToPlusY( To, Hook ) {
+		let ScrollTo;
+		if ( To > window.pageYOffset ) {
+			if ( To+1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset << 1
+				if( To < ScrollTo ) {
+					window.scrollTo( 0, ScrollTo + 1 );
+				}
+				else {
+					window.scrollTo( 0, ScrollTo )
+				}
+				return false;
+			} else {
+				if( false === Utils.isEmpty(Hook) ) {
+					Hook()
+				}
+				window.scrollTo( 0, To );
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	static scrollToY( To, Hook ) {
+		let ScrollTo;
+		if ( To > window.pageYOffset ) {
+			if ( To+1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset << 1
+				if( To < ScrollTo ) {
+					window.scrollTo( 0, ScrollTo + 1 );
+				}
+				else {
+					window.scrollTo( 0, ScrollTo )
+				}
+				return false;
+			} else {
+				if( false === Utils.isEmpty(Hook) ) {
+					Hook()
+				}
+				window.scrollTo( 0, To );
+				return true;
+			}
+		} else if ( To < window.pageYOffset ) {
+			if ( To-1 < window.pageYOffset ) {
+				ScrollTo = window.pageYOffset >> 1
+				if( To > ScrollTo ) {
+					window.scrollTo( 0, ScrollTo - 1 );
+				}
+				else {
+					window.scrollTo( 0, ScrollTo )
+				}
+				return false;
+			} else {
+				if( false === Utils.isEmpty(Hook) ) {
+					Hook()
+				}
+				window.scrollTo( 0, To );
 				return true;
 			}
 		} else {
