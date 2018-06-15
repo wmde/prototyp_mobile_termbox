@@ -114,7 +114,13 @@ export default {
 			if( this.$data.lastWidth !== window.innerWidth )
 			{
 				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 )
-				this.$data.documentBody.style.margin = 'auto'
+				if( false === Utils.isEmpty( this.$data.documentBody.getAttribute('style') ) ) {
+					this.$data.documentBody.style.margin = 'auto'
+				}
+				else
+				{
+					this.$data.documentBody.removeAttribute('style')
+				}
 				this.$data.lastWidth = window.innerWidth
 				this.$nextTick( function () {
 					this.$forceUpdate();
