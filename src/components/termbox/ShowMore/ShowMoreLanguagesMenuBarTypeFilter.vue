@@ -10,7 +10,10 @@ export default {
 		return {
 			marginTopElement: null,
 			marginTop: 0,
-			offset: 0
+			offset: 0,
+			labels: true,
+			descriptions: true,
+			aliases: true
 		};
 	},
 	computed: {
@@ -27,6 +30,10 @@ export default {
 	mounted: function () {
 		document.getElementById( 'showMoreLanguagesMenuBar' ).removeAttribute( 'style' );
 		this.$data.marginTopElement = document.getElementById( 'showMoreLanguagesTypeFilterMenu' );
+		this.$data.labels = this.$props.directives.get( 'labels' );
+		this.$data.descriptions = this.$props.directives.get( 'descriptions' );
+		this.$data.aliases = this.$props.directives.get( 'aliases' );
+
 	},
 	destroyed: function () {
 		document.getElementById( 'showMoreLanguagesMenuBar' ).setAttribute( 'style', 'height:54px;' );
@@ -35,7 +42,7 @@ export default {
 		const Differenz = this.$data.marginTop - DomHelper.getPositionY( this.$data.marginTopElement );
 		const ScrollTo = this.$data.offset - Differenz;
 		if ( 0 !== Differenz ) {
-			if ( 0 > ScrollTo ) {
+			if ( 0 >= ScrollTo ) {
 				window.scrollTo( 0, 0 );
 			} else {
 				window.scrollTo( 0, ScrollTo );
@@ -47,6 +54,7 @@ export default {
 			this.$data.offset = window.pageYOffset;
 			this.$data.marginTop = DomHelper.getPositionY( this.$data.marginTopElement );
 			this.$props.directives.set( Key, !this.$props.directives.get( Key ) );
+			this.$data[ Key ] = !this.$data[ Key ];
 		},
 		doLabel: function () {
 			this.doSwitch( 'labels' );
@@ -70,25 +78,48 @@ export default {
 <template>
     <div>
         <div class="showMoreLanguagesTypeFilter">
-            <button @click="activateLanguageFilter()" class="showMoreLanguagesMenuLanguageFilterActivator" >Show more languages</button>
+            <button @click="activateLanguageFilter()"
+					class="showMoreLanguagesMenuLanguageFilterActivator"
+			>Show more languages</button>
             <div @click="close()" id="showMoreLanguagesTypeFilterSave">
                 <button><img src="../../../assets/DoneType.png" /></button>
             </div>
         </div>
         <form id="showMoreLanguagesTypeFilterMenu">
             <div @click="doLabel()">
-                <input v-if="isLabeled" type="checkbox" checked/>
-                <input v-else id="showMoreLanguagesTypeFilterLabel" type="checkbox"/>
-                <label>Label</label>
-            </div>
-            <div @click="doDescription">
-                <input v-if="isDescribed" type="checkbox" checked/>
-                <input v-else type="checkbox"/>
-                <label>Description</label>
-            </div>
-            <div @click="doAka()">
-                <input v-if="isAka" type="checkbox" checked/>
-                <input v-else type="checkbox"/>
+				<input v-if="isLabeled"
+						v-model="labels"
+						type="checkbox"
+						checked
+				/>
+				<input v-else
+						v-model="labels"
+						type="checkbox"
+				/>
+				<label>Label</label>
+			</div>
+			<div @click="doDescription">
+				<input v-if="isDescribed"
+						v-model="descriptions"
+						type="checkbox"
+						checked
+				/>
+				<input v-else
+						v-model="descriptions"
+						type="checkbox"
+				/>
+				<label>Description</label>
+			</div>
+			<div @click="doAka()">
+				<input v-if="isAka"
+						v-model="aliases"
+						type="checkbox"
+						checked
+				/>
+				<input v-else
+						v-model="aliases"
+						type="checkbox"
+				/>
                 <label>Also known as</label>
             </div>
         </form>

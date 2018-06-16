@@ -144,7 +144,7 @@ export default{
     border-width: 1px;
     border-bottom-color: #f4f4f4;
     border-style: solid;
-    padding-right: 4%!important;
+    padding-right: 3.4%!important;
 }
 
 .keepOnTheTop

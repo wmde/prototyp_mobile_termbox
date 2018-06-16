@@ -32,10 +32,10 @@ export default {
 		}
 	},
 	methods: {
-			shouldDisplayInOtherLanguages: function ( Language ) {
-				return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
+		shouldDisplayInOtherLanguages: function ( Language ) {
+			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
 					this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
-			}
+		}
 	}
 };
 </script>
