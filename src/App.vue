@@ -126,13 +126,13 @@ export default {
 		getClientLanguages: function () {
 			let Index, Value, Index2;
 			if ( 'undefined' !== typeof window.navigator.language ) {
-				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
+				this.$data.defaultLanguage = window.navigator.language.toLowerCase().split( '-' ).shift();
 				this.$data.languages.push( this.$data.defaultLanguage );
 			}
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
 				for ( Index in window.navigator.languages ) {
-					Value = window.navigator.languages[ Index ].toLowerCase();// any formatter could putted here
+					Value = window.navigator.languages[ Index ].toLowerCase().split( '-' ).shift();// any formatter could putted here
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 					// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 					if ( 0 > Index2 ) {
@@ -147,7 +147,7 @@ export default {
 			}
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
-				Value = window.navigator.systemLanguage.toLowerCase();// any formatter could putted here
+				Value = window.navigator.systemLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
@@ -162,7 +162,7 @@ export default {
 			}
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
-				Value = window.navigator.browserLanguage.toLowerCase();// any formatter could putted here
+				Value = window.navigator.browserLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
@@ -177,7 +177,7 @@ export default {
 			}
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
-				Value = window.navigator.userLanguage.toLowerCase();// any formatter could putted here
+				Value = window.navigator.userLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
