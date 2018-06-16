@@ -32,10 +32,10 @@ export default {
 		}
 	},
 	methods: {
-		shouldDisplayInOtherLanguages: function ( Language ) {
-			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
-				this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
-		}
+			shouldDisplayInOtherLanguages: function ( Language ) {
+				return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
+					this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
+			}
 	}
 };
 </script>
@@ -109,11 +109,6 @@ export default {
     div.otherLanguagesContainer
     {
         padding-left: 0.5em;
-    }
-
-    div.otherLanguages > ul.wikibase-entitytermsview-aliases > li:last-child.listItem-extended::after
-    {
-        content: '';
     }
 
     div.otherLanguagesContainer > .wikibase-entitytermsview-heading-description,

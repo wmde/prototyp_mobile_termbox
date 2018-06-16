@@ -57,7 +57,6 @@ export default {
 {
     width: 100%;
     left:0;
-    /*margin-left:-10px;*/
 }
 
 #termbox > div

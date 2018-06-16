@@ -14,10 +14,9 @@ export default {
 			reframe: '',
 			reframeIntervall: '',
 			reAdjust: '',
-			reset: true,
 			originLanguages: [],
 			lastPosition: 0,
-			include: '',
+			keyMap: '',
 			lastWidth: 0,
 			documentBody: null,
 			toReframe: null,
@@ -27,7 +26,6 @@ export default {
 	},
 	mounted: function () {
 		const TopBar = document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' );
-		this.$data.reset = true;
 		this.$data.reAdjust = [
 			TopBar,
 			document.getElementById( 'showMoreLanguagesLanguagesFilterMenu' ),
@@ -63,15 +61,7 @@ export default {
 		for ( Index in this.$data.otherLanguages ) {
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.otherLanguages[ Index ] );
 		}
-		// this.$props.languagesSettings.set( 'otherLanguages', this.$data.otherLanguages )
-		if ( true === this.$data.reset ) {
-			for ( Index in this.$data.originLanguages ) {
-				if ( -1 === this.$props.languagesSettings.get( 'otherLanguages' ).indexOf( this.$data.originLanguages[ Index ] ) ) {
-					this.$props.languagesSettings.get( 'otherLanguages' ).splice( Index, 0, this.$data.originLanguages[ Index ] );
-				}
-			}
-			this.$forceUpdate();
-		}
+
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:block;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).setAttribute( 'style', 'display:none;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:inline;' );
@@ -98,14 +88,14 @@ export default {
 	},
 	methods: {
 		showCurrentLanguage: function () {
-			if ( 0 === this.$data.include.length ) {
+			if ( 0 === this.$data.keyMap.length ) {
 				return this.$props.languagesSettings.get( 'currentLanguage' );
 			}
 
 			if ( true === this.$props.languagesSettings.get( 'languageNames' )[
 				this.$props.languagesSettings.get( 'currentLanguage' ) ]
 				.toLowerCase()
-				.startsWith( this.$data.include.toLowerCase() )
+				.startsWith( this.$data.keyMap.toLowerCase() )
 			) {
 				return true;
 			}
@@ -138,7 +128,7 @@ export default {
 		pushVisibleLanguages( Key ) {
 			let Index;
 			const Output = [];
-			if ( 0 === this.$data.include.length ) {
+			if ( 0 === this.$data.keyMap.length ) {
 				for ( Index in this.$props.languagesSettings.get( Key ) ) {
 					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) ) {
 						Output.push(
@@ -152,7 +142,7 @@ export default {
 			} else {
 				for ( Index in this.$props.languagesSettings.get( Key ) ) {
 					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
-						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.include.toLowerCase() )
+						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.keyMap.toLowerCase() )
 					) {
 						Output.push(
 							[
@@ -167,11 +157,9 @@ export default {
 			return Output.sort( function ( A, B ) { return A[ 0 ].localeCompare( B[ 0 ] ); } );
 		},
 		close: function () {
-			this.$data.reset = false;
 			this.$props.menuSwitch.set( 'switch', 0 );
 		},
 		activateTypeFilter: function () {
-			this.$data.reset = false;
 			this.$props.menuSwitch.set( 'switch', 1 );
 		},
 		selectLanguage: function ( Language ) {
@@ -207,10 +195,10 @@ export default {
 		},
 		renderTextInput: function () {
 			let Reload;
-			if ( 0 < this.$data.include.length ) {
-				Reload = this.$data.include;
-				this.$data.include = '';
-				this.$data.include = Reload;
+			if ( 0 < this.$data.keyMap.length ) {
+				Reload = this.$data.keyMap;
+				this.$data.keyMap = '';
+				this.$data.keyMap = Reload;
 			}
 		},
 		reframeTop: function () {
@@ -273,7 +261,7 @@ export default {
 			<div @click="focusSearchField()"
 				id="showMoreLanguagesSearchBar">
 				<div @click="focusSearchField()">
-					<input id="showMoreLanguagesSearchField" type="text" v-model="include" placeholder="Find language"/>
+					<input id="showMoreLanguagesSearchField" type="text" v-model="keyMap" placeholder="Find language"/>
 				</div>
 				<button disabled><img src="../../../assets/Lupe.png"/></button>
 			</div>

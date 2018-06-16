@@ -127,7 +127,6 @@ export default{
 {
     margin: 1em 0 0 0!important;
     padding-left: 0px!important;
-    /*width: 102.5%;*/
     width: 100%;
     background-color: #F8F9FA;
 }
