@@ -1,52 +1,305 @@
+/* eslint-disable operator-linebreak */
 import Utils from '../../Utils';
+import { TypeErrorException } from './BaseExceptions';
 
-export default class PatricaTrie {
-	__Value = null;
-	_Children = null;
-	__Parent = null;
-	__IsEnding = null;
+class Compare
+{
+	static compare()
+	{}
+}
 
-	constructor( Value, Parent = null ) {
-		if ( null !== Parent && Parent instanceof PatricaTrie ) {
-			this.__Parent = Parent;
+class PatricaTrieNode
+{
+	_Children;
+	_IsEnding;
+	__Value
+	__Key;
+	__Parent;
+	_IsRoot;
+
+	constructor( Key, Value, Parent )
+	{
+		let IsRoot = false;
+		if (
+			'undefined' === typeof Key		&&
+			'undefined' === typeof Value		&&
+			'undefined' === typeof Parent
+		)
+		{
+			IsRoot = true;
 		}
 
-		this._Children = [];
+		this._IsRoot = IsRoot;
 
-		if ( false === Utils.isEmpty( Value ) ) {
-			this.__Value = `${Value}`;
-			this.__IsEnding = true;
-		} else {
-			this.__IsEnding = false;
+		if ( false === IsRoot )
+		{
+			if ( true === Utils.isEmpty( Parent ) || false === ( Parent instanceof PatricaTrieNode ) )
+			{
+				throw new TypeErrorException( 'Expected a PatricaTrieNode as Parent.' );
+			}
+
+			this._IsEnding = true;
+		}
+		else
+		{
+			this._IsEnding = false;
+		}
+
+		this.__Parent = Parent;
+		this._Children = [];
+		this.__Key = Key;
+
+		if ( false === IsRoot )
+		{
+			this.__Value = Value;
 		}
 	}
 
-	getValue() {
+	isAEnd()
+	{
+		return this._IsEnding;
+	}
+
+	unsetEnd()
+	{
+		this._IsEnding = false;
+	}
+
+	hasChildren()
+	{
+		return 0 < this._Children.length;
+	}
+
+	setValue( Value )
+	{
+		this.__Value = Value;
+	}
+
+	getValue()
+	{
 		return this.__Value;
 	}
 
-	hasChildes() {
-		if ( null !== this._Children ) {
-			return 0 < this._Children.length;
+	getValues()
+	{
+		let Child;
+		let Output = [];
+
+		if ( true === this._IsEnding )
+		{
+			Output.push( this.__Value );
 		}
-		return false;
+
+		if ( 0 !== this._Children.length )
+		{
+			for ( Child in this._Children )
+			{
+				Output = Output.concat( this._Children[ Child ].getValues() );
+			}
+		}
+
+		return Output;
 	}
 
-	isAEnd() {
-		return this.__IsEnding;
+	_getKey()
+	{
+		return this.__Key;
 	}
 
-	unsetEnd() {
-		this.__IsEnding = false;
+	getKey()
+	{
+		if( true === this.__Parent._IsRoot )
+		{
+			return this.__Key;
+		}
+		else
+		{
+			return this.__Parent.getKey() + this.__Key;
+		}
 	}
 
-	// ToDo: improve this
-	__findLongesPrefix( Str, l1, l2 ) {
+	getKeys()
+	{
+		let Child, Index;
+		let Start = 0;
+		let Output = [];
+
+		if ( true === this._IsEnding )
+		{
+			Output.push( this.__Key );
+			Start = 1;
+		}
+
+		if ( 0 !== this._Children.length )
+		{
+			for ( Child in this._Children )
+			{
+				Output = Output.concat( this._Children[ Child ].getKeys() );
+			}
+
+			for ( Index = Start; Index < Output.length; Index++ )
+			{
+				Output[ Index ] = this.__Key + Output[ Index ];
+			}
+		}
+
+		return Output;
+	}
+
+	getKeysAndValues()
+	{
 		let Index;
-		const To = Math.min( l1, l2 );
+		let Output = {};
+		let Return = {}
 
-		for ( Index = 1; Index < To; Index++ ) {
-			if ( Str.charCodeAt( Index ) !== this.__Value.charCodeAt( Index ) ) {
+		if ( true === this._IsEnding )
+		{
+			Output[ this.getKey() ] = this.__Value;
+		}
+
+		for( Index = 0; Index < this._Children.length; Index++ )
+		{
+			Output = Object.assign({}, Output, this._Children[ Index ].getKeysAndValues() )
+		}
+
+		Object.keys(Output).sort().forEach(
+			function(Key)
+			{
+				Return[Key] = Output[Key];
+			}
+		);
+
+		return Return
+	}
+
+	__findKey( Key )
+	{
+		let Start, End, Middle;
+
+		Start = 0;
+		End = this._Children.length - 1;
+
+		while ( Start <= End )
+		{
+			Middle = ( ( Start + End ) >> 1 );
+			if ( Key > this._Children[ Middle ]._getKey().charCodeAt( 0 ) )
+			{
+				Start = Middle + 1;
+			}
+			else if ( Key < this._Children[ Middle ]._getKey().charCodeAt( 0 ) )
+			{
+				End = Middle - 1;
+			}
+			else
+			{
+				return Middle;
+			}
+		}
+
+		return -1;
+	}
+
+	findKey( Key, Exact = false )
+	{
+		let Index;
+		if ( true === this.__Key.startsWith( Key ) )
+		{
+			if ( true === Exact && Key !== this.__Key )
+			{
+				return null;
+			}
+			else
+			{
+				return this;
+			}
+		}
+		else if ( Key.startsWith( this.__Key ) )
+		{
+			if ( 0 < this._Children.length )
+			{
+				Key = Key.substring( this.__Key.length );
+				Index = this.__findKey( Key.charCodeAt( 0 ) );
+				if ( -1 !== Index )
+				{
+					return this._Children[ Index ].findKey( Key );
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	containsKey( Key, Exact = false )
+	{
+		const Node = this.findKey( Key, Exact );
+		if ( null === Node )
+		{
+			return false;
+		}
+		else
+		{
+			if ( true === Exact )
+			{
+				return Node.isAEnd();
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+
+	__insertPosition( Key )
+	{
+		let Start, End, Middle;
+
+		Start = 0;
+		End = this._Children.length - 1;
+
+		while ( Start <= End )
+		{
+			Middle = ( ( Start + End ) >> 1 );
+			if ( 'undefined' === typeof this._Children[ Middle ]._getKey() )
+			{
+				return -( Start + 1 );
+			}
+
+			if ( Key > this._Children[ Middle ]._getKey().charCodeAt( 0 ) )
+			{
+				Start = Middle + 1;
+			}
+			else if ( Key < this._Children[ Middle ]._getKey().charCodeAt( 0 ) )
+			{
+				End = Middle - 1;
+			}
+			else
+			{
+				return Middle;
+			}
+		}
+
+		return -( Start + 1 );
+	}
+
+	_longestPrefix( Key )
+	{
+		let Index;
+		const To = Math.min( Key.length, this.__Key.length );
+
+		for ( Index = 1; To > Index; Index++ )
+		{
+			if ( Key.charCodeAt( Index ) !== this.__Key.charCodeAt( Index ) )
+			{
 				return Index;
 			}
 		}
@@ -54,272 +307,825 @@ export default class PatricaTrie {
 		return To;
 	}
 
-	__contains( Str ) {
-		let Start, Mid, End;
-		const Letter = Str.charCodeAt( 0 );
-
-		if ( null === this._Children || 0 === this._Children.length || Str !== this.__Value ) {
-			return -1;
-		} else {
-			Start = 0;
-			End = this._Children.length - 1;
-			while ( Start <= End ) {
-				Mid = ( Start + End ) >> 1;
-				if ( Letter > this._Children[ Mid ].getValue()[ 0 ] ) {
-					Start += 1;
-				} else if ( Letter < this._Children[ Mid ].getValue()[ 0 ] ) {
-					End = Mid - 1;
-				} else {
-					return Mid;
-				}
-			}
-			return -1;
-		}
+	static sortChildes( Child )
+	{
+		return Child._getKey();
 	}
 
-	__insertSearch( Str ) {
-		let Start, Mid, End;
-		const Letter = Str.charCodeAt( 0 );
-
-		if ( 0 === this._Children.length ) {
-			return -1;
-		} else {
-			Start = 0;
-			End = this._Children.length - 1;
-			while ( Start <= End ) {
-				Mid = ( Start + End ) >> 1;
-				if ( Letter > this._Children[ Mid ].getValue().charCodeAt( 0 ) ) {
-					Start += 1;
-				} else if ( Letter < this._Children[ Mid ].getValue().charCodeAt( 0 ) ) {
-					End = Mid - 1;
-				} else {
-					return Mid;
-				}
-			}
-			return -( Start + 1 );
+	_importChildren( Children )
+	{
+		if ( false === Array.isArray( Children ) )
+		{
+			return false;
 		}
-	}
-
-	insert( Element ) {
-		let Index, Index2, NewChild, NewChild2, LengthInsert, LengthValue, Common;
-		Element = `${Element}`;
-
-		if ( true === Utils.isEmpty( this.__Value ) ) {
-			Index = this.__insertSearch( Element );
-			if ( -1 < Index ) {
-				return this._Children[ Index ].insert( Element );
-			}
-
-			NewChild = new PatricaTrie( Element, this );
-			this._Children.splice( -( Index + 1 ), 0, NewChild );
+		else
+		{
+			this._Children = this._Children.concat( this._Children, Children );
+			this._Children = this._Children.sort( PatricaTrieNode.sortChildes );
 			return true;
-		} else {
-			if ( this.__Value[ 0 ] !== Element.charCodeAt( 0 ) ) {
-				return false;
-			} else {
-				LengthInsert = Element.length;
-				LengthValue = this.__Value.length;
+		}
+	}
 
-				Index = this.__findLongesPrefix( Element,
-					LengthInsert,
-					LengthValue
+	_insertIntoChildPreventOverwrite( Key, Value )
+	{
+		const Index = this.__insertPosition( Key.charCodeAt( 0 ) );
+
+		if ( -1 < Index )
+		{
+			return this._Children[ Index ].insertPreventOverwrite( Key, Value );
+		}
+
+		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		return null;
+	}
+
+	insertPreventOverwrite( Key, Value )
+	{
+		let Common, NewKey, NewChild, NewChild2;
+
+		const NewKeyLength = Key.length;
+		const CurrentKeyLength = this.__Key.length;
+		const PrefixLength = this._longestPrefix( Key );
+
+		if (
+			NewKeyLength === CurrentKeyLength		&&
+			PrefixLength === CurrentKeyLength
+		)
+		{
+			if ( null === this.__Value )
+			{
+				this._IsEnding = true;
+				this.__Value = Value;
+				return null;
+			}
+			else
+			{
+				return this;
+			}
+		}
+		else
+		{
+			if ( PrefixLength === CurrentKeyLength )
+			{
+				NewKey = Key.substring( PrefixLength );
+				return this._insertIntoChildPreventOverwrite( NewKey, Value );
+			}
+			else if ( PrefixLength === NewKeyLength )
+			{
+				NewChild = new PatricaTrieNode(
+					this.__Key.substring( PrefixLength ),
+					this.__Value,
+					this,
 				);
 
-				if (
-					LengthInsert === LengthValue &&
-					Index === LengthValue
-				) {
-					if ( false === this.__IsEnding ) {
-						this.__IsEnding = true;
-					}
+				this.__Value = Value;
 
-					return true;
-				} else {
-
-					if ( Index === LengthValue ) {
-						Element = Element.substring( Index );
-						Index2 = this.__insertSearch( Element );
-						if ( -1 < Index2 ) {
-							return this._Children[ Index2 ].insert( Element );
-						}
-
-						NewChild = new PatricaTrie( Element, this );
-						this._Children.splice( -( Index + 1 ), 0, NewChild );
-						return true;
-					} else if ( Index === LengthInsert ) {
-
-						NewChild = new PatricaTrie( this.__Value.substring( Index ), this );
-						this.__Value = Element;
-
-						if ( false === NewChild._importChildes( this._Children ) ) {
-							return false;
-						}
-
-						if ( false === this.__IsEnding ) {
-							this.__IsEnding = true;
-							NewChild.unsetEnd();
-						}
-
-						this._Children = [ NewChild ];
-						return true;
-					} else {
-						Common = this.__Value.substring( 0, Index );
-						NewChild = new PatricaTrie( this.__Value.substring( Index ), this );
-
-						if ( false === NewChild._importChildes( this._Children ) ) {
-							return false;
-						}
-
-						if ( false === this.__IsEnding ) {
-							NewChild.unsetEnd();
-						}
-
-						this.__Value = Common;
-						this.__IsEnding = false;
-
-						NewChild2 = PatricaTrie( Element.substring( Index, this ) );
-						if ( NewChild.getValue()[ 0 ] < NewChild2.getValue()[ 0 ] ) {
-							this._Children = [ NewChild, NewChild2 ];
-						} else {
-							this._Children = [ NewChild2, NewChild ];
-						}
-						return true;
-					}
+				if ( false === NewChild._importChildren( this._Children ) )
+				{
+					return false;
 				}
+
+				if ( false === this._IsEnding )
+				{
+					this._IsEnding = true;
+					NewChild.unsetEnd();
+				}
+				this.__Key = this.__Key.substring( 0, PrefixLength );
+				this._Children = [ NewChild ];
+				return null;
+			}
+			else
+			{
+				Common = this.__Key.substring( 0, PrefixLength );
+				NewChild = new PatricaTrieNode(
+					this.__Key.substring( PrefixLength ),
+					this.__Value,
+					this
+				);
+
+				NewChild2 = new PatricaTrieNode(
+					Key.substring( PrefixLength ),
+					Value,
+					this
+				);
+
+				if ( false === NewChild._importChildren( this._Children ) )
+				{
+					return false;
+				}
+
+				if ( false === this._IsEnding )
+				{
+					NewChild.unsetEnd();
+				}
+
+				this._IsEnding = false;
+				this.__Key = Common;
+				this.__Value = null;
+
+				if ( NewChild._getKey().charCodeAt( 0 ) < NewChild2._getKey().charCodeAt( 0 ) )
+				{
+					this._Children = [ NewChild, NewChild2 ];
+				}
+				else
+				{
+					this._Children = [ NewChild2, NewChild ];
+				}
+
+				return null;
 			}
 		}
 	}
 
-	static sortChildes( Child ) {
-		return Child.getValue();
+	_insertIntoChild( Key, Value )
+	{
+		const Index = this.__insertPosition( Key.charCodeAt( 0 ) );
+
+		if ( -1 < Index )
+		{
+			return this._Children[ Index ].insert( Key, Value );
+		}
+
+		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		return true;
 	}
 
-	_importChildes( Childes ) {
-		if ( false === Array.isArray( Childes ) ) {
-			return false;
-		} else {
-			this._Children = this._Children.concat( Childes );
-			this._Children.sort( PatricaTrie.sortChildes );
+	insert( Key, Value )
+	{
+		let Common, NewKey, NewChild, NewChild2;
 
+		const NewKeyLength = Key.length;
+		const CurrentKeyLength = this.__Key.length;
+		const PrefixLength = this._longestPrefix( Key );
+
+		if (
+			NewKeyLength === CurrentKeyLength		&&
+			PrefixLength === CurrentKeyLength
+		)
+		{
+			this._IsEnding = true;
+			this.__Value = Value;
 			return true;
 		}
-	}
-
-	delete( Key ) {
-		Key = `${Key}`;
-		const ToDel = this.find( Key );
-
-		if ( null === ToDel ) {
-			return;
-		}
-
-		if ( true === ToDel.hasChildes() ) {
-			if ( true === ToDel.isAEnd() ) {
-				ToDel.unsetEnd();
+		else
+		{
+			if ( PrefixLength === CurrentKeyLength )
+			{
+				NewKey = Key.substring( PrefixLength );
+				return this._insertIntoChild( NewKey, Value );
 			}
-		} else {
-			ToDel._removeFromTrie();
-		}
-	}
+			else if ( PrefixLength === NewKeyLength )
+			{
+				NewChild = new PatricaTrieNode(
+					this.__Key.substring( PrefixLength ),
+					this.__Value,
+					this,
+				);
 
-	_removeFromTrie() {
-		const FormerValue = this.__Value[ 0 ];
-		this.__Parent._clean( FormerValue );
-		delete this.__Value;
-	}
+				this.__Value = Value;
 
-	_clean( FormerValue ) {
-		const Index = this.__contains( FormerValue );
-		if ( -1 === Index ) {
-			return;
-		}
-
-		this._Children.splice( Index, 1 );
-		if ( 0 === this.__Value.length ) {
-			return;
-		}
-
-		if ( 0 === this._Children && false === this.__IsEnding ) {
-			FormerValue = this.__Value[ 0 ];
-			delete this.__Value;
-			this.__Parent._clean( FormerValue );
-		} else if (
-			1 === this._Children.length &&
-			false === this._Children[ 0 ].hasChildes()
-		) {
-			this.__Value += this._Children[ 0 ].getValue();
-			this._Children.pop();
-			this.__IsEnding = true;
-		}
-	}
-
-	find( Key ) {
-		let Index;
-		Key = `${Key}`;
-		if ( 0 < this.__Value.length ) {
-			if ( this.__Value.startswith( Key ) ) {
-				return this;
-			} else if ( Key.startsWith( this.__Value ) ) {
-				if ( 0 < this._Children.length ) {
-					Key = Key.substring( this.__Value.length );
-					Index = this.__contains( Key );
-					if ( -1 !== Index ) {
-						return this._Children[ Index ].find( Key );
-					} else {
-						return null;
-					}
-				} else {
-					return null;
+				if ( false === NewChild._importChildren( this._Children ) )
+				{
+					return false;
 				}
-			} else {
-				return null;
-			}
-		} else {
-			Index = this.__contains( Key );
-			if ( -1 !== Index ) {
-				return this._Children[ Index ].find( Key );
-			} else {
-				return null;
-			}
-		}
-	}
 
-	contains( Key, Exact = false ) {
-		const Node = this.find( Key );
-		if ( null === Node ) {
-			return false;
-		} else {
-			if ( true === Exact ) {
-				return Node.isAEnd();
-			} else {
+				if ( false === this._IsEnding )
+				{
+					this._IsEnding = true;
+					NewChild.unsetEnd();
+				}
+				this.__Key = this.__Key.substring( 0, PrefixLength );
+				this._Children = [ NewChild ];
+				return true;
+			}
+			else
+			{
+				Common = this.__Key.substring( 0, PrefixLength );
+				NewChild = new PatricaTrieNode(
+					this.__Key.substring( PrefixLength ),
+					this.__Value,
+					this
+				);
+
+				NewChild2 = new PatricaTrieNode(
+					Key.substring( PrefixLength ),
+					Value,
+					this
+				);
+
+				if ( false === NewChild._importChildren( this._Children ) )
+				{
+					return false;
+				}
+
+				if ( false === this._IsEnding )
+				{
+					NewChild.unsetEnd();
+				}
+
+				this._IsEnding = false;
+				this.__Key = Common;
+				this.__Value = null;
+
+				if ( NewChild._getKey().charCodeAt( 0 ) < NewChild2._getKey().charCodeAt( 0 ) )
+				{
+					this._Children = [ NewChild, NewChild2 ];
+				}
+				else
+				{
+					this._Children = [ NewChild2, NewChild ];
+				}
+
 				return true;
 			}
 		}
 	}
 
-	getValues() {
-		let Index, Child;
-		const Output = [];
-		if ( null !== this._Children && 0 < this._Children.length ) {
-			for ( Child in this._Children ) {
-				Output.push( this._Children[ Child ].getValues() );
-			}
+	_removeFromTrie()
+	{
+		this.__Parent._clean( this.__Key.charCodeAt( 0 ) );
+	}
 
-			if ( 0 < Output.length ) {
-				if ( null !== this.__Value && 0 < this.__Value.length ) {
-
-					for ( Index in Output ) {
-						Output[ Index ] = this.__Value + Output[ Index ];
-					}
-				}
-			}
-
-			if ( true === this.__IsEnding && 0 < this.__Value.length ) {
-				Output.append( this.__Value );
-			}
-
+	_clean( Key )
+	{
+		const Index = this.__findKey( Key );
+		if ( -1 === Index )
+		{
+			return;
 		}
 
-		return Output.sort();
+		this._Children.splice( Index, 1 );
+
+		if ( true === this.__IsRoot )
+		{
+			return;
+		}
+
+		if (
+			0 === this._Children.length
+		&&
+			false === this._IsEnding
+		&&
+			0 < this.__Key.length
+		)
+		{
+			this._removeFromTrie();
+		}
+		else if (
+			1 === this._Children.length
+		&&
+			false === this._Children[ 0 ].hasChildren()
+		&&
+			false === this._IsEnding
+		)
+		{
+			this.__Key += this._Children[ 0 ]._getKey();
+			this.__Value = this._Children[ 0 ].getValue();
+			this._IsEnding = this._Children[ 0 ].isAEnd();
+			this._Children.pop();
+		}
+	}
+
+	delete( Key )
+	{
+		const ToDelete = this.findKey( Key, true );
+		if ( null === ToDelete )
+		{
+			return;
+		}
+
+		if ( true === ToDelete.hasChildren() )
+		{
+			if ( true === ToDelete.isAEnd() )
+			{
+				ToDelete.setValue( null );
+				ToDelete.unsetEnd();
+			}
+		}
+		else
+		{
+			ToDelete._removeFromTrie();
+		}
+	}
+
+	findValue( Comparer, StartKey = undefined, EndKey = undefined )
+	{
+		let Index, Found;
+		let NewStart = '';
+		let NewEnd = '';
+		let Start = 0;
+		let End = this._Children.length;
+
+		if ( 'string' === typeof StartKey )
+		{
+			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			NewStart = StartKey.substring( 1 );
+		}
+
+		if ( 'string' === typeof EndKey )
+		{
+			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			NewEnd = EndKey.substring( 1 );
+		}
+
+		if ( -1 === Start && -1 === End )
+		{
+			return null;
+		}
+
+		if ( Start > End )
+		{
+			return null;
+		}
+
+		if ( 0 < NewStart.length )
+		{
+			if ( Start === End )
+			{
+				Found = this._Children[ Start ].findValue( Comparer, NewStart, NewEnd );
+			}
+			else
+			{
+				Found = this._Children[ Start ].findValue( Comparer, NewStart );
+			}
+
+			if ( null !== Found )
+			{
+				return this.__Key + Found;
+			}
+		}
+
+		for ( Index = Start; Index < End; Index++ )
+		{
+			Found = this._Children[ Index ].findValue( Comparer );
+			if ( null !== Found )
+			{
+				return this.__Key + Found;
+			}
+		}
+
+		if ( 0 < NewEnd.length )
+		{
+			Found = this._Children[ End ].findValue( Comparer, undefined, NewEnd );
+
+			if ( null !== Found )
+			{
+				return this.__Key + Found;
+			}
+		}
+
+		if ( true === this._IsEnding )
+		{
+			if ( true === Comparer.compare( this.__Value ) )
+			{
+				return this.__Key;
+			}
+		}
+
+		return null;
+	}
+
+	findAllValue( Comparer, StartKey = undefined, EndKey = undefined )
+	{
+		let Index, Found;
+		let NewStart = '';
+		let NewEnd = '';
+		let Start = 0;
+		let Return = [];
+		let End = this._Children.length;
+
+		if ( 'string' === typeof StartKey )
+		{
+			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			NewStart = StartKey.substring( 1 );
+		}
+
+		if ( 'string' === typeof EndKey )
+		{
+			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			NewEnd = EndKey.substring( 1 );
+		}
+
+		if ( -1 === Start && -1 === End )
+		{
+			return Return;
+		}
+
+		if ( Start > End )
+		{
+			return Return;
+		}
+
+		if ( 0 < NewStart.length )
+		{
+			if ( Start === End )
+			{
+				Found = this._Children[ Start ].findAllValue( Comparer, NewStart, NewEnd );
+			}
+			else
+			{
+				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
+			}
+
+			Return = Return.concat( Found )
+		}
+
+		for ( Index = Start; Index < End; Index++ )
+		{
+			Found = this._Children[ Index ].findAllValue( Comparer );
+			Return = Return.concat( Found )
+		}
+
+		if ( 0 < NewEnd.length )
+		{
+			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
+			Return = Return.concat( Found )
+		}
+
+		for( Index = 0; Index < Return.length; Index++ )
+		{
+			Return[Index] = this.__Key + Return[Index]
+		}
+
+		if ( true === this._IsEnding )
+		{
+			if ( true === Comparer.compare( this.__Value ) )
+			{
+				Return.push( this.__Key  );
+			}
+		}
+
+		return Return;
 	}
 }
+
+class PatricaTrie extends PatricaTrieNode
+{
+
+	constructor()
+	{
+		super( undefined, undefined, undefined );
+	}
+
+	__findKey( Key )
+	{
+		let Start, End, MiddleBinary, MiddleInterpolation, WhereStart, WhereEnd, Swap;
+		let Interpolation, Binary, InterpolationIsDefined, BinaryIsDefined;
+		if ( 0 === this._Children.length )
+		{
+			return -1;
+		}
+		else
+		{
+			Start = 0;
+			End = this._Children.length - 1;
+		}
+
+		while ( Start <= End && this._Children.length > End )
+		{
+			WhereStart = this._Children[ Start ]._getKey().charCodeAt( 0 );
+			WhereEnd = this._Children[ End ]._getKey().charCodeAt( 0 );
+
+			MiddleBinary = ( ( Start + End ) >> 1 );
+			MiddleInterpolation = WhereEnd - WhereStart;
+			if ( 0 !== MiddleInterpolation )
+			{
+				MiddleInterpolation = Math.round( Start + ( ( Key - WhereStart ) * ( End - Start ) / ( WhereEnd - WhereStart ) ) );
+			}
+
+			if ( MiddleBinary > MiddleInterpolation )
+			{
+				Swap = MiddleBinary;
+				MiddleBinary = MiddleInterpolation;
+				MiddleInterpolation = Swap;
+			}
+
+			Binary = this._Children[ MiddleBinary ];
+			BinaryIsDefined = 'undefined' !== typeof Binary;
+			Interpolation = this._Children[ MiddleInterpolation ];
+			InterpolationIsDefined = 'undefined' !== typeof Interpolation;
+
+			if ( false === BinaryIsDefined && false === InterpolationIsDefined )
+			{
+				return -1;
+			}
+
+			if ( true === BinaryIsDefined && Key === Binary._getKey().charCodeAt( 0 ) )
+			{
+				return MiddleBinary;
+			}
+			else if ( true === InterpolationIsDefined && Key === Interpolation._getKey().charCodeAt( 0 ) )
+			{
+				return MiddleInterpolation;
+			}
+			else if ( true === BinaryIsDefined && Key < Binary._getKey().charCodeAt( 0 ) )
+			{
+				End = MiddleBinary - 1;
+			}
+			else if ( true === InterpolationIsDefined && Key < Interpolation._getKey().charCodeAt( 0 ) )
+			{
+				Start = MiddleBinary + 1;
+				End = MiddleInterpolation + 1;
+			}
+			else
+			{
+				Start = MiddleInterpolation + 1;
+			}
+		}
+
+		return -1;
+	}
+
+	// @override
+	containsKey( Key, Exact = false )
+	{
+		const Found = this.__findKey( Key.charCodeAt( 0 ) );
+
+		if ( -1 === Found )
+		{
+			return false;
+		}
+		else
+		{
+			return this._Children[ Found ].containsKey( Key, Exact );
+		}
+	}
+
+	// @override
+	findKey( Key, Exact = false )
+	{
+		const Found = this.__findKey( Key.charCodeAt( 0 ) );
+
+		if ( -1 === Found )
+		{
+			return null;
+		}
+		else
+		{
+			return this._Children[ Found ].findKey( Key, Exact );
+		}
+	}
+
+	insert( Key, Value )
+	{
+		return this._insertIntoChild( Key, Value );
+	}
+
+	insertPreventOverwrite( Key, Value )
+	{
+		return this._insertIntoChildPreventOverwrite( Key, Value );
+	}
+
+	getKey()
+	{
+		return undefined
+	}
+
+	getKeys()
+	{
+		let Child;
+		let Output = [];
+
+		if ( 0 !== this._Children.length )
+		{
+			for ( Child in this._Children )
+			{
+				Output = Output.concat( this._Children[ Child ].getKeys() );
+			}
+		}
+
+		return Output;
+	}
+
+	getValues()
+	{
+		let Child;
+		let Output = [];
+
+		if ( 0 !== this._Children.length )
+		{
+			for ( Child in this._Children )
+			{
+				Output = Output.concat( this._Children[ Child ].getValues() );
+			}
+		}
+
+		return Output;
+	}
+
+	getKeysAndValues()
+	{
+		let Index;
+		let Output = [];
+		let Return = {}
+
+		for( Index = 0; Index < this._Children.length; Index++ )
+		{
+			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() )
+		}
+
+		Object.keys(Output).sort().forEach(
+			function(Key)
+			{
+				Return[Key] = Output[Key];
+			}
+		);
+
+		return Return
+	}
+
+	findValue( Comparer, StartKey = undefined, EndKey = undefined )
+	{
+		let Index, Found;
+		let Start = 0;
+		let End = this._Children.length;
+		let NewStart = '';
+		let NewEnd = '';
+
+		if ( 'string' === typeof StartKey )
+		{
+			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			if( -1 === Start )
+			{
+				Start = 0
+			}
+			else
+			{
+				NewStart = StartKey.substring(1);
+			}
+		}
+
+		if ( 'string' === typeof EndKey )
+		{
+			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			if( -1 === End )
+			{
+				Start = 0
+			}
+			else
+			{
+				NewEnd = EndKey.substring( 1 );
+			}
+		}
+
+		if ( -1 === Start && -1 === End )
+		{
+			return null;
+		}
+
+		if ( Start > End )
+		{
+			return null;
+		}
+
+		if ( 0 < NewStart.length )
+		{
+			if ( Start === End )
+			{
+				Found = this._Children[ Start ].findValue( Comparer, NewStart, NewEnd );
+			}
+			else
+			{
+				Found = this._Children[ Start ].findValue( Comparer, NewStart );
+			}
+
+			if ( null !== Found )
+			{
+				return Found;
+			}
+		}
+
+		for ( Index = Start; Index < End; Index++ )
+		{
+			Found = this._Children[ Index ].findValue( Comparer );
+			if ( null !== Found )
+			{
+				return Found;
+			}
+		}
+
+		if ( 0 < NewEnd.length )
+		{
+			Found = this._Children[ End ].findValue( Comparer, undefined, NewEnd );
+
+			if ( null !== Found )
+			{
+				return Found;
+			}
+		}
+
+		return null;
+	}
+
+	findAllValue( Comparer, StartKey = undefined, EndKey = undefined )
+	{
+		let Index, Found;
+		let NewStart = '';
+		let NewEnd = '';
+		let Start = 0;
+		let Return = [];
+		let End = this._Children.length;
+
+		if ( 'string' === typeof StartKey )
+		{
+			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			NewStart = StartKey.substring( 1 );
+		}
+
+		if ( 'string' === typeof EndKey )
+		{
+			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			NewEnd = EndKey.substring( 1 );
+		}
+
+		if ( -1 === Start && -1 === End )
+		{
+			return Return;
+		}
+
+		if ( Start > End )
+		{
+			return Return;
+		}
+
+		if ( 0 < NewStart.length )
+		{
+			if ( Start === End )
+			{
+				Found = this._Children[ Start ].findAllValue( Comparer, NewStart, NewEnd );
+			}
+			else
+			{
+				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
+			}
+
+			Return = Return.concat( Found )
+		}
+
+		for ( Index = Start; Index < End; Index++ )
+		{
+			Found = this._Children[ Index ].findAllValue( Comparer );
+			Return = Return.concat( Found )
+		}
+
+		if ( 0 < NewEnd.length )
+		{
+			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
+			Return = Return.concat( Found )
+		}
+
+		return Return;
+	}
+}
+
+export { Compare, PatricaTrieNode, PatricaTrie };
+/*
+
+class StringCompare extends Compare
+{
+	static Tests = [ 'a', 'b', 'e', 'f', 'g', 'm' ]
+	static compare( Comp )
+	{
+		return  -1 !== StringCompare.Tests.indexOf(Comp)
+	}
+}
+
+const Trie = new PatricaTrie();
+Trie.insert( '121', 'a' );
+Trie.insert( '11', 'b' );
+Trie.insert( '12', 'c' );
+Trie.insert( '13', 'd' );
+Trie.insert( '14', 'e' );
+Trie.insert( '15', 'f' );
+Trie.insert( '123123', 'g' );
+Trie.insert( '23', 'h' );
+Trie.insert( '42', 'i' );
+Trie.insert( '1112341', 'j' );
+Trie.insert( '124532', 'k' );
+Trie.insert( '2333', 'l' );
+Trie.insert( '422222', 'm' );
+Trie.insert( '1', 'n' );
+console.log( Trie.containsKey( '5432' ) );
+console.log( Trie.containsKey( '12' ) );
+console.log( Trie.containsKey( '4', true ) );
+Utils.debugObjectPrint( Trie.getKeys() );
+Utils.debugObjectPrint( Trie.getValues() );
+console.log( Trie.findKey( '4', true ) );
+Trie.delete( '12' );
+Trie.delete( '11' );
+Trie.delete( '13' );
+Trie.delete( '14' );
+Trie.delete( '15' );
+Trie.delete( '23' );
+Trie.delete( '2333' );
+Trie.insert( '2', 'q' )
+Utils.debugObjectPrint( Trie.getKeys() );
+Utils.debugObjectPrint( Trie.getValues() );
+Utils.debugObjectPrint( Trie.findKey( '1' ).getValues() );
+Utils.debugObjectPrint( Trie.findKey( '124532' ).getKey() );
+console.log( '\n\n' );
+console.log( Trie.insertPreventOverwrite( '123', 'o' ) );
+console.log( Trie.insertPreventOverwrite( '123', 'p' ) );
+Utils.debugObjectPrint( Trie.findValue( StringCompare ) );
+Utils.debugObjectPrint( Trie.findAllValue( StringCompare ) );
+Utils.debugObjectPrint( Trie.getKeysAndValues() );*/

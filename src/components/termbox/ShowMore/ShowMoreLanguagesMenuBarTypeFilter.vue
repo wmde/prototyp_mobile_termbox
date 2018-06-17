@@ -6,7 +6,8 @@ export default {
 		menuSwitch: Object,
 		directives: Object
 	},
-	data: function () {
+	data: function ()
+	{
 		return {
 			marginTopElement: null,
 			marginTop: 0,
@@ -17,17 +18,21 @@ export default {
 		};
 	},
 	computed: {
-		isLabeled: function () {
+		isLabeled: function ()
+		{
 			return this.$props.directives.get( 'labels' );
 		},
-		isDescribed: function () {
+		isDescribed: function ()
+		{
 			return this.$props.directives.get( 'descriptions' );
 		},
-		isAka: function () {
+		isAka: function ()
+		{
 			return this.$props.directives.get( 'aliases' );
 		}
 	},
-	mounted: function () {
+	mounted: function ()
+	{
 		document.getElementById( 'showMoreLanguagesMenuBar' ).removeAttribute( 'style' );
 		this.$data.marginTopElement = document.getElementById( 'showMoreLanguagesTypeFilterMenu' );
 		this.$data.labels = this.$props.directives.get( 'labels' );
@@ -35,40 +40,52 @@ export default {
 		this.$data.aliases = this.$props.directives.get( 'aliases' );
 
 	},
-	destroyed: function () {
+	destroyed: function ()
+	{
 		document.getElementById( 'showMoreLanguagesMenuBar' ).setAttribute( 'style', 'height:54px;' );
 	},
-	updated: function () {
+	updated: function ()
+	{
 		const Differenz = this.$data.marginTop - DomHelper.getPositionY( this.$data.marginTopElement );
 		const ScrollTo = this.$data.offset - Differenz;
-		if ( 0 !== Differenz ) {
-			if ( 0 >= ScrollTo ) {
+		if ( 0 !== Differenz )
+		{
+			if ( 0 >= ScrollTo )
+			{
 				window.scrollTo( 0, 0 );
-			} else {
+			}
+			else
+			{
 				window.scrollTo( 0, ScrollTo );
 			}
 		}
 	},
 	methods: {
-		doSwitch: function ( Key ) {
+		doSwitch: function ( Key )
+		{
 			this.$data.offset = window.pageYOffset;
 			this.$data.marginTop = DomHelper.getPositionY( this.$data.marginTopElement );
 			this.$props.directives.set( Key, !this.$props.directives.get( Key ) );
 			this.$data[ Key ] = !this.$data[ Key ];
 		},
-		doLabel: function () {
+		doLabel: function ()
+		{
 			this.doSwitch( 'labels' );
 		},
-		doDescription: function () {
+		doDescription: function ()
+		{
 			this.doSwitch( 'descriptions' );
 		},
-		doAka: function () {
+		doAka: function ()
+		{
 			this.doSwitch( 'aliases' );
 		},
-		activateLanguageFilter: function () {
+		activateLanguageFilter: function ()
+		{
 			this.$props.menuSwitch.set( 'switch', -1 );
 		},
-		close: function () {
+		close: function ()
+		{
 			this.$props.menuSwitch.set( 'switch', 0 );
 		}
 	}

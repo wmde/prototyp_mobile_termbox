@@ -9,7 +9,8 @@ export default {
 		languagesSettings: Object,
 		menuSwitch: Object
 	},
-	data: function () {
+	data: function ()
+	{
 		return {
 			reframe: '',
 			reframeIntervall: '',
@@ -24,7 +25,8 @@ export default {
 			otherLanguages: []
 		};
 	},
-	mounted: function () {
+	mounted: function ()
+	{
 		const TopBar = document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' );
 		this.$data.reAdjust = [
 			TopBar,
@@ -50,15 +52,18 @@ export default {
 		window.scrollTo( 0, 0 );
 		this.reframeTop();
 	},
-	updated: function () {
+	updated: function ()
+	{
 		this.$data.reAdjust[ 0 ].removeAttribute( 'style' );
 		this.$data.reAdjust[ 1 ].removeAttribute( 'style' );
 		this.reframeTop();
 	},
-	beforeDestroy: function () {
+	beforeDestroy: function ()
+	{
 		let Index;
 		this.$props.languagesSettings.get( 'otherLanguages' ).length = 0;
-		for ( Index in this.$data.otherLanguages ) {
+		for ( Index in this.$data.otherLanguages )
+		{
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.otherLanguages[ Index ] );
 		}
 
@@ -70,25 +75,41 @@ export default {
 		window.scrollTo( 0, this.$data.lastPosition );
 	},
 	computed: {
-		getTopLanguages() {
-			if ( 0 === this.$data.otherLanguages.length ) {
+		getTopLanguages()
+		{
+			if ( 0 === this.$data.otherLanguages.length )
+			{
 				this.getOtherLanguages();
 			}
 			return this.$data.otherLanguages;
 		},
-		getLanguageNames: function () {
+		getLanguageNames: function ()
+		{
 			return this.$props.languagesSettings.get( 'languageNames' );
 		},
-		getLanguages() {
-			return this.pushVisibleLanguages( 'possibleLanguages' );
+		getLanguages()
+		{
+			let CurrentSearch
+			if ( 0 === this.$data.keyMap.length )
+			{
+				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues()
+			}
+			else
+			{
+				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase()
+				return this.$props.languagesSettings.get( 'languages' ).findKey( CurrentSearch ).getKeysAndValues()
+			}
 		},
-		getCurrentLanguage() {
+		getCurrentLanguage()
+		{
 			return this.$props.languagesSettings.get( 'currentLanguage' );
 		}
 	},
 	methods: {
-		showCurrentLanguage: function () {
-			if ( 0 === this.$data.keyMap.length ) {
+		showCurrentLanguage: function ()
+		{
+			if ( 0 === this.$data.keyMap.length )
+			{
 				return this.$props.languagesSettings.get( 'currentLanguage' );
 			}
 
@@ -96,41 +117,55 @@ export default {
 				this.$props.languagesSettings.get( 'currentLanguage' ) ]
 				.toLowerCase()
 				.startsWith( this.$data.keyMap.toLowerCase() )
-			) {
+			)
+			{
 				return true;
 			}
 			return false;
 		},
-		getOtherLanguages: function () {
+		getOtherLanguages: function ()
+		{
 			let Index;
-			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) ) {
+			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) )
+			{
 				if ( -1 < Utils.binarySearch(
 					this.$props.languagesSettings.get( 'possibleLanguages' ),
 					this.$props.languagesSettings.get( 'otherLanguages' )[ Index ]
-				) ) {
+				) )
+				{
 					this.$data.otherLanguages.push( this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] );
 				}
 			}
 		},
-		focusSearchField: function () {
+		focusSearchField: function ()
+		{
 			this.$data.searchField.focus();
 		},
-		ignoreLanguage: function ( Language ) {
+		ignoreLanguage: function ( Language )
+		{
 			return this.$props.languagesSettings.get( 'currentLanguage' ) === Language;
 		},
-		isSelected: function ( Language ) {
-			if ( -1 < Utils.binarySearch( this.$data.otherLanguages, Language ) ) {
+		isSelected: function ( Language )
+		{
+			if ( -1 < Utils.binarySearch( this.$data.otherLanguages, Language ) )
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
-		},
-		pushVisibleLanguages( Key ) {
+		}
+		/*pushVisibleLanguages( Key )
+		{
 			let Index;
 			const Output = [];
-			if ( 0 === this.$data.keyMap.length ) {
-				for ( Index in this.$props.languagesSettings.get( Key ) ) {
-					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) ) {
+			if ( 0 === this.$data.keyMap.length )
+			{
+				for ( Index in this.$props.languagesSettings.get( Key ) )
+				{
+					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) )
+					{
 						Output.push(
 							[
 								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
@@ -139,11 +174,15 @@ export default {
 						);
 					}
 				}
-			} else {
-				for ( Index in this.$props.languagesSettings.get( Key ) ) {
+			}
+			else
+			{
+				for ( Index in this.$props.languagesSettings.get( Key ) )
+				{
 					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
 						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.keyMap.toLowerCase() )
-					) {
+					)
+					{
 						Output.push(
 							[
 								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
@@ -154,20 +193,27 @@ export default {
 				}
 			}
 
-			return Output.sort( function ( A, B ) { return A[ 0 ].localeCompare( B[ 0 ] ); } );
-		},
-		close: function () {
+			return Output.sort( function ( A, B )
+			{
+				return A[ 0 ].localeCompare( B[ 0 ] );
+			} );
+		}*/,
+		close: function ()
+		{
 			this.$props.menuSwitch.set( 'switch', 0 );
 		},
-		activateTypeFilter: function () {
+		activateTypeFilter: function ()
+		{
 			this.$props.menuSwitch.set( 'switch', 1 );
 		},
-		selectLanguage: function ( Language ) {
+		selectLanguage: function ( Language )
+		{
 			const Index = Utils.binaryInsertSearch(
 				this.$data.otherLanguages,
 				Language
 			);
-			if ( 0 > Index ) {
+			if ( 0 > Index )
+			{
 				this.$data.otherLanguages.splice(
 					-( Index + 1 ),
 					0,
@@ -178,12 +224,14 @@ export default {
 			this.renderTextInput();
 			this.$forceUpdate();
 		},
-		unSelectLanguage: function ( Language ) {
+		unSelectLanguage: function ( Language )
+		{
 			const Index = Utils.binarySearch(
 				this.$data.otherLanguages,
 				Language
 			);
-			if ( -1 < Index ) {
+			if ( -1 < Index )
+			{
 				this.$data.otherLanguages.splice(
 					Index,
 					1
@@ -193,42 +241,54 @@ export default {
 			this.renderTextInput();
 			this.$forceUpdate();
 		},
-		renderTextInput: function () {
+		renderTextInput: function ()
+		{
 			let Reload;
-			if ( 0 < this.$data.keyMap.length ) {
+			if ( 0 < this.$data.keyMap.length )
+			{
 				Reload = this.$data.keyMap;
 				this.$data.keyMap = '';
 				this.$data.keyMap = Reload;
 			}
 		},
-		reframeTop: function () {
+		reframeTop: function ()
+		{
 
 			const TopHeight = DomHelper.computeHeight( this.$data.reAdjust[ 2 ] )				+
 				DomHelper.computeHeight( this.$data.reAdjust[ 3 ] );
 
-			if ( null === this.$data.reAdjust[ 0 ] || null === this.$data.documentBody ) {
+			if ( null === this.$data.reAdjust[ 0 ] || null === this.$data.documentBody )
+			{
 				return;
 			}
 
-			if ( null === this.$data.reAdjust[ 0 ].getAttribute( 'style' ) ) {
+			if ( null === this.$data.reAdjust[ 0 ].getAttribute( 'style' ) )
+			{
 				this.$data.reAdjust[ 0 ].setAttribute( 'style', `height:${ TopHeight }px;` );
-			} else {
+			}
+			else
+			{
 				this.$data.reAdjust[ 0 ].style.height = `${ TopHeight }px;`;
 			}
 
-			if ( null === this.$data.reAdjust[ 1 ].getAttribute( 'style' ) ) {
+			if ( null === this.$data.reAdjust[ 1 ].getAttribute( 'style' ) )
+			{
 				this.$data.reAdjust[ 1 ].setAttribute( 'style', `margin-top:${
 					( TopHeight + 25 )
 				}px;` );
-			} else {
+			}
+			else
+			{
 				this.$data.reAdjust[ 1 ].style.marginTop = `${
 					( TopHeight + 25 )
 				}px;`;
 			}
 			DomHelper.reframeToElement( this.$data.reAdjust[ 0 ], this.$data.documentBody );
 		},
-		reframeComponent: function () {
-			if ( this.$data.lastWidth !== window.innerWidth ) {
+		reframeComponent: function ()
+		{
+			if ( this.$data.lastWidth !== window.innerWidth )
+			{
 				DomHelper.reframeToElement( this.$data.toReframe, this.$data.documentBody );
 				this.$data.reAdjust[ 0 ].removeAttribute( 'style' );
 				this.reframeTop();
@@ -275,17 +335,17 @@ export default {
 				<!-- just stupido you are forced to do that //-->
 				<div v-bind:key="index"
 					v-for="(language, index) in getLanguages">
-					<div v-if="false === ignoreLanguage(language[1]) && false === isSelected(language[1])"
-						@click="selectLanguage(language[1])"
+					<div v-if="false === ignoreLanguage(language) && false === isSelected(language)"
+						@click="selectLanguage(language)"
 						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
-						<label>{{language[0]}}</label>
+						<label>{{index}}</label>
 					</div>
-					<div v-else-if="false === ignoreLanguage(language[1]) && true === isSelected(language[1])"
-						@click="unSelectLanguage(language[1])"
+					<div v-else-if="false === ignoreLanguage(language) && true === isSelected(language)"
+						@click="unSelectLanguage(language)"
 						class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
-						<label>{{language[0]}}</label>
+						<label>{{index}}</label>
 					</div>
 				</div>
 			</div>

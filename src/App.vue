@@ -6,15 +6,16 @@ import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
-import PatricaTrie from './components/lib/Patrica';
+import { PatricaTrie } from './components/lib/Patrica';
 import { DomHelper } from './components/lib/DomHelpers';
 
-function wrapTerm( Term ) {
+function wrapTerm( Term )
+{
 	let Key, Alias, Index;
 	const NewTerms = {};
 	const Languages = [];
-	const Trie = new PatricaTrie();
-	for ( Key in Term.labels ) {
+	for ( Key in Term.labels )
+	{
 		NewTerms[ Key ] = {
 			title: Term.labels[ Key ].value
 		};
@@ -22,7 +23,8 @@ function wrapTerm( Term ) {
 		NewTerms[ Key ].language = Key;
 		NewTerms[ Key ].id = Term.id;
 		Index = Utils.binaryInsertSearch( Languages, Key );
-		if ( 0 > Index ) {
+		if ( 0 > Index )
+		{
 			Languages.splice(
 				-( Index + 1 ),
 				0,
@@ -30,24 +32,27 @@ function wrapTerm( Term ) {
 			);
 		}
 
-		Trie.insert( Key );
-
-		if ( Key in Term.descriptions ) {
+		if ( Key in Term.descriptions )
+		{
 			NewTerms[ Key ].description = Term.descriptions[ Key ].value;
-		} else {
+		}
+		else
+		{
 			NewTerms[ Key ].description = '';
 		}
 
 		NewTerms[ Key ].aliases = [];
-		if ( Key in Term.aliases ) {
-			for ( Alias in Term.aliases[ Key ] ) {
+		if ( Key in Term.aliases )
+		{
+			for ( Alias in Term.aliases[ Key ] )
+			{
 				NewTerms[ Key ].aliases.push( Term.aliases[ Key ][ Alias ].value );
 			}
 		}
 	}
 
-	// Add PTrie here
-	for ( Key in NewTerms ) {
+	for ( Key in NewTerms )
+	{
 		NewTerms[ Key ].languages = ObjectHelper.copyObj( Languages );
 	}
 
@@ -61,11 +66,13 @@ export default {
 		Termbox,
 		Statementbox
 	},
-	beforeCreate: function () {
+	beforeCreate: function ()
+	{
 
 		// Detect item ID from URL, fallback to Q64
 		let itemId = document.URL.substr( document.URL.lastIndexOf( '/' ) + 1 );
-		if ( !itemId || !itemId.match( /^[Qq][0-9].*$/ ) ) {
+		if ( !itemId || !itemId.match( /^[Qq][0-9].*$/ ) )
+		{
 			itemId = 'Q64';
 		}
 
@@ -84,9 +91,11 @@ export default {
 			headers: {
 				// 'user-agent': 'Wikidata Mobile Term Box Prototype'
 			},
-			transformResponse: [ function ( data ) {
+			transformResponse: [ function ( data )
+			{
 				data = JSON.parse( data );
-				for ( const name in data.entities ) {
+				for ( const name in data.entities )
+				{
 					// We only requested a single entity, so get it
 					return data.entities[ name ];
 				}
@@ -98,42 +107,55 @@ export default {
 		 */
 		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
-	mounted: function () {
+	mounted: function ()
+	{
 		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
 		this.$data.reframeIntervall = window.setInterval( this.reframe, 10 );
 
-		if ( false === this.$data.termLoaded ) {
+		if ( false === this.$data.termLoaded )
+		{
 			this.getClientLanguages();
 			setTimeout( this.refreshOnLoaded, 10 );
 		}
 	},
 	methods: {
-		reframe: function () {
-			if ( this.$data.lastWidth !== window.innerWidth ) {
+		reframe: function ()
+		{
+			if ( this.$data.lastWidth !== window.innerWidth )
+			{
 				DomHelper.reframe( this.$data.documentBody, window.innerWidth, 800 );
-				if ( false === Utils.isEmpty( this.$data.documentBody.getAttribute( 'style' ) ) ) {
+				if ( false === Utils.isEmpty( this.$data.documentBody.getAttribute( 'style' ) ) )
+				{
 					this.$data.documentBody.style.margin = 'auto';
-				} else {
+				}
+				else
+				{
 					this.$data.documentBody.removeAttribute( 'style' );
 				}
 				this.$data.lastWidth = window.innerWidth;
-				this.$nextTick( function () {
+				this.$nextTick( function ()
+				{
 					this.$forceUpdate();
 				} );
 			}
 		},
-		getClientLanguages: function () {
+		getClientLanguages: function ()
+		{
 			let Index, Value, Index2;
-			if ( 'undefined' !== typeof window.navigator.language ) {
+			if ( 'undefined' !== typeof window.navigator.language )
+			{
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
 			}
 
-			if ( 'undefined' !== typeof window.navigator.languages ) {
-				for ( Index in window.navigator.languages ) {
+			if ( 'undefined' !== typeof window.navigator.languages )
+			{
+				for ( Index in window.navigator.languages )
+				{
 					Value = window.navigator.languages[ Index ].toLowerCase();
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-					if ( 0 > Index2 ) {
+					if ( 0 > Index2 )
+					{
 						this.$data.languages.splice(
 							-( Index2 + 1 ),
 							0,
@@ -143,10 +165,12 @@ export default {
 				}
 			}
 
-			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
+			if ( 'undefined' !== typeof window.navigator.systemLanguage )
+			{
 				Value = window.navigator.systemLanguage.toLowerCase();
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
+				if ( 0 > Index2 )
+				{
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
@@ -156,10 +180,12 @@ export default {
 				this.$data.defaultLanguage = Value;
 			}
 
-			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
+			if ( 'undefined' !== typeof window.navigator.browserLanguage )
+			{
 				Value = window.navigator.browserLanguage.toLowerCase();
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
+				if ( 0 > Index2 )
+				{
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
@@ -169,10 +195,12 @@ export default {
 				this.$data.defaultLanguage = Value;
 			}
 
-			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
+			if ( 'undefined' !== typeof window.navigator.userLanguage )
+			{
 				Value = window.navigator.userLanguage.toLowerCase();
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				if ( 0 > Index2 ) {
+				if ( 0 > Index2 )
+				{
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
@@ -182,54 +210,86 @@ export default {
 				this.$data.defaultLanguage = Value;
 			}
 		},
-		getCurrentLanguage: function ( SupportedLanguages ) {
+		getCurrentLanguage: function ( SupportedLanguages )
+		{
 			let Index;
-			if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
+			if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) )
+			{
 				this.$data.languages.splice( this.$data.languages.indexOf( this.$data.defaultLanguage ), 1 );
-				for ( Index in this.$data.languages ) {
-					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) ) {
+				for ( Index in this.$data.languages )
+				{
+					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) )
+					{
 						this.$data.defaultLanguage = this.$data.languages[ Index ];
 						break;
 					}
 				}
-			} else {
-				if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
+			}
+			else
+			{
+				if ( -1 < SupportedLanguages.indexOf( 'en' ) )
+				{
 					this.$data.defaultLanguage = 'en';
-				} else {
+				}
+				else
+				{
 					this.$data.defaultLanguage = SupportedLanguages[ 0 ];
 				}
 			}
 
 			return this.$data.defaultLanguage;
 		},
-		getOtherLanguages: function () {
+		getOtherLanguages: function ()
+		{
 			return this.$data.languages;
 		},
-		refreshOnLoaded: function () {
+		refreshOnLoaded: function ()
+		{
+			let Index, Language
 			let Key = 'en';
-			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
+			let Trie = new PatricaTrie()
+			if (
+				false === Utils.isEmpty( CurrentTerm.Term )
+			&&
+				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
+			)
+			{
 				this.$data.languageSettings = new SharedStore();
-				if ( false === ( Key in CurrentTerm.Term ) ) {
+				if ( false === ( Key in CurrentTerm.Term ) )
+				{
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
+
+				for( Index in CurrentLanguageNames.LanguageNames )
+				{
+					Language =  CurrentLanguageNames.LanguageNames[Index].charAt(0).toUpperCase()
+						+  CurrentLanguageNames.LanguageNames[Index].slice(1).toLowerCase();
+					Trie.insert( Language, Index )
+				}
+
 				this.$data.languageSettings.multibleSets( [
-					[ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
+					[ 'term', CurrentTerm.Term  ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
-					[ 'languageNames', CurrentLanguageNames.LanguageNames ]
+					[ 'languageNames', CurrentLanguageNames.LanguageNames ],
+					[ 'languages', Trie ]
 				] );
 
 				this.$data.termLoaded = true;
-				this.$nextTick( function () {
+				this.$nextTick( function ()
+				{
 					this.$forceUpdate();
 				} );
-			} else {
+			}
+			else
+			{
 				setTimeout( this.refreshOnLoaded, 10 );
 			}
 		}
 	},
-	data: function () {
+	data: function ()
+	{
 		return {
 			termLoaded: false,
 			languageSettings: null,
@@ -241,7 +301,8 @@ export default {
 		};
 	},
 	computed: {
-		getLanguagesSettings: function () {
+		getLanguagesSettings: function ()
+		{
 			return this.$data.languageSettings;
 		}
 	}

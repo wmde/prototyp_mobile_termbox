@@ -10,31 +10,39 @@ export default {
 	},
 	components: { TermContentBox, ShowMoreLanguagesBar },
 	methods: {
-		getCurrentLanguage: function () {
+		getCurrentLanguage: function ()
+		{
 			return this.$props.languagesSettings.get( 'currentLanguage' );
 		}
 
 	},
 	computed: {
-		id: function () {
+		id: function ()
+		{
 			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].id;
 		},
-		title: function () {
+		title: function ()
+		{
 			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].title;
 		},
-		description: function () {
+		description: function ()
+		{
 			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].description;
 		},
-		aliases: function () {
+		aliases: function ()
+		{
 			return this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].aliases;
 		},
-		getTerm: function () {
+		getTerm: function ()
+		{
 			return ObjectHelper.copyObj( this.$props.languagesSettings.get( 'term' ) );
 		},
-		hasAlias: function () {
+		hasAlias: function ()
+		{
 			return 0 < this.$props.languagesSettings.get( 'term' )[ this.getCurrentLanguage() ].aliases;
 		},
-		getLanguagesSettings: function () {
+		getLanguagesSettings: function ()
+		{
 			return this.$props.languagesSettings;
 		}
 	}
