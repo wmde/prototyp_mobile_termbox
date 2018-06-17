@@ -112,7 +112,12 @@ class PatricaTrieNode {
 	}
 
 	getKeys() {
-		const Prefix = this.__Parent.getKey();
+		let Prefix;
+		if ( false === this.__Parent._IsRoot ) {
+			Prefix = this.__Parent.getKey();
+		} else {
+			Prefix = '';
+		}
 		const Output = [];
 		this._getKeys( Prefix, Output );
 		return Output;
@@ -133,7 +138,12 @@ class PatricaTrieNode {
 
 	getKeysAndValues() {
 		const Return = {};
-		const Key = this.__Parent.getKey();
+		let Key;
+		if ( false === this.__Parent._IsRoot ) {
+			Key = this.__Parent.getKey();
+		} else {
+			Key = '';
+		}
 		this._getKeysAndValues( Key, Return );
 		return Return;
 	}
