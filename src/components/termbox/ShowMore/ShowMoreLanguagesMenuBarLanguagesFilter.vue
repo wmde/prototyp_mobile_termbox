@@ -85,7 +85,12 @@ export default {
 				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues();
 			} else {
 				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
-				return this.$props.languagesSettings.get( 'languages' ).findKey( CurrentSearch ).getKeysAndValues();
+				CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findKey( CurrentSearch );
+				if ( null === CurrentSearch ) {
+					return {};
+				} else {
+					return CurrentSearch.getKeysAndValues();
+				}
 			}
 		},
 		getCurrentLanguage() {
