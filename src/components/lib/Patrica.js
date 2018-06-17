@@ -108,7 +108,7 @@ class PatricaTrieNode
 
 	getKey()
 	{
-		if( true === this.__Parent._IsRoot )
+		if ( true === this.__Parent._IsRoot )
 		{
 			return this.__Key;
 		}
@@ -150,26 +150,26 @@ class PatricaTrieNode
 	{
 		let Index;
 		let Output = {};
-		let Return = {}
+		const Return = {};
 
 		if ( true === this._IsEnding )
 		{
 			Output[ this.getKey() ] = this.__Value;
 		}
 
-		for( Index = 0; Index < this._Children.length; Index++ )
+		for ( Index = 0; Index < this._Children.length; Index++ )
 		{
-			Output = Object.assign({}, Output, this._Children[ Index ].getKeysAndValues() )
+			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() );
 		}
 
-		Object.keys(Output).sort().forEach(
-			function(Key)
+		Object.keys( Output ).sort().forEach(
+			function ( Key )
 			{
-				Return[Key] = Output[Key];
+				Return[ Key ] = Output[ Key ];
 			}
 		);
 
-		return Return
+		return Return;
 	}
 
 	__findKey( Key )
@@ -727,31 +727,31 @@ class PatricaTrieNode
 				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
 			}
 
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
 		for ( Index = Start; Index < End; Index++ )
 		{
 			Found = this._Children[ Index ].findAllValue( Comparer );
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
 		if ( 0 < NewEnd.length )
 		{
 			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
-		for( Index = 0; Index < Return.length; Index++ )
+		for ( Index = 0; Index < Return.length; Index++ )
 		{
-			Return[Index] = this.__Key + Return[Index]
+			Return[ Index ] = this.__Key + Return[ Index ];
 		}
 
 		if ( true === this._IsEnding )
 		{
 			if ( true === Comparer.compare( this.__Value ) )
 			{
-				Return.push( this.__Key  );
+				Return.push( this.__Key );
 			}
 		}
 
@@ -878,7 +878,7 @@ class PatricaTrie extends PatricaTrieNode
 
 	getKey()
 	{
-		return undefined
+		return undefined;
 	}
 
 	getKeys()
@@ -917,21 +917,21 @@ class PatricaTrie extends PatricaTrieNode
 	{
 		let Index;
 		let Output = [];
-		let Return = {}
+		const Return = {};
 
-		for( Index = 0; Index < this._Children.length; Index++ )
+		for ( Index = 0; Index < this._Children.length; Index++ )
 		{
-			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() )
+			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() );
 		}
 
-		Object.keys(Output).sort().forEach(
-			function(Key)
+		Object.keys( Output ).sort().forEach(
+			function ( Key )
 			{
-				Return[Key] = Output[Key];
+				Return[ Key ] = Output[ Key ];
 			}
 		);
 
-		return Return
+		return Return;
 	}
 
 	findValue( Comparer, StartKey = undefined, EndKey = undefined )
@@ -945,22 +945,22 @@ class PatricaTrie extends PatricaTrieNode
 		if ( 'string' === typeof StartKey )
 		{
 			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
-			if( -1 === Start )
+			if ( -1 === Start )
 			{
-				Start = 0
+				Start = 0;
 			}
 			else
 			{
-				NewStart = StartKey.substring(1);
+				NewStart = StartKey.substring( 1 );
 			}
 		}
 
 		if ( 'string' === typeof EndKey )
 		{
 			End = this.__findKey( EndKey.charCodeAt( 0 ) );
-			if( -1 === End )
+			if ( -1 === End )
 			{
-				Start = 0
+				Start = 0;
 			}
 			else
 			{
@@ -1059,19 +1059,19 @@ class PatricaTrie extends PatricaTrieNode
 				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
 			}
 
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
 		for ( Index = Start; Index < End; Index++ )
 		{
 			Found = this._Children[ Index ].findAllValue( Comparer );
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
 		if ( 0 < NewEnd.length )
 		{
 			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
-			Return = Return.concat( Found )
+			Return = Return.concat( Found );
 		}
 
 		return Return;

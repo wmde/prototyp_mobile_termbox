@@ -89,15 +89,15 @@ export default {
 		},
 		getLanguages()
 		{
-			let CurrentSearch
+			let CurrentSearch;
 			if ( 0 === this.$data.keyMap.length )
 			{
-				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues()
+				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues();
 			}
 			else
 			{
-				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase()
-				return this.$props.languagesSettings.get( 'languages' ).findKey( CurrentSearch ).getKeysAndValues()
+				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
+				return this.$props.languagesSettings.get( 'languages' ).findKey( CurrentSearch ).getKeysAndValues();
 			}
 		},
 		getCurrentLanguage()
@@ -155,49 +155,7 @@ export default {
 			{
 				return false;
 			}
-		}
-		/*pushVisibleLanguages( Key )
-		{
-			let Index;
-			const Output = [];
-			if ( 0 === this.$data.keyMap.length )
-			{
-				for ( Index in this.$props.languagesSettings.get( Key ) )
-				{
-					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) )
-					{
-						Output.push(
-							[
-								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
-								this.$props.languagesSettings.get( Key )[ Index ]
-							]
-						);
-					}
-				}
-			}
-			else
-			{
-				for ( Index in this.$props.languagesSettings.get( Key ) )
-				{
-					if ( this.$props.languagesSettings.get( Key )[ Index ] in this.$props.languagesSettings.get( 'languageNames' ) &&
-						true === this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ].toLowerCase().startsWith( this.$data.keyMap.toLowerCase() )
-					)
-					{
-						Output.push(
-							[
-								this.$props.languagesSettings.get( 'languageNames' )[ this.$props.languagesSettings.get( Key )[ Index ] ],
-								this.$props.languagesSettings.get( Key )[ Index ]
-							]
-						);
-					}
-				}
-			}
-
-			return Output.sort( function ( A, B )
-			{
-				return A[ 0 ].localeCompare( B[ 0 ] );
-			} );
-		}*/,
+		},
 		close: function ()
 		{
 			this.$props.menuSwitch.set( 'switch', 0 );

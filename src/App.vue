@@ -245,12 +245,11 @@ export default {
 		},
 		refreshOnLoaded: function ()
 		{
-			let Index, Language
+			let Index, Language;
 			let Key = 'en';
-			let Trie = new PatricaTrie()
+			const Trie = new PatricaTrie();
 			if (
-				false === Utils.isEmpty( CurrentTerm.Term )
-			&&
+				false === Utils.isEmpty( CurrentTerm.Term )			&&
 				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
 			)
 			{
@@ -260,15 +259,15 @@ export default {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
 
-				for( Index in CurrentLanguageNames.LanguageNames )
+				for ( Index in CurrentLanguageNames.LanguageNames )
 				{
-					Language =  CurrentLanguageNames.LanguageNames[Index].charAt(0).toUpperCase()
-						+  CurrentLanguageNames.LanguageNames[Index].slice(1).toLowerCase();
-					Trie.insert( Language, Index )
+					Language = CurrentLanguageNames.LanguageNames[ Index ].charAt( 0 ).toUpperCase() +
+						CurrentLanguageNames.LanguageNames[ Index ].slice( 1 ).toLowerCase();
+					Trie.insert( Language, Index );
 				}
 
 				this.$data.languageSettings.multibleSets( [
-					[ 'term', CurrentTerm.Term  ],
+					[ 'term', CurrentTerm.Term ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
