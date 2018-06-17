@@ -1,25 +1,20 @@
 import { RuntimeErrorException } from './BaseExceptions.js';
 import Utils from '../../Utils';
 
-export default class CurrentTerm
-{
+export default class CurrentTerm {
 	static Term = '';
 	static Wrapper;
 	static __Dept = 0;
 
-	static loadTerm( Term )
-	{
+	static loadTerm( Term ) {
 		CurrentTerm.Term = '';
 		Utils.get( Term, CurrentTerm.onLoadTerm, true );
 		Utils.waitUntil( CurrentTerm.termIsLoaded );
 	}
 
-	static onLoadTerm( Response, ResponseError )
-	{
-		if ( 'object' === typeof ResponseError )
-		{
-			if ( 2 === CurrentTerm.__Dept )
-			{
+	static onLoadTerm( Response, ResponseError ) {
+		if ( 'object' === typeof ResponseError ) {
+			if ( 2 === CurrentTerm.__Dept ) {
 				throw new RuntimeErrorException( ResponseError );
 			}
 			CurrentTerm.__Dept++;
@@ -29,23 +24,18 @@ export default class CurrentTerm
 		}
 
 		// If this was a web request the response objects data is in the data property
-		if ( Response.hasOwnProperty( 'data' ) )
-		{
+		if ( Response.hasOwnProperty( 'data' ) ) {
 			Response = Response.data;
 		}
 
-		if ( 'function' !== typeof CurrentTerm.Wrapper )
-		{
+		if ( 'function' !== typeof CurrentTerm.Wrapper ) {
 			CurrentTerm.Term = Response;
-		}
-		else
-		{
+		} else {
 			CurrentTerm.Term = CurrentTerm.Wrapper( Response );
 		}
 	}
 
-	static termIsLoaded()
-	{
+	static termIsLoaded() {
 		return Utils.isEmpty( CurrentTerm.Term );
 	}
 }

@@ -5,43 +5,34 @@ export default {
 		languagesSettings: Object,
 		directives: Object
 	},
-	data: function ()
-	{
+	data: function () {
 		return { otherLanguages: [] };
 	},
-	mounted: function ()
-	{
+	mounted: function () {
 		this.$data.otherLanguages = this.$props.languagesSettings.get( 'otherLanguages' );
 	},
 	computed: {
-		getTerm: function ()
-		{
+		getTerm: function () {
 			return this.$props.languagesSettings.get( 'term' );
 		},
-		getLanguageNames: function ()
-		{
+		getLanguageNames: function () {
 			return this.$props.languagesSettings.get( 'languageNames' );
 		},
-		currentLanguage: function ()
-		{
+		currentLanguage: function () {
 			return this.$props.languagesSettings.get( 'currentLanguage' );
 		},
-		displayLabels: function ()
-		{
+		displayLabels: function () {
 			return this.$props.directives.get( 'labels' );
 		},
-		displayDescriptions: function ()
-		{
+		displayDescriptions: function () {
 			return this.$props.directives.get( 'descriptions' );
 		},
-		displayAliases: function ()
-		{
+		displayAliases: function () {
 			return this.$props.directives.get( 'aliases' );
 		}
 	},
 	methods: {
-		shouldDisplayInOtherLanguages: function ( Language )
-		{
+		shouldDisplayInOtherLanguages: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
 					this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
 		}

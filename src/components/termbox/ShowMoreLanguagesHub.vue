@@ -10,8 +10,7 @@ export default{
 	props: {
 		languagesSettings: Object
 	},
-	data: function ()
-	{
+	data: function () {
 		const Directives = new SharedStore();
 		Directives.set( 'labels', true );
 		Directives.set( 'descriptions', true );
@@ -20,18 +19,15 @@ export default{
 			displayDirectives: Directives
 		};
 	},
-	mounted: function ()
-	{
+	mounted: function () {
 		this.loadProperties();
 		this.$data.IsScrolledIntervall = setInterval( this.keepButtonFieldVisible, 1 );
 	},
-	destroyed: function ()
-	{
+	destroyed: function () {
 		clearInterval( this.$data.IsScrolledIntervall );
 	},
 	methods: {
-		loadProperties()
-		{
+		loadProperties() {
 			this.$data.TroggelField = document.getElementById( 'showMoreLanguagesBarTroggleField' );
 			this.$data.MoreImage = document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' );
 			this.$data.Repositioning = null;
@@ -45,45 +41,34 @@ export default{
 				[ 'keepOnTheTop' ]
 			);
 		},
-		showMoreLanguages()
-		{
+		showMoreLanguages() {
 			const More = document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' );
 
-			if ( 'inline' === More.style.display )
-			{
+			if ( 'inline' === More.style.display ) {
 				this.$data.MoreImage.style.display = 'inline';
 				More.style.display = 'none';
 				this.goBackToStartPositionTroggleField();
-			}
-			else
-			{
+			} else {
 				More.style.display = 'inline';
 				this.$data.MoreImage.style.display = 'none';
 				DomHelper.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 			}
 		},
-		keepButtonFieldVisible()
-		{
+		keepButtonFieldVisible() {
 
-			if ( 'none' === this.$data.MoreImage.style.display )
-			{
+			if ( 'none' === this.$data.MoreImage.style.display ) {
 				this.$data.DomEffects.sticky();
 			}
 		},
-		goBackToStartPositionTroggleField()
-		{
+		goBackToStartPositionTroggleField() {
 			let Scroll, Shrink;
 			this.$data.TroggelField.removeAttribute( 'class' );
-			if ( 0 !== window.pageYOffset )
-			{
+			if ( 0 !== window.pageYOffset ) {
 				Scroll = DomEffects.scrollToMinusY( 0, this.scrollHook );
 				Shrink = DomEffects.shrink( this.$data.ContentBox, 0, window.innerWidth );
-				if ( false === Scroll || false === Shrink )
-				{
+				if ( false === Scroll || false === Shrink ) {
 					this.$data.Repositioning = setTimeout( this.goBackToStartPositionTroggleField, 50 );
-				}
-				else
-				{
+				} else {
 					clearTimeout( this.$data.Repositioning );
 					this.$data.Repositioning = null;
 					DomHelper.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
@@ -91,25 +76,20 @@ export default{
 					this.$data.TroggelField.removeAttribute( 'style' );
 
 				}
-			}
-			else
-			{
+			} else {
 				DomHelper.removeClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 				this.$data.ContentBox.removeAttribute( 'style' );
 			}
 		},
-		scrollHook()
-		{
+		scrollHook() {
 			this.$data.TroggelField.removeAttribute( 'class' );
 		}
 	},
 	computed: {
-		getLanguagesSettings()
-		{
+		getLanguagesSettings() {
 			return this.$props.languagesSettings;
 		},
-		getDirectives()
-		{
+		getDirectives() {
 			return this.$data.displayDirectives;
 		}
 	}

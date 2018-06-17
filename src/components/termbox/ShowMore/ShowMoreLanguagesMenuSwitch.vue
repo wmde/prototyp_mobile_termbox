@@ -10,33 +10,27 @@ export default {
 		directives: Object,
 		languagesSettings: Object
 	},
-	data: function ()
-	{
+	data: function () {
 		const State = new SharedStore();
 		State.set( 'switch', 0 );
 		return { menuSwitch: State };
 	},
 	computed: {
-		getLanguagesSettings: function ()
-		{
+		getLanguagesSettings: function () {
 			return this.$props.languagesSettings;
 		},
-		getSwitch: function ()
-		{
+		getSwitch: function () {
 			return this.$data.menuSwitch;
 		},
-		getDirectives: function ()
-		{
+		getDirectives: function () {
 			return this.$props.directives;
 		}
 	},
 	methods: {
-		activateLanguageFilter: function ()
-		{
+		activateLanguageFilter: function () {
 			this.$data.menuSwitch.set( 'switch', -1 );
 		},
-		activateTypeFilter: function ()
-		{
+		activateTypeFilter: function () {
 			this.$data.menuSwitch.set( 'switch', 1 );
 		}
 	}
