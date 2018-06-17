@@ -65,20 +65,21 @@ class PatricaTrieNode {
 		return this.__Value;
 	}
 
-	getValues() {
+	_getValues( Return ) {
 		let Child;
-		let Output = [];
 
 		if ( true === this._IsEnding ) {
-			Output.push( this.__Value );
+			Return.push( this.__Value );
 		}
 
-		if ( 0 !== this._Children.length ) {
-			for ( Child in this._Children ) {
-				Output = Output.concat( this._Children[ Child ].getValues() );
-			}
+		for ( Child in this._Children ) {
+			this._Children[ Child ]._getValues( Return );
 		}
+	}
 
+	getValues() {
+		const Output = [];
+		this._getValues( Output );
 		return Output;
 	}
 
@@ -94,48 +95,44 @@ class PatricaTrieNode {
 		}
 	}
 
-	getKeys() {
-		let Child, Index;
-		let Start = 0;
-		let Output = [];
+	_getKeys( Key, Return ) {
+		let Child;
+
+		Key += this.__Key;
 
 		if ( true === this._IsEnding ) {
-			Output.push( this.__Key );
-			Start = 1;
+			Return.push( Key );
 		}
 
-		if ( 0 !== this._Children.length ) {
-			for ( Child in this._Children ) {
-				Output = Output.concat( this._Children[ Child ].getKeys() );
-			}
-
-			for ( Index = Start; Index < Output.length; Index++ ) {
-				Output[ Index ] = this.__Key + Output[ Index ];
-			}
+		for ( Child in this._Children ) {
+			this._Children[ Child ]._getKeys( Key, Return );
 		}
+	}
 
+	getKeys() {
+		const Prefix = this.__Parent.getKey();
+		const Output = [];
+		this._getKeys( Prefix, Output );
 		return Output;
 	}
 
-	getKeysAndValues() {
+	_getKeysAndValues( Key, Return ) {
 		let Index;
-		let Output = {};
-		const Return = {};
+		Key += this.__Key;
 
 		if ( true === this._IsEnding ) {
-			Output[ this.getKey() ] = this.__Value;
+			Return[ Key ] = this.__Value;
 		}
 
 		for ( Index = 0; Index < this._Children.length; Index++ ) {
-			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() );
+			this._Children[ Index ]._getKeysAndValues( Key, Return );
 		}
+	}
 
-		Object.keys( Output ).sort().forEach(
-			function ( Key ) {
-				Return[ Key ] = Output[ Key ];
-			}
-		);
-
+	getKeysAndValues() {
+		const Return = {};
+		const Key = this.__Parent.getKey();
+		this._getKeysAndValues( Key, Return );
 		return Return;
 	}
 
@@ -693,45 +690,31 @@ class PatricaTrie extends PatricaTrieNode {
 
 	getKeys() {
 		let Child;
-		let Output = [];
+		const Output = [];
 
-		if ( 0 !== this._Children.length ) {
-			for ( Child in this._Children ) {
-				Output = Output.concat( this._Children[ Child ].getKeys() );
-			}
+		for ( Child in this._Children ) {
+			this._Children[ Child ]._getKeys( '', Output );
 		}
-
 		return Output;
 	}
 
 	getValues() {
 		let Child;
-		let Output = [];
+		const Output = [];
 
-		if ( 0 !== this._Children.length ) {
-			for ( Child in this._Children ) {
-				Output = Output.concat( this._Children[ Child ].getValues() );
-			}
+		for ( Child in this._Children ) {
+			this._Children[ Child ]._getValues( Output );
 		}
-
 		return Output;
 	}
 
 	getKeysAndValues() {
-		let Index;
-		let Output = [];
+		let Child;
 		const Return = {};
 
-		for ( Index = 0; Index < this._Children.length; Index++ ) {
-			Output = Object.assign( {}, Output, this._Children[ Index ].getKeysAndValues() );
+		for ( Child in this._Children ) {
+			this._Children[ Child ]._getKeysAndValues( '', Return );
 		}
-
-		Object.keys( Output ).sort().forEach(
-			function ( Key ) {
-				Return[ Key ] = Output[ Key ];
-			}
-		);
-
 		return Return;
 	}
 

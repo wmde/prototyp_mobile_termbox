@@ -1,7 +1,7 @@
-export class BaseException {
+export class BaseException extends Error {
 	constructor( Name, Message ) {
+		super( Message );
 		this.Name = Name;
-		this.Message = Message;
 		console.trace();// eslint-disable-line
 	}
 }
