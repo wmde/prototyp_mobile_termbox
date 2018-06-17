@@ -17,8 +17,10 @@ class PatricaTrieNode {
 	constructor( Key, Value, Parent ) {
 		let IsRoot = false;
 		if (
-			'undefined' === typeof Key		&&
-			'undefined' === typeof Value		&&
+			'undefined' === typeof Key
+		&&
+			'undefined' === typeof Value
+		&&
 			'undefined' === typeof Parent
 		) {
 			IsRoot = true;
@@ -136,7 +138,7 @@ class PatricaTrieNode {
 		return Return;
 	}
 
-	__findKey( Key ) {
+	__findByKey( Key ) {
 		let Start, End, Middle;
 
 		Start = 0;
@@ -156,7 +158,7 @@ class PatricaTrieNode {
 		return -1;
 	}
 
-	findKey( Key, Exact = false ) {
+	findByKey( Key, Exact = false ) {
 		let Index;
 		if ( true === this.__Key.startsWith( Key ) ) {
 			if ( true === Exact && Key !== this.__Key ) {
@@ -165,14 +167,10 @@ class PatricaTrieNode {
 				return this;
 			}
 		} else if ( Key.startsWith( this.__Key ) ) {
-			if ( 0 < this._Children.length ) {
-				Key = Key.substring( this.__Key.length );
-				Index = this.__findKey( Key.charCodeAt( 0 ) );
-				if ( -1 !== Index ) {
-					return this._Children[ Index ].findKey( Key );
-				} else {
-					return null;
-				}
+			Key = Key.substring( this.__Key.length );
+			Index = this.__findByKey( Key.charCodeAt( 0 ) );
+			if ( -1 !== Index ) {
+				return this._Children[ Index ].findByKey( Key );
 			} else {
 				return null;
 			}
@@ -182,7 +180,7 @@ class PatricaTrieNode {
 	}
 
 	containsKey( Key, Exact = false ) {
-		const Node = this.findKey( Key, Exact );
+		const Node = this.findByKey( Key, Exact );
 		if ( null === Node ) {
 			return false;
 		} else {
@@ -426,14 +424,14 @@ class PatricaTrieNode {
 	}
 
 	_clean( Key ) {
-		const Index = this.__findKey( Key );
+		const Index = this.__findByKey( Key );
 		if ( -1 === Index ) {
 			return;
 		}
 
 		this._Children.splice( Index, 1 );
 
-		if ( true === this.__IsRoot ) {
+		if ( true === this._IsRoot ) {
 			return;
 		}
 
@@ -460,7 +458,7 @@ class PatricaTrieNode {
 	}
 
 	delete( Key ) {
-		const ToDelete = this.findKey( Key, true );
+		const ToDelete = this.findByKey( Key, true );
 		if ( null === ToDelete ) {
 			return;
 		}
@@ -475,7 +473,7 @@ class PatricaTrieNode {
 		}
 	}
 
-	findValue( Comparer, StartKey = undefined, EndKey = undefined ) {
+	findByValue( Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
 		let Index, Found;
 		let NewStart = '';
 		let NewEnd = '';
@@ -483,12 +481,12 @@ class PatricaTrieNode {
 		let End = this._Children.length;
 
 		if ( 'string' === typeof StartKey ) {
-			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			Start = this.__findByKey( StartKey.charCodeAt( 0 ) );
 			NewStart = StartKey.substring( 1 );
 		}
 
 		if ( 'string' === typeof EndKey ) {
-			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			End = this.__findByKey( EndKey.charCodeAt( 0 ) );
 			NewEnd = EndKey.substring( 1 );
 		}
 
@@ -500,98 +498,106 @@ class PatricaTrieNode {
 			return null;
 		}
 
+		if ( true === this._IsEnding && false === Depth ) {
+			if ( true === Comparer.compare( this.__Value ) ) {
+				return this;
+			}
+		}
+
 		if ( 0 < NewStart.length ) {
 			if ( Start === End ) {
-				Found = this._Children[ Start ].findValue( Comparer, NewStart, NewEnd );
+				Found = this._Children[ Start ].findByValue( Comparer, Depth, NewStart, NewEnd );
 			} else {
-				Found = this._Children[ Start ].findValue( Comparer, NewStart );
+				Found = this._Children[ Start ].findByValue( Comparer, Depth, NewStart );
 			}
 
 			if ( null !== Found ) {
-				return this.__Key + Found;
+				return Found;
 			}
 		}
 
 		for ( Index = Start; Index < End; Index++ ) {
-			Found = this._Children[ Index ].findValue( Comparer );
+			Found = this._Children[ Index ].findByValue( Comparer, Depth );
 			if ( null !== Found ) {
-				return this.__Key + Found;
+				return Found;
 			}
 		}
 
 		if ( 0 < NewEnd.length ) {
-			Found = this._Children[ End ].findValue( Comparer, undefined, NewEnd );
+			Found = this._Children[ End ].findByValue( Comparer, Depth, undefined, NewEnd );
 
 			if ( null !== Found ) {
-				return this.__Key + Found;
+				return Found;
 			}
 		}
 
-		if ( true === this._IsEnding ) {
+		if ( true === this._IsEnding && true === Depth ) {
 			if ( true === Comparer.compare( this.__Value ) ) {
-				return this.__Key;
+				return this;
 			}
 		}
 
 		return null;
 	}
 
-	findAllValue( Comparer, StartKey = undefined, EndKey = undefined ) {
-		let Index, Found;
+	_findAllByValue( Return, Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
+		let Index;
 		let NewStart = '';
 		let NewEnd = '';
 		let Start = 0;
-		let Return = [];
 		let End = this._Children.length;
 
 		if ( 'string' === typeof StartKey ) {
-			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			Start = this.__findByKey( StartKey.charCodeAt( 0 ) );
 			NewStart = StartKey.substring( 1 );
 		}
 
 		if ( 'string' === typeof EndKey ) {
-			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			End = this.__findByKey( EndKey.charCodeAt( 0 ) );
 			NewEnd = EndKey.substring( 1 );
 		}
 
 		if ( -1 === Start && -1 === End ) {
-			return Return;
+			return;
 		}
 
 		if ( Start > End ) {
-			return Return;
+			return;
+		}
+
+		if ( true === this._IsEnding && false === Depth ) {
+			if ( true === Comparer.compare( this.__Value ) ) {
+				Return.push( this );
+			}
 		}
 
 		if ( 0 < NewStart.length ) {
 			if ( Start === End ) {
-				Found = this._Children[ Start ].findAllValue( Comparer, NewStart, NewEnd );
+				this._Children[ Start ]._findAllByValue( Return, Comparer, Depth, NewStart, NewEnd );
 			} else {
-				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
+				this._Children[ Start ]._findAllByValue( Return, Comparer, Depth, NewStart );
 			}
-
-			Return = Return.concat( Found );
 		}
 
 		for ( Index = Start; Index < End; Index++ ) {
-			Found = this._Children[ Index ].findAllValue( Comparer );
-			Return = Return.concat( Found );
+			this._Children[ Index ]._findAllByValue( Return, Comparer, Depth );
 		}
 
 		if ( 0 < NewEnd.length ) {
-			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
-			Return = Return.concat( Found );
+			this._Children[ End ].findAllByValue( Return, Comparer, Depth, undefined, NewEnd );
 		}
 
-		for ( Index = 0; Index < Return.length; Index++ ) {
-			Return[ Index ] = this.__Key + Return[ Index ];
-		}
-
-		if ( true === this._IsEnding ) {
+		if ( true === this._IsEnding && true === Depth ) {
 			if ( true === Comparer.compare( this.__Value ) ) {
-				Return.push( this.__Key );
+				Return.push( this );
 			}
 		}
+	}
 
+	findAllByValue( Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
+
+		const Return = [];
+		this._findAllByValue( Return, Comparer, Depth, StartKey, EndKey );
 		return Return;
 	}
 }
@@ -602,7 +608,7 @@ class PatricaTrie extends PatricaTrieNode {
 		super( undefined, undefined, undefined );
 	}
 
-	__findKey( Key ) {
+	__findByKey( Key ) {
 		let Start, End, MiddleBinary, MiddleInterpolation, WhereStart, WhereEnd, Swap;
 		let Interpolation, Binary, InterpolationIsDefined, BinaryIsDefined;
 		if ( 0 === this._Children.length ) {
@@ -656,7 +662,7 @@ class PatricaTrie extends PatricaTrieNode {
 
 	// @override
 	containsKey( Key, Exact = false ) {
-		const Found = this.__findKey( Key.charCodeAt( 0 ) );
+		const Found = this.__findByKey( Key.charCodeAt( 0 ) );
 
 		if ( -1 === Found ) {
 			return false;
@@ -666,13 +672,13 @@ class PatricaTrie extends PatricaTrieNode {
 	}
 
 	// @override
-	findKey( Key, Exact = false ) {
-		const Found = this.__findKey( Key.charCodeAt( 0 ) );
+	findByKey( Key, Exact = false ) {
+		const Found = this.__findByKey( Key.charCodeAt( 0 ) );
 
 		if ( -1 === Found ) {
 			return null;
 		} else {
-			return this._Children[ Found ].findKey( Key, Exact );
+			return this._Children[ Found ].findByKey( Key, Exact );
 		}
 	}
 
@@ -695,6 +701,7 @@ class PatricaTrie extends PatricaTrieNode {
 		for ( Child in this._Children ) {
 			this._Children[ Child ]._getKeys( '', Output );
 		}
+
 		return Output;
 	}
 
@@ -705,6 +712,7 @@ class PatricaTrie extends PatricaTrieNode {
 		for ( Child in this._Children ) {
 			this._Children[ Child ]._getValues( Output );
 		}
+
 		return Output;
 	}
 
@@ -715,32 +723,25 @@ class PatricaTrie extends PatricaTrieNode {
 		for ( Child in this._Children ) {
 			this._Children[ Child ]._getKeysAndValues( '', Return );
 		}
+
 		return Return;
 	}
 
-	findValue( Comparer, StartKey = undefined, EndKey = undefined ) {
+	findByValue( Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
 		let Index, Found;
-		let Start = 0;
-		let End = this._Children.length;
 		let NewStart = '';
 		let NewEnd = '';
+		let Start = 0;
+		let End = this._Children.length;
 
 		if ( 'string' === typeof StartKey ) {
-			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
-			if ( -1 === Start ) {
-				Start = 0;
-			} else {
-				NewStart = StartKey.substring( 1 );
-			}
+			Start = this.__findByKey( StartKey.charCodeAt( 0 ) );
+			NewStart = StartKey.substring( 1 );
 		}
 
 		if ( 'string' === typeof EndKey ) {
-			End = this.__findKey( EndKey.charCodeAt( 0 ) );
-			if ( -1 === End ) {
-				Start = 0;
-			} else {
-				NewEnd = EndKey.substring( 1 );
-			}
+			End = this.__findByKey( EndKey.charCodeAt( 0 ) );
+			NewEnd = EndKey.substring( 1 );
 		}
 
 		if ( -1 === Start && -1 === End ) {
@@ -753,9 +754,9 @@ class PatricaTrie extends PatricaTrieNode {
 
 		if ( 0 < NewStart.length ) {
 			if ( Start === End ) {
-				Found = this._Children[ Start ].findValue( Comparer, NewStart, NewEnd );
+				Found = this._Children[ Start ].findByValue( Comparer, Depth, NewStart, NewEnd );
 			} else {
-				Found = this._Children[ Start ].findValue( Comparer, NewStart );
+				Found = this._Children[ Start ].findByValue( Comparer, Depth, NewStart );
 			}
 
 			if ( null !== Found ) {
@@ -764,14 +765,14 @@ class PatricaTrie extends PatricaTrieNode {
 		}
 
 		for ( Index = Start; Index < End; Index++ ) {
-			Found = this._Children[ Index ].findValue( Comparer );
+			Found = this._Children[ Index ].findByValue( Comparer, Depth );
 			if ( null !== Found ) {
 				return Found;
 			}
 		}
 
 		if ( 0 < NewEnd.length ) {
-			Found = this._Children[ End ].findValue( Comparer, undefined, NewEnd );
+			Found = this._Children[ End ].findByValue( Comparer, Depth, undefined, NewEnd );
 
 			if ( null !== Found ) {
 				return Found;
@@ -781,52 +782,52 @@ class PatricaTrie extends PatricaTrieNode {
 		return null;
 	}
 
-	findAllValue( Comparer, StartKey = undefined, EndKey = undefined ) {
-		let Index, Found;
+	_findAllByValue( Return, Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
+		let Index;
 		let NewStart = '';
 		let NewEnd = '';
 		let Start = 0;
-		let Return = [];
 		let End = this._Children.length;
 
 		if ( 'string' === typeof StartKey ) {
-			Start = this.__findKey( StartKey.charCodeAt( 0 ) );
+			Start = this.__findByKey( StartKey.charCodeAt( 0 ) );
 			NewStart = StartKey.substring( 1 );
 		}
 
 		if ( 'string' === typeof EndKey ) {
-			End = this.__findKey( EndKey.charCodeAt( 0 ) );
+			End = this.__findByKey( EndKey.charCodeAt( 0 ) );
 			NewEnd = EndKey.substring( 1 );
 		}
 
 		if ( -1 === Start && -1 === End ) {
-			return Return;
+			return;
 		}
 
 		if ( Start > End ) {
-			return Return;
+			return;
 		}
 
 		if ( 0 < NewStart.length ) {
 			if ( Start === End ) {
-				Found = this._Children[ Start ].findAllValue( Comparer, NewStart, NewEnd );
+				this._Children[ Start ]._findAllByValue( Return, Comparer, Depth, NewStart, NewEnd );
 			} else {
-				Found = this._Children[ Start ].findAllValue( Comparer, NewStart );
+				this._Children[ Start ]._findAllByValue( Return, Comparer, Depth, NewStart );
 			}
-
-			Return = Return.concat( Found );
 		}
 
 		for ( Index = Start; Index < End; Index++ ) {
-			Found = this._Children[ Index ].findAllValue( Comparer );
-			Return = Return.concat( Found );
+			this._Children[ Index ]._findAllByValue( Return, Comparer, Depth );
 		}
 
 		if ( 0 < NewEnd.length ) {
-			Found = this._Children[ End ].findAllValue( Comparer, undefined, NewEnd );
-			Return = Return.concat( Found );
+			this._Children[ End ].findAllByValue( Return, Comparer, Depth, undefined, NewEnd );
 		}
+	}
 
+	findAllByValue( Comparer, Depth = false, StartKey = undefined, EndKey = undefined ) {
+
+		const Return = [];
+		this._findAllByValue( Return, Comparer, Depth, StartKey, EndKey );
 		return Return;
 	}
 }
@@ -863,7 +864,7 @@ console.log( Trie.containsKey( '12' ) );
 console.log( Trie.containsKey( '4', true ) );
 Utils.debugObjectPrint( Trie.getKeys() );
 Utils.debugObjectPrint( Trie.getValues() );
-console.log( Trie.findKey( '4', true ) );
+console.log( Trie.findByKey( '4', true ) );
 Trie.delete( '12' );
 Trie.delete( '11' );
 Trie.delete( '13' );
@@ -871,14 +872,14 @@ Trie.delete( '14' );
 Trie.delete( '15' );
 Trie.delete( '23' );
 Trie.delete( '2333' );
-Trie.insert( '2', 'q' )
+Trie.insert( '2', 'q' );
 Utils.debugObjectPrint( Trie.getKeys() );
 Utils.debugObjectPrint( Trie.getValues() );
-Utils.debugObjectPrint( Trie.findKey( '1' ).getValues() );
-Utils.debugObjectPrint( Trie.findKey( '124532' ).getKey() );
+Utils.debugObjectPrint( Trie.findByKey( '1' ).getValues() );
+Utils.debugObjectPrint( Trie.findByKey( '124532' ).getKey() );
 console.log( '\n\n' );
 console.log( Trie.insertPreventOverwrite( '123', 'o' ) );
 console.log( Trie.insertPreventOverwrite( '123', 'p' ) );
-Utils.debugObjectPrint( Trie.findValue( StringCompare ) );
-Utils.debugObjectPrint( Trie.findAllValue( StringCompare ) );
+Utils.debugObjectPrint( Trie.findByValue( StringCompare ).getKey() );
+console.log( Trie.findAllByValue( StringCompare ) );
 Utils.debugObjectPrint( Trie.getKeysAndValues() );*/
