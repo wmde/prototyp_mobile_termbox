@@ -1,9 +1,17 @@
 <script>
+import { DomHelper } from '../../lib/DomHelpers';
 export default {
 	name: 'showMoreLanguagesMenuTypeFilterActivator',
 	props: {
 		menuSwitch: Object,
 		directives: Object
+	},
+	data: function () {
+		return {
+			marginTopElement: null,
+			marginTop: 0,
+			offset: 0
+		};
 	},
 	computed: {
 		isLabeled: function () {
@@ -16,8 +24,28 @@ export default {
 			return this.$props.directives.get( 'aliases' );
 		}
 	},
+	mounted: function () {
+		document.getElementById( 'showMoreLanguagesMenuBar' ).removeAttribute( 'style' );
+		this.$data.marginTopElement = document.getElementById( 'showMoreLanguagesTypeFilterMenu' );
+	},
+	destroyed: function () {
+		document.getElementById( 'showMoreLanguagesMenuBar' ).setAttribute( 'style', 'height:54px;' );
+	},
+	updated: function () {
+		const Differenz = this.$data.marginTop - DomHelper.getPositionY( this.$data.marginTopElement );
+		const ScrollTo = this.$data.offset - Differenz;
+		if ( 0 !== Differenz ) {
+			if ( 0 > ScrollTo ) {
+				window.scrollTo( 0, 0 );
+			} else {
+				window.scrollTo( 0, ScrollTo );
+			}
+		}
+	},
 	methods: {
 		doSwitch: function ( Key ) {
+			this.$data.offset = window.pageYOffset;
+			this.$data.marginTop = DomHelper.getPositionY( this.$data.marginTopElement );
 			this.$props.directives.set( Key, !this.$props.directives.get( Key ) );
 		},
 		doLabel: function () {
@@ -107,7 +135,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
 #showMoreLanguagesTypeFilterMenu
 {
     background-color: #eaecf0;
-    border-bottom: 5px solid #a2a9b1;
+    border-bottom: 2px solid #a2a9b1;
     padding: 0px 0px 0px 0px;
     position: relative;
 }
