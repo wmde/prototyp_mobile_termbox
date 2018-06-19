@@ -161,16 +161,10 @@ export default {
 	},
 	methods: {
 		getSelectedStartLanguages() {
-			let Index;
-			let KeyAndValue;
 			let Key;
-			let Selection = new LanguageCompare( this.$data.selectedLanguages );
-			Selection = this.$props.languagesSettings.get( 'languages' ).findAllByValue( Selection );
-			for ( Index = 0; Index < Selection.length; Index++ ) {
-				KeyAndValue = Selection[ Index ].getKeyAndValue();
-				for ( Key in KeyAndValue ) {
-					this.$data.startLanguages[ KeyAndValue[ Key ] ] = Key;
-				}
+			const KeyAndValue = this.getLanguagesAndLabels( this.$data.selectedLanguages );
+			for ( Key in KeyAndValue ) {
+				this.$data.startLanguages[ KeyAndValue[ Key ] ] = Key;
 			}
 		},
 		getPossibleLanguages() {
@@ -489,7 +483,7 @@ export default {
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] + label {
 	color: #000000 !important;
-	
+
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[disabled] + label {
@@ -503,7 +497,7 @@ export default {
 	position: absolute;
 	width: 20px;
 	height: 20px;
-	
+
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] {

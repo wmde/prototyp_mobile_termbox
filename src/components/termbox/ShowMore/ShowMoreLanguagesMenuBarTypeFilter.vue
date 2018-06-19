@@ -204,7 +204,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
     background:transparent;
 	width:20px;
 	height:20px;
-	
+
 }
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]
