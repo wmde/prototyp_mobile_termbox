@@ -180,6 +180,7 @@ button.showMoreLanguagesButtonIsActive
     color: #72777D;
     position: relative;
     font-size:1em;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 img#showMoreLanguagesBarTroggleFieldMoreImage, img#showMoreLanguagesBarTroggleFieldLessImage

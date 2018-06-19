@@ -426,6 +426,7 @@ export default {
 	font-size: 1em;
 	width: 100%;
 	height: 50px;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 .showMoreLanguagesLanguagesFilter > div {
@@ -447,6 +448,7 @@ export default {
 	width: 100%;
 	margin-left: 5%;
 	line-height: 1.5;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 #showMoreLanguagesActiveLanguages > span {
@@ -482,10 +484,12 @@ export default {
 	color: #72777d;
 	font-size: 1.3em;
 	padding-right: 90px;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] + label {
 	color: #000000 !important;
+	
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[disabled] + label {
@@ -499,6 +503,7 @@ export default {
 	position: absolute;
 	width: 20px;
 	height: 20px;
+	
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] {
