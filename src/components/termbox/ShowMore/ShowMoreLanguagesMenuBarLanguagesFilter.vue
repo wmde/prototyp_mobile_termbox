@@ -48,7 +48,8 @@ export default {
 			otherLanguages: [],
 			lastSearch: null,
 			selectedLanguages: [],
-			possibleLanguages: null
+			possibleLanguages: null,
+			model:{}
 		};
 	},
 	mounted: function () {
@@ -129,7 +130,7 @@ export default {
 			} else {
 				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
 				if ( null === this.$data.lastSearch ) {
-					CurrentSearch = this.$data.possibleLanguages.findByKey( CurrentSearch );
+					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKey( CurrentSearch );
 				} else {
 					CurrentSearch = this.$data.lastSearch.findByKey( CurrentSearch, true );
 				}
@@ -192,13 +193,17 @@ export default {
 		},
 		getOtherLanguages: function () {
 			let Index;
+			this.$data.otherLanguages.push( 0 )
+			this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'currentLanguage' ) );
 			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) ) {
 				if ( -1 < Utils.binarySearch(
 					this.$props.languagesSettings.get( 'possibleLanguages' ),
 					this.$props.languagesSettings.get( 'otherLanguages' )[ Index ]
 				) ) {
-					this.$data.otherLanguages.push( this.$data.selectedLanguages.length )
-					this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] );
+					if( this.$props.languagesSettings.get( 'currentLanguage' ) !== this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] ) {
+						this.$data.otherLanguages.push(this.$data.selectedLanguages.length)
+						this.$data.selectedLanguages.push(this.$props.languagesSettings.get('otherLanguages')[Index]);
+					}
 				}
 			}
 		},
