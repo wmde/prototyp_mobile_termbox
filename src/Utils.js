@@ -116,14 +116,13 @@ class Utils {
 		Start = 0;
 		End = Where.length - 1;
 
-		if ( 0 === Where.length || Where[0] > What ) {
+		if ( 0 === Where.length || Where[ 0 ] > What ) {
 			return -1;
 		}
 
 		if ( Where[ End ] < What ) {
 			return -( Where.length + 1 );
 		}
-
 
 		while ( Start <= End ) {
 			Mid = ( ( Start + End ) >> 1 );
