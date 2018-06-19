@@ -33,6 +33,7 @@ export default{
     .page-title-label
     {
         font-size:1.2em;
+        padding-right: 0.5em;
     }
 
     .wikibase-entitytermsview-heading-description, .wikibase-entitytermsview-aliases

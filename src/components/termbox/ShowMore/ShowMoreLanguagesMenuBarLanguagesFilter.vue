@@ -476,7 +476,7 @@ export default {
 #showMoreLanguagesLanguagesSelection > div > div > label {
 	display: inline-block;
 	color: #72777d;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	padding-right: 90px;
 	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
