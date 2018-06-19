@@ -47,7 +47,8 @@ export default {
 			currentLanguageString: '',
 			otherLanguages: [],
 			lastSearch: null,
-			selectedLanguages: []
+			selectedLanguages: [],
+			possibleLanguages: null
 		};
 	},
 	mounted: function () {
@@ -58,6 +59,11 @@ export default {
 			TopBar.firstChild,
 			TopBar.lastChild
 		];
+
+		this.$data.possibleLanguages = this.$props.languagesSettings.get( 'languages' ).findAllByValue(
+			new LanguageCompare( this.$props.languagesSettings.get( 'possibleLanguages' ) )
+		);
+		this.$data.possibleLanguages = this.getPossibleLanguages();
 
 		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
 		this.$data.toReframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' );
@@ -87,11 +93,11 @@ export default {
 	beforeDestroy: function () {
 		let Index;
 		this.$props.languagesSettings.get( 'otherLanguages' ).length = 0;
-		console.log( this.$data.selectedLanguages )
+		this.$forceUpdate()
 		for ( Index in this.$data.selectedLanguages ) {
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.selectedLanguages[ Index ] );
 		}
-
+		this.$forceUpdate()
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:block;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).setAttribute( 'style', 'display:none;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:inline;' );
@@ -115,11 +121,15 @@ export default {
 		getLanguages() {
 			let CurrentSearch;
 			if ( 0 === this.$data.keyMap.length ) {
-				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues();
+				if( null === this.$data.possibleLanguages )
+				{
+					return {}
+				}
+				return this.$data.possibleLanguages;
 			} else {
 				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
 				if ( null === this.$data.lastSearch ) {
-					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKey( CurrentSearch );
+					CurrentSearch = this.$data.possibleLanguages.findByKey( CurrentSearch );
 				} else {
 					CurrentSearch = this.$data.lastSearch.findByKey( CurrentSearch, true );
 				}
@@ -138,6 +148,17 @@ export default {
 		}
 	},
 	methods: {
+		getPossibleLanguages()
+		{
+			let Index;
+			let Output = {};
+
+			for( Index = 0; Index < this.$data.possibleLanguages.length; Index++ )
+			{
+				Output = Object.assign( {}, Output, this.$data.possibleLanguages[Index].getKeyAndValue() )
+			}
+			return Output;
+		},
 		getLanguageId( Language )
 		{
 			return this.$data.selectedLanguages.indexOf( Language )
