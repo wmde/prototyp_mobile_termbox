@@ -45,11 +45,14 @@ export default {
 			toReframe: null,
 			searchField: null,
 			currentLanguageString: '',
+			currentLanguageStringN: '',
 			otherLanguages: [],
 			lastSearch: null,
 			selectedLanguages: [],
 			possibleLanguages: null,
-			model:{}
+			startLanguages: {},
+			startLanguagesShort: [],
+			model: {}
 		};
 	},
 	mounted: function () {
@@ -60,11 +63,6 @@ export default {
 			TopBar.firstChild,
 			TopBar.lastChild
 		];
-
-		this.$data.possibleLanguages = this.$props.languagesSettings.get( 'languages' ).findAllByValue(
-			new LanguageCompare( this.$props.languagesSettings.get( 'possibleLanguages' ) )
-		);
-		this.$data.possibleLanguages = this.getPossibleLanguages();
 
 		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
 		this.$data.toReframe = document.getElementById( 'showMoreLanguagesLanguagesFilterBox' );
@@ -80,9 +78,20 @@ export default {
 		document.getElementById( 'statementbox' ).setAttribute( 'style', 'overflow: hidden!important; height: 0px!important;' );
 		this.$data.searchField = document.getElementById( 'showMoreLanguagesSearchField' );
 
-		this.$data.currentLanguageString = this.$props.languagesSettings.get( 'languages' ).findByValue(
+		this.$data.possibleLanguages = this.$props.languagesSettings.get( 'languages' ).findAllByValue(
+			new LanguageCompare( this.$props.languagesSettings.get( 'possibleLanguages' ) )
+		);
+
+		this.$data.possibleLanguages = this.getPossibleLanguages();
+
+		this.$data.startLanguagesShort = ObjectHelper.copyObj( this.$data.selectedLanguages );
+		this.getSelectedStartLanguages();
+
+		this.$data.currentLanguageStringN = this.$props.languagesSettings.get( 'languages' ).findByValue(
 			new LanguageCompare( this.$props.languagesSettings.get( 'currentLanguage' ) )
-		).getKey().toLowerCase();
+		).getKey();
+		this.$data.currentLanguageString = this.$data.currentLanguageStringN.toLowerCase();
+
 		window.scrollTo( 0, 0 );
 		this.reframeTop();
 	},
@@ -94,11 +103,11 @@ export default {
 	beforeDestroy: function () {
 		let Index;
 		this.$props.languagesSettings.get( 'otherLanguages' ).length = 0;
-		this.$forceUpdate()
+		this.$forceUpdate();
 		for ( Index in this.$data.selectedLanguages ) {
 			this.$props.languagesSettings.get( 'otherLanguages' ).push( this.$data.selectedLanguages[ Index ] );
 		}
-		this.$forceUpdate()
+		this.$forceUpdate();
 		document.getElementById( 'showMoreLanguagesBarTroggleField' ).setAttribute( 'style', 'display:block;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldMoreImage' ).setAttribute( 'style', 'display:none;' );
 		document.getElementById( 'showMoreLanguagesBarTroggleFieldLessImage' ).setAttribute( 'style', 'display:inline;' );
@@ -112,8 +121,8 @@ export default {
 			if ( 0 === this.$data.otherLanguages.length ) {
 				this.getOtherLanguages();
 			}
-			//Languages = new LanguageCompare( this.$data.otherLanguages );
-			//Languages = this.$props.languagesSettings.get( 'languages' ).findAllByValue( Languages );
+			// Languages = new LanguageCompare( this.$data.otherLanguages );
+			// Languages = this.$props.languagesSettings.get( 'languages' ).findAllByValue( Languages );
 			return this.getLanguagesAndLabels( this.$data.selectedLanguages );
 		},
 		getLanguageNames: function () {
@@ -122,9 +131,8 @@ export default {
 		getLanguages() {
 			let CurrentSearch;
 			if ( 0 === this.$data.keyMap.length ) {
-				if( null === this.$data.possibleLanguages )
-				{
-					return {}
+				if ( null === this.$data.possibleLanguages ) {
+					return {};
 				}
 				return this.$data.possibleLanguages;
 			} else {
@@ -134,7 +142,7 @@ export default {
 				} else {
 					CurrentSearch = this.$data.lastSearch.findByKey( CurrentSearch, true );
 				}
-
+				// eslint-disable-next-line
 				this.$data.lastSearch = CurrentSearch;
 
 				if ( null === CurrentSearch ) {
@@ -146,39 +154,50 @@ export default {
 		},
 		getCurrentLanguage() {
 			return this.$props.languagesSettings.get( 'currentLanguage' );
+		},
+		getStartLanguages() {
+			return this.$data.startLanguages;
 		}
 	},
 	methods: {
-		getPossibleLanguages()
-		{
+		getSelectedStartLanguages() {
+			let Index;
+			let KeyAndValue;
+			let Key;
+			let Selection = new LanguageCompare( this.$data.selectedLanguages );
+			Selection = this.$props.languagesSettings.get( 'languages' ).findAllByValue( Selection );
+			for ( Index = 0; Index < Selection.length; Index++ ) {
+				KeyAndValue = Selection[ Index ].getKeyAndValue();
+				for ( Key in KeyAndValue ) {
+					this.$data.startLanguages[ KeyAndValue[ Key ] ] = Key;
+				}
+			}
+		},
+		getPossibleLanguages() {
 			let Index;
 			let Output = {};
 
-			for( Index = 0; Index < this.$data.possibleLanguages.length; Index++ )
-			{
-				Output = Object.assign( {}, Output, this.$data.possibleLanguages[Index].getKeyAndValue() )
+			for ( Index = 0; Index < this.$data.possibleLanguages.length; Index++ ) {
+				Output = Object.assign( {}, Output, this.$data.possibleLanguages[ Index ].getKeyAndValue() );
 			}
 			return Output;
 		},
-		getLanguageId( Language )
-		{
-			return this.$data.selectedLanguages.indexOf( Language )
+		getLanguageId( Language ) {
+			return this.$data.selectedLanguages.indexOf( Language );
 		},
-		getLanguagesAndLabels( ToFind )
-		{
+		getLanguagesAndLabels( ToFind ) {
 			let Languages, Index;
 			let Output = {};
 			const Subtries = [];
 
-			for ( Index in ToFind )
-			{
-				Languages = new LanguageCompare( ToFind[Index] );
+			for ( Index in ToFind ) {
+				Languages = new LanguageCompare( ToFind[ Index ] );
 				Subtries.push( this.$props.languagesSettings.get( 'languages' ).findByValue( Languages ) );
 			}
 
 			for ( Index in Subtries ) {
-				if( null !== Subtries[ Index ] ) {
-					Output = Object.assign({}, Output, Subtries[Index].getKeyAndValue());
+				if ( null !== Subtries[ Index ] ) {
+					Output = Object.assign( {}, Output, Subtries[ Index ].getKeyAndValue() );
 				}
 			}
 
@@ -193,16 +212,16 @@ export default {
 		},
 		getOtherLanguages: function () {
 			let Index;
-			this.$data.otherLanguages.push( 0 )
+			this.$data.otherLanguages.push( 0 );
 			this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'currentLanguage' ) );
 			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) ) {
 				if ( -1 < Utils.binarySearch(
 					this.$props.languagesSettings.get( 'possibleLanguages' ),
 					this.$props.languagesSettings.get( 'otherLanguages' )[ Index ]
 				) ) {
-					if( this.$props.languagesSettings.get( 'currentLanguage' ) !== this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] ) {
-						this.$data.otherLanguages.push(this.$data.selectedLanguages.length)
-						this.$data.selectedLanguages.push(this.$props.languagesSettings.get('otherLanguages')[Index]);
+					if ( this.$props.languagesSettings.get( 'currentLanguage' ) !== this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] ) {
+						this.$data.otherLanguages.push( this.$data.selectedLanguages.length );
+						this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] );
 					}
 				}
 			}
@@ -213,8 +232,11 @@ export default {
 		ignoreLanguage: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) === Language;
 		},
+		isStartLanguages( Language ) {
+			return -1 < this.$data.startLanguagesShort.indexOf( Language );
+		},
 		isSelected: function ( Language ) {
-			return -1 < this.$data.selectedLanguages.indexOf( Language )
+			return -1 < this.$data.selectedLanguages.indexOf( Language );
 		},
 		close: function () {
 			this.$props.menuSwitch.set( 'switch', 0 );
@@ -224,8 +246,8 @@ export default {
 		},
 		selectLanguage: function ( Language ) {
 			const SelectIndex = this.$data.selectedLanguages.length;
-			this.$data.selectedLanguages.push( Language )
-			this.$data.otherLanguages.push( SelectIndex )
+			this.$data.selectedLanguages.push( Language );
+			this.$data.otherLanguages.push( SelectIndex );
 			this.renderTextInput();
 			this.$forceUpdate();
 		},
@@ -326,19 +348,34 @@ export default {
 				<div v-if="showCurrentLanguage()" class="showMoreLanguagesLanguagesActiveLanguage">
 					<div>
 						<input id="lastStanding" disabled checked type="checkbox"/>
-						<label>{{getLanguageNames[getCurrentLanguage]}}</label>
+						<label>{{currentLanguageStringN}}</label>
+					</div>
+				</div>
+				<div v-bind:key="index"
+						v-for="(language, index) in getStartLanguages">
+					<div v-if="false === ignoreLanguage(index) && false === isSelected(index)"
+						@click="selectLanguage(index)"
+						class="showMoreLanguagesLanguagesInActiveLanguage">
+						<input type="checkbox"/>
+						<label>{{language}}</label>
+					</div>
+					<div v-else-if="false === ignoreLanguage(index) && true === isSelected(index)"
+							@click="unSelectLanguage(getLanguageId(index))"
+							class="showMoreLanguagesLanguagesActiveLanguage">
+						<input checked type="checkbox"/>
+						<label>{{language}}</label>
 					</div>
 				</div>
 				<!-- just stupido you are forced to do that //-->
 				<div v-bind:key="index"
 					v-for="(language, index) in getLanguages">
-					<div v-if="false === ignoreLanguage(language) && false === isSelected(language)"
+					<div v-if="false === isStartLanguages(language) && false === ignoreLanguage(language) && false === isSelected(language)"
 						@click="selectLanguage(language)"
 						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
 						<label>{{index}}</label>
 					</div>
-					<div v-else-if="false === ignoreLanguage(language) && true === isSelected(language)"
+					<div v-else-if="false === isStartLanguages(language) && false === ignoreLanguage(language) && true === isSelected(language)"
 						@click="unSelectLanguage(getLanguageId(language))"
 						class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
