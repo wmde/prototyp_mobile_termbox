@@ -89,7 +89,7 @@ export default {
     div.otherLanguages h2
     {
         font-weight: 300;
-        font-size: 0.9em;
+        font-size: 0.8em;
         color: #72777D;
         margin-left: 0;
         margin-bottom: 0;

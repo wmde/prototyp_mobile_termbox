@@ -445,14 +445,14 @@ export default {
 #showMoreLanguagesLanguagesSelection > div > div > label {
 	display: inline-block;
 	color: #72777d;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	padding-right: 90px;
 	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] + label {
 	color: #000000 !important;
-	
+
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[disabled] + label {
@@ -466,7 +466,7 @@ export default {
 	position: absolute;
 	width: 20px;
 	height: 20px;
-	
+
 }
 
 #showMoreLanguagesLanguagesSelection > div > div > input[checked] {
