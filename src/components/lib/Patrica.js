@@ -1,6 +1,6 @@
 /* eslint-disable operator-linebreak */
 import Utils from '../../Utils';
-import { TypeErrorException } from './BaseExceptions';
+import { TypeErrorException, ValueErrorException } from './BaseExceptions';
 
 class Compare {
 	static compare() {}
@@ -13,6 +13,7 @@ class PatricaTrieNode {
 	__Key;
 	__Parent;
 	_IsRoot;
+	_MaxKeyLength;
 
 	constructor( Key, Value, Parent ) {
 		let IsRoot = false;
@@ -24,6 +25,7 @@ class PatricaTrieNode {
 			'undefined' === typeof Parent
 		) {
 			IsRoot = true;
+			this._MaxKeyLength = 0;
 		}
 
 		this._IsRoot = IsRoot;
@@ -44,6 +46,7 @@ class PatricaTrieNode {
 
 		if ( false === IsRoot ) {
 			this.__Value = Value;
+			this._MaxKeyLength = Key.length;
 		}
 	}
 
@@ -137,8 +140,8 @@ class PatricaTrieNode {
 	}
 
 	getKeysAndValues() {
-		const Return = {};
 		let Key;
+		const Return = {};
 		if ( false === this.__Parent._IsRoot ) {
 			Key = this.__Parent.getKey();
 		} else {
@@ -154,6 +157,14 @@ class PatricaTrieNode {
 		Start = 0;
 		End = this._Children.length - 1;
 
+		if ( 0 === this._Children.length || this._Children[ 0 ]._getKey().charCodeAt( 0 ) > Key ) {
+			return -1;
+		}
+
+		if ( this._Children[ End ]._getKey().charCodeAt( 0 ) < Key ) {
+			return -1;
+		}
+
 		while ( Start <= End ) {
 			Middle = ( ( Start + End ) >> 1 );
 			if ( Key > this._Children[ Middle ]._getKey().charCodeAt( 0 ) ) {
@@ -168,8 +179,25 @@ class PatricaTrieNode {
 		return -1;
 	}
 
-	findByKey( Key, Exact = false ) {
+	findByKey( Key, Prefixed = false, Exact = false ) {
 		let Index;
+		let RootKeyLength;
+
+		if ( 'string' !== typeof Key ) {
+			return null;
+		}
+
+		if ( true === Prefixed ) {
+			if ( false === this.__Parent._IsRoot ) {
+				RootKeyLength = this.__Parent.getKey().length;
+				Key = Key.substring( RootKeyLength );
+			}
+		}
+
+		if ( 0 === Key.length ) {
+			return null;
+		}
+
 		if ( true === this.__Key.startsWith( Key ) ) {
 			if ( true === Exact && Key !== this.__Key ) {
 				return null;
@@ -189,8 +217,8 @@ class PatricaTrieNode {
 		}
 	}
 
-	containsKey( Key, Exact = false ) {
-		const Node = this.findByKey( Key, Exact );
+	containsKey( Key, Prefixed = false, Exact = false ) {
+		const Node = this.findByKey( Key, Prefixed, Exact );
 		if ( null === Node ) {
 			return false;
 		} else {
@@ -207,6 +235,14 @@ class PatricaTrieNode {
 
 		Start = 0;
 		End = this._Children.length - 1;
+
+		if ( 0 === this._Children.length || this._Children[ 0 ]._getKey().charCodeAt( 0 ) > Key ) {
+			return -1;
+		}
+
+		if ( this._Children[ End ]._getKey().charCodeAt( 0 ) < Key ) {
+			return -( this._Children.length + 1 );
+		}
 
 		while ( Start <= End ) {
 			Middle = ( ( Start + End ) >> 1 );
@@ -244,10 +280,19 @@ class PatricaTrieNode {
 	}
 
 	_importChildren( Children ) {
+		let Child;
+		const MaxLength = this._MaxKeyLength;
 		if ( false === Array.isArray( Children ) ) {
 			return false;
 		} else {
-			this._Children = this._Children.concat( this._Children, Children );
+			for ( Child in Children ) {
+				if ( false === ( Children[ Child ] instanceof PatricaTrieNode ) ) {
+					throw new ValueErrorException( 'Illegal import of non PatricaTrieNode.' );
+				}
+				this._MaxKeyLength = Math.max( this._MaxKeyLength, MaxLength + Children[ Child ]._MaxKeyLength );
+				this._Children.push( Children[ Child ] );
+			}
+			// this._Children = this._Children.concat( this._Children, Children );
 			this._Children = this._Children.sort( PatricaTrieNode.sortChildes );
 			return true;
 		}
@@ -261,6 +306,7 @@ class PatricaTrieNode {
 		}
 
 		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		this._MaxKeyLength = Math.max( Key.length, this._MaxKeyLength );
 		return null;
 	}
 
@@ -269,13 +315,19 @@ class PatricaTrieNode {
 
 		const NewKeyLength = Key.length;
 		const CurrentKeyLength = this.__Key.length;
-		const PrefixLength = this._longestPrefix( Key );
+		let PrefixLength;
+
+		if ( 'string' !== typeof Key || 0 === Key.length ) {
+			return false;
+		}
+		// eslint-disable-next-line
+		PrefixLength = this._longestPrefix( Key );
 
 		if (
 			NewKeyLength === CurrentKeyLength		&&
 			PrefixLength === CurrentKeyLength
 		) {
-			if ( null === this.__Value ) {
+			if ( undefined === this.__Value ) {
 				this._IsEnding = true;
 				this.__Value = Value;
 				return null;
@@ -328,9 +380,12 @@ class PatricaTrieNode {
 					NewChild.unsetEnd();
 				}
 
+				// Would be faster, but not so nice
+				// NewChild._MaxKeyLength = this._MaxKeyLength-Common.length
+
 				this._IsEnding = false;
 				this.__Key = Common;
-				this.__Value = null;
+				this.__Value = undefined;
 
 				if ( NewChild._getKey().charCodeAt( 0 ) < NewChild2._getKey().charCodeAt( 0 ) ) {
 					this._Children = [ NewChild, NewChild2 ];
@@ -345,12 +400,19 @@ class PatricaTrieNode {
 
 	_insertIntoChild( Key, Value ) {
 		const Index = this.__insertPosition( Key.charCodeAt( 0 ) );
+		let Return;
 
 		if ( -1 < Index ) {
-			return this._Children[ Index ].insert( Key, Value );
+			Return = this._Children[ Index ].insert( Key, Value );
+			this._MaxKeyLength = Math.max(
+				this.__Key.length + this._Children[ Index ]._MaxKeyLength,
+				this._MaxKeyLength
+			);
+			return Return;
 		}
 
 		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		this._MaxKeyLength = Math.max( this.__Key.length + Key.length, this._MaxKeyLength );
 		return true;
 	}
 
@@ -359,7 +421,13 @@ class PatricaTrieNode {
 
 		const NewKeyLength = Key.length;
 		const CurrentKeyLength = this.__Key.length;
-		const PrefixLength = this._longestPrefix( Key );
+		let PrefixLength;
+
+		if ( 'string' !== typeof Key || 0 === Key.length ) {
+			return false;
+		}
+		// eslint-disable-next-line
+		PrefixLength = this._longestPrefix( Key );
 
 		if (
 			NewKeyLength === CurrentKeyLength		&&
@@ -382,7 +450,7 @@ class PatricaTrieNode {
 				this.__Value = Value;
 
 				if ( false === NewChild._importChildren( this._Children ) ) {
-					return false;
+					return false;// Should never happen if you done the implementation well
 				}
 
 				if ( false === this._IsEnding ) {
@@ -414,9 +482,12 @@ class PatricaTrieNode {
 					NewChild.unsetEnd();
 				}
 
+				// Would be faster, but not so nice
+				// NewChild._MaxKeyLength = this._MaxKeyLength-Common.length
+
 				this._IsEnding = false;
 				this.__Key = Common;
-				this.__Value = null;
+				this.__Value = undefined;
 
 				if ( NewChild._getKey().charCodeAt( 0 ) < NewChild2._getKey().charCodeAt( 0 ) ) {
 					this._Children = [ NewChild, NewChild2 ];
@@ -467,8 +538,27 @@ class PatricaTrieNode {
 		}
 	}
 
-	delete( Key ) {
-		const ToDelete = this.findByKey( Key, true );
+	delete( Key, Prefixed = false ) {
+
+		let ToDelete, RootKeyLength;
+
+		if ( 'string' !== typeof Key ) {
+			return null;
+		}
+
+		if ( true === Prefixed ) {
+			if ( false === this.__Parent._IsRoot ) {
+				RootKeyLength = this.__Parent.getKey().length;
+				Key = Key.substring( RootKeyLength );
+			}
+		}
+
+		if ( 0 === Key.length ) {
+			return null;
+		}
+		// eslint-disable-next-line
+		ToDelete = this.findByKey( Key, true );
+
 		if ( null === ToDelete ) {
 			return;
 		}
@@ -628,6 +718,14 @@ class PatricaTrie extends PatricaTrieNode {
 			End = this._Children.length - 1;
 		}
 
+		if ( 0 === this._Children.length || this._Children[ 0 ]._getKey().charCodeAt( 0 ) > Key ) {
+			return -1;
+		}
+
+		if ( this._Children[ End ]._getKey().charCodeAt( 0 ) < Key ) {
+			return -1;
+		}
+
 		while ( Start <= End && this._Children.length > End ) {
 			WhereStart = this._Children[ Start ]._getKey().charCodeAt( 0 );
 			WhereEnd = this._Children[ End ]._getKey().charCodeAt( 0 );
@@ -672,31 +770,99 @@ class PatricaTrie extends PatricaTrieNode {
 
 	// @override
 	containsKey( Key, Exact = false ) {
-		const Found = this.__findByKey( Key.charCodeAt( 0 ) );
+		let Found;
+
+		if (
+			'string' !== typeof Key
+		||
+			0 === Key.length
+		||
+			this._MaxKeyLength < Key.length
+		) {
+			return false;
+		}
+		// eslint-disable-next-line
+		Found = this.__findByKey( Key.charCodeAt( 0 ) );
 
 		if ( -1 === Found ) {
 			return false;
 		} else {
-			return this._Children[ Found ].containsKey( Key, Exact );
+			return this._Children[ Found ].containsKey( Key, false, Exact );
 		}
 	}
 
 	// @override
 	findByKey( Key, Exact = false ) {
-		const Found = this.__findByKey( Key.charCodeAt( 0 ) );
+		let Found;
+
+		if (
+			'string' !== typeof Key
+		||
+			0 === Key.length
+		||
+			this._MaxKeyLength < Key.length
+		) {
+			return null;
+		}
+		// eslint-disable-next-line
+		Found = this.__findByKey( Key.charCodeAt( 0 ) );
 
 		if ( -1 === Found ) {
 			return null;
 		} else {
-			return this._Children[ Found ].findByKey( Key, Exact );
+			return this._Children[ Found ].findByKey( Key, false, Exact );
 		}
 	}
 
+	_insertIntoChild( Key, Value ) {
+		const Index = this.__insertPosition( Key.charCodeAt( 0 ) );
+		let Return;
+
+		if ( -1 < Index ) {
+			Return = this._Children[ Index ].insert( Key, Value );
+			this._MaxKeyLength = Math.max(
+				this._Children[ Index ]._MaxKeyLength,
+				this._MaxKeyLength
+			);
+			return Return;
+		}
+
+		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		this._MaxKeyLength = Math.max( Key.length, this._MaxKeyLength );
+		return true;
+	}
+
 	insert( Key, Value ) {
+		if ( 'string' !== typeof Key || 0 === Key.length ) {
+			return false;
+		}
+
 		return this._insertIntoChild( Key, Value );
 	}
 
+	_insertIntoChildPreventOverwrite( Key, Value ) {
+		let Return;
+		const Index = this.__insertPosition( Key.charCodeAt( 0 ) );
+
+		if ( -1 < Index ) {
+			Return = this._Children[ Index ].insertPreventOverwrite( Key, Value );
+			this._MaxKeyLength = Math.max(
+				this._Children[ Index ]._MaxKeyLength,
+				this._MaxKeyLength
+			);
+			return Return;
+		}
+
+		this._Children.splice( -( Index + 1 ), 0, new PatricaTrieNode( Key, Value, this ) );
+		this._MaxKeyLength = Math.max( Key.length, this._MaxKeyLength );
+		return null;
+	}
+
 	insertPreventOverwrite( Key, Value ) {
+		if ( 'string' !== typeof Key || 0 === Key.length ) {
+			return false;
+		}
+
 		return this._insertIntoChildPreventOverwrite( Key, Value );
 	}
 
