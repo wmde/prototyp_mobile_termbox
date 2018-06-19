@@ -79,6 +79,7 @@ button.showMoreLanguagesMenuLanguageFilterActivator
     font-size:1em;
     width: 100%;
     height: 50px;
+	font-family:'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 div.showMoreLanguagesMenuTypeFilterActivator
