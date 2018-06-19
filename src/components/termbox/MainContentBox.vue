@@ -27,7 +27,7 @@ export default{
     {
         color: #72777D;
         display: block;
-        font-size:0.7em;
+        font-size:1.1em;
     }
     .page-title-label
     {

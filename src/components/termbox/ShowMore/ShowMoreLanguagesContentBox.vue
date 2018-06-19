@@ -93,6 +93,7 @@ export default {
         color: #72777D;
         margin-left: 0;
         margin-bottom: 0;
+		font-family:'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
     }
 
     div.otherLanguages h3
@@ -103,7 +104,7 @@ export default {
         margin-bottom: 0px;
         margin-top: 0.2em;
         font-size: 0.9em;
-        font-family: 'Linux Libertine','Georgia','Times',serif !important;
+        font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
     }
 
     div.otherLanguagesContainer

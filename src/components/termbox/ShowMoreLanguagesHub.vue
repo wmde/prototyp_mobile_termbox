@@ -181,7 +181,8 @@ button.showMoreLanguagesButtonIsActive
     margin-top: 15px;
     color: #72777D;
     position: relative;
-    font-size:1em;
+    font-size:1.3em;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 img#showMoreLanguagesBarTroggleFieldMoreImage, img#showMoreLanguagesBarTroggleFieldLessImage

@@ -144,6 +144,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
 {
     padding:1em;
     margin-bottom: 0px;
+	font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
 }
 
 #showMoreLanguagesTypeFilterMenu > div:last-child
@@ -172,6 +173,7 @@ div#showMoreLanguagesTypeFilterSave > button > img
     background:transparent;
 	width:20px;
 	height:20px;
+	
 }
 
 #showMoreLanguagesTypeFilterMenu > div > input[checked]

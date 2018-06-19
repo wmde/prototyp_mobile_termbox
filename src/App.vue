@@ -302,6 +302,7 @@ export default {
         text-align: left;  
         line-height: 1.3;
 		font-weight:1.3;
+
     
 
 	}
@@ -315,7 +316,7 @@ export default {
         margin-left: 10px;
         padding-bottom: 0px;
         margin-bottom: 0px;
-        font-family: 'Linux Libertine','Georgia','Times',serif !important;
+        font-family: 'Linux Libertine','Georgia','Times',serif;
     }
 
 	input:focus
