@@ -298,10 +298,9 @@ export default {
     {
         color: #222222;
         font-family: 'Linux Libertine','Georgia','Times',serif;
-        text-align: left;  
+        text-align: left;
         line-height: 1.3;
 		font-weight:1.3;
-    
 
 	}
 	.wikibase-entitytermsview-heading-description,  .listItem-extended{

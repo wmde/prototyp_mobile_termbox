@@ -19,9 +19,9 @@ class PatricaTrieNode {
 		let IsRoot = false;
 		if (
 			'undefined' === typeof Key
-		&&
+			&&
 			'undefined' === typeof Value
-		&&
+			&&
 			'undefined' === typeof Parent
 		) {
 			IsRoot = true;
@@ -124,6 +124,21 @@ class PatricaTrieNode {
 		const Output = [];
 		this._getKeys( Prefix, Output );
 		return Output;
+	}
+
+	getKeyAndValue() {
+		let Key;
+		const Return = {};
+		if ( false === this.__Parent._IsRoot ) {
+			Key = this.__Parent.getKey();
+		} else {
+			Key = '';
+		}
+
+		Key += this.__Key;
+
+		Return[ Key ] = this.__Value;
+		return Return;
 	}
 
 	_getKeysAndValues( Key, Return ) {
@@ -518,17 +533,17 @@ class PatricaTrieNode {
 
 		if (
 			0 === this._Children.length
-		&&
+			&&
 			false === this._IsEnding
-		&&
+			&&
 			0 < this.__Key.length
 		) {
 			this._removeFromTrie();
 		} else if (
 			1 === this._Children.length
-		&&
+			&&
 			false === this._Children[ 0 ].hasChildren()
-		&&
+			&&
 			false === this._IsEnding
 		) {
 			this.__Key += this._Children[ 0 ]._getKey();
@@ -774,9 +789,9 @@ class PatricaTrie extends PatricaTrieNode {
 
 		if (
 			'string' !== typeof Key
-		||
+			||
 			0 === Key.length
-		||
+			||
 			this._MaxKeyLength < Key.length
 		) {
 			return false;
@@ -797,9 +812,9 @@ class PatricaTrie extends PatricaTrieNode {
 
 		if (
 			'string' !== typeof Key
-		||
+			||
 			0 === Key.length
-		||
+			||
 			this._MaxKeyLength < Key.length
 		) {
 			return null;
@@ -866,10 +881,6 @@ class PatricaTrie extends PatricaTrieNode {
 		return this._insertIntoChildPreventOverwrite( Key, Value );
 	}
 
-	getKey() {
-		return undefined;
-	}
-
 	getKeys() {
 		let Child;
 		const Output = [];
@@ -890,6 +901,10 @@ class PatricaTrie extends PatricaTrieNode {
 		}
 
 		return Output;
+	}
+
+	getKeyAndValue() {
+		return null;
 	}
 
 	getKeysAndValues() {
