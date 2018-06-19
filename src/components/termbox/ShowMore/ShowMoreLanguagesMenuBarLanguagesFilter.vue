@@ -87,10 +87,9 @@ export default {
 		this.$data.startLanguagesShort = ObjectHelper.copyObj( this.$data.selectedLanguages );
 		this.getSelectedStartLanguages();
 
-		this.$data.currentLanguageStringN = this.$props.languagesSettings.get( 'languages' ).findByValue(
+		this.$data.currentLanguageString = this.$props.languagesSettings.get( 'languages' ).findByValue(
 			new LanguageCompare( this.$props.languagesSettings.get( 'currentLanguage' ) )
 		).getKey();
-		this.$data.currentLanguageString = this.$data.currentLanguageStringN.toLowerCase();
 
 		window.scrollTo( 0, 0 );
 		this.reframeTop();
@@ -197,12 +196,12 @@ export default {
 
 			return Output;
 		},
-		showCurrentLanguage: function () {
+		showCurrentLanguage: function ( Language ) {
 			if ( 0 === this.$data.keyMap.length ) {
 				return true;
 			}
 
-			return this.$data.currentLanguageString.startsWith( this.$data.keyMap.toLowerCase() );
+			return Language.toLowerCase().startsWith( this.$data.keyMap.toLowerCase() );
 		},
 		getOtherLanguages: function () {
 			let Index;
@@ -339,21 +338,21 @@ export default {
 				<button disabled><img src="../../../assets/Lupe.png"/></button>
 			</div>
 			<div id="showMoreLanguagesLanguagesSelection">
-				<div v-if="showCurrentLanguage()" class="showMoreLanguagesLanguagesActiveLanguage">
+				<div v-if="showCurrentLanguage( currentLanguageString )" class="showMoreLanguagesLanguagesActiveLanguage">
 					<div>
 						<input id="lastStanding" disabled checked type="checkbox"/>
-						<label>{{currentLanguageStringN}}</label>
+						<label>{{currentLanguageString}}</label>
 					</div>
 				</div>
 				<div v-bind:key="index"
 						v-for="(language, index) in getStartLanguages">
-					<div v-if="false === ignoreLanguage(index) && false === isSelected(index)"
+					<div v-if="true === showCurrentLanguage( language ) && false === ignoreLanguage(index) && false === isSelected(index)"
 						@click="selectLanguage(index)"
 						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
 						<label>{{language}}</label>
 					</div>
-					<div v-else-if="false === ignoreLanguage(index) && true === isSelected(index)"
+					<div v-else-if="true === showCurrentLanguage( language ) && false === ignoreLanguage(index) && true === isSelected(index)"
 							@click="unSelectLanguage(getLanguageId(index))"
 							class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
