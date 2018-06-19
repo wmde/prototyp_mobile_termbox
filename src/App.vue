@@ -297,10 +297,16 @@ export default {
     h1,h2,h3,h4,h5,h6,p,ul, button
     {
         color: #222222;
-        font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans', sans-serif;
-        text-align: left;
+        font-family: 'Linux Libertine','Georgia','Times',serif;
+        text-align: left;  
         line-height: 1.3;
-    }
+		font-weight:1.3;
+    
+
+	}
+	.wikibase-entitytermsview-heading-description,  .listItem-extended{
+		font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
+	}
 
     h1
     {
