@@ -147,7 +147,7 @@ export default {
 				if ( null === CurrentSearch ) {
 					return {};
 				} else {
-					return CurrentSearch.getKeysAndValues();
+					return CurrentSearch.getKeysAndValues( this.filterSubKeys );
 				}
 			}
 		},
@@ -159,34 +159,36 @@ export default {
 		}
 	},
 	methods: {
+		buildModel()
+		{
+
+		},
+		filterSubKeys( Key, Value ) {
+			return -1 < this.$props.languagesSettings.get( 'possibleLanguages' ).indexOf( Value );
+		},
 		getSelectedStartLanguages() {
 			this.$data.startLanguages = this.getLanguagesAndLabels( this.$data.selectedLanguages );
 		},
 		getPossibleLanguages() {
-			let Index;
-			let Output = {};
-
-			for ( Index = 0; Index < this.$data.possibleLanguages.length; Index++ ) {
-				Output = Object.assign( {}, Output, this.$data.possibleLanguages[ Index ].getKeyAndValue() );
-			}
-			return Output;
+			return this.$data.possibleLanguages.getKeysAndValues();
 		},
 		getLanguageId( Language ) {
 			return this.$data.selectedLanguages.indexOf( Language );
 		},
 		getLanguagesAndLabels( ToFind ) {
-			let Languages, Index;
-			let Output = {};
-			const Subtries = [];
+			let Languages, OuterLoop, InnerLoop;
+			const Output = {};
+			let Subree;
 
-			for ( Index in ToFind ) {
-				Languages = new LanguageCompare( ToFind[ Index ] );
-				Subtries.push( this.$props.languagesSettings.get( 'languages' ).findByValue( Languages ) );
-			}
-
-			for ( Index in Subtries ) {
-				if ( null !== Subtries[ Index ] ) {
-					Output = Object.assign( {}, Output, Subtries[ Index ].getKeyAndValue() );
+			Languages = new LanguageCompare( ToFind );
+			Languages = this.$props.languagesSettings.get( 'languages' ).findAllByValue( Languages, true );
+			Subree = Languages.getKeysAndValues();
+			for ( OuterLoop in ToFind ) {
+				for ( InnerLoop in Subree ) {
+					if ( Subree[ InnerLoop ] === ToFind[ OuterLoop ] ) {
+						Output[ InnerLoop ] = ToFind[ OuterLoop ];
+						break;
+					}
 				}
 			}
 
@@ -312,7 +314,7 @@ export default {
 	<div id="showMoreLanguagesLanguagesFilterBox">
 		<div id="showMoreLanguagesLanguagesFilterFixedTop">
 			<div id="showMoreLanguagesActiveLanguages">
-				<span v-bind:key="index" v-for="(language, index) in getTopLanguages">{{index}}</span>
+				<span v-bind:key="languagestring" v-for="( languagecode, languagestring) in getTopLanguages">{{languagestring}}</span>
 			</div>
 			<div class="showMoreLanguagesLanguagesFilter">
 				<button @click="close()"
@@ -340,35 +342,35 @@ export default {
 						<label>{{currentLanguageString}}</label>
 					</div>
 				</div>
-				<div v-bind:key="indexP"
-						v-for="(indexP, languageP) in getStartLanguages">
-					<div v-if="true === showCurrentLanguage( languageP ) && false === ignoreLanguage( indexP ) && false === isSelected( indexP )"
-						@click="selectLanguage( indexP )"
+				<div v-bind:key="languagecode"
+						v-for="(languagecode, languagestring) in getStartLanguages">
+					<div v-if="true === showCurrentLanguage( languagestring ) && false === ignoreLanguage( languagecode ) && false === isSelected( languagecode )"
+						@click="selectLanguage( languagecode )"
 						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
-						<label>{{languageP}}</label>
+						<label>{{languagestring}}</label>
 					</div>
-					<div v-else-if="true === showCurrentLanguage( languageP ) && false === ignoreLanguage( indexP ) && true === isSelected( indexP )"
-							@click="unSelectLanguage(getLanguageId( indexP ))"
+					<div v-else-if="true === showCurrentLanguage( languagestring ) && false === ignoreLanguage( languagecode ) && true === isSelected( languagecode )"
+							@click="unSelectLanguage(getLanguageId( languagecode ))"
 							class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
-						<label>{{languageP}}</label>
+						<label>{{languagestring}}</label>
 					</div>
 				</div>
 				<!-- just stupido you are forced to do that //-->
-				<div v-bind:key="index"
-					v-for="(language, index) in getLanguages">
-					<div v-if="false === isStartLanguages(language) && false === ignoreLanguage(language) && false === isSelected(language)"
-						@click="selectLanguage(language)"
-						class="showMoreLanguagesLanguagesInActiveLanguage">
+				<div v-bind:key="languagestring"
+					 v-for="(languagecode, languagestring) in getLanguages">
+					<div v-if="false === isStartLanguages(languagestring) && false === ignoreLanguage(languagecode) && false === isSelected(languagecode)"
+						 @click="selectLanguage(languagecode)"
+						 class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
-						<label>{{index}}</label>
+						<label>{{languagestring}}</label>
 					</div>
-					<div v-else-if="false === isStartLanguages(language) && false === ignoreLanguage(language) && true === isSelected(language)"
-						@click="unSelectLanguage(getLanguageId(language))"
-						class="showMoreLanguagesLanguagesActiveLanguage">
+					<div v-else-if="false === isStartLanguages(languagecode) && false === ignoreLanguage(languagecode) && true === isSelected(languagecode)"
+						 @click="unSelectLanguage(getLanguageId(languagecode))"
+						 class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
-						<label>{{index}}</label>
+						<label>{{languagestring}}</label>
 					</div>
 				</div>
 			</div>

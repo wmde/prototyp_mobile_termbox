@@ -30,4 +30,10 @@ export class AssertionErrorException extends BaseException {
 	}
 }
 
+export class NotImplementedException extends BaseException {
+	constructor( What ) {
+		super( 'NotImplementedException', `${What} is not implemented (yet).` );
+	}
+}
+
 export default BaseException;
