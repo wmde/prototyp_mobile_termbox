@@ -160,11 +160,7 @@ export default {
 	},
 	methods: {
 		getSelectedStartLanguages() {
-			let Key;
-			const KeyAndValue = this.getLanguagesAndLabels( this.$data.selectedLanguages );
-			for ( Key in KeyAndValue ) {
-				this.$data.startLanguages[ KeyAndValue[ Key ] ] = Key;
-			}
+			this.$data.startLanguages = this.getLanguagesAndLabels( this.$data.selectedLanguages );
 		},
 		getPossibleLanguages() {
 			let Index;
@@ -275,7 +271,7 @@ export default {
 		},
 		reframeTop: function () {
 
-			const TopHeight = DomHelper.computeHeight( this.$data.reAdjust[ 2 ] )				+
+			const TopHeight = DomHelper.computeHeight( this.$data.reAdjust[ 2 ] ) +
 				DomHelper.computeHeight( this.$data.reAdjust[ 3 ] );
 
 			if ( null === this.$data.reAdjust[ 0 ] || null === this.$data.documentBody ) {
@@ -344,19 +340,19 @@ export default {
 						<label>{{currentLanguageString}}</label>
 					</div>
 				</div>
-				<div v-bind:key="index"
-						v-for="(language, index) in getStartLanguages">
-					<div v-if="true === showCurrentLanguage( language ) && false === ignoreLanguage(index) && false === isSelected(index)"
-						@click="selectLanguage(index)"
+				<div v-bind:key="indexP"
+						v-for="(indexP, languageP) in getStartLanguages">
+					<div v-if="true === showCurrentLanguage( languageP ) && false === ignoreLanguage( indexP ) && false === isSelected( indexP )"
+						@click="selectLanguage( indexP )"
 						class="showMoreLanguagesLanguagesInActiveLanguage">
 						<input type="checkbox"/>
-						<label>{{language}}</label>
+						<label>{{languageP}}</label>
 					</div>
-					<div v-else-if="true === showCurrentLanguage( language ) && false === ignoreLanguage(index) && true === isSelected(index)"
-							@click="unSelectLanguage(getLanguageId(index))"
+					<div v-else-if="true === showCurrentLanguage( languageP ) && false === ignoreLanguage( indexP ) && true === isSelected( indexP )"
+							@click="unSelectLanguage(getLanguageId( indexP ))"
 							class="showMoreLanguagesLanguagesActiveLanguage">
 						<input checked type="checkbox"/>
-						<label>{{language}}</label>
+						<label>{{languageP}}</label>
 					</div>
 				</div>
 				<!-- just stupido you are forced to do that //-->

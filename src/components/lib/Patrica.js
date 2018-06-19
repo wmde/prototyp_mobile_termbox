@@ -50,6 +50,10 @@ class PatricaTrieNode {
 		}
 	}
 
+	_setParent( Patrent ) {
+		this.__Parent = Patrent;
+	}
+
 	isAEnd() {
 		return this._IsEnding;
 	}
@@ -93,11 +97,14 @@ class PatricaTrieNode {
 	}
 
 	getKey() {
-		if ( true === this.__Parent._IsRoot ) {
-			return this.__Key;
+		let Prefix;
+		if ( false === this.__Parent._IsRoot ) {
+			Prefix = this.__Parent.getKey();
 		} else {
-			return this.__Parent.getKey() + this.__Key;
+			Prefix = '';
 		}
+
+		return Prefix + this.__Key;
 	}
 
 	_getKeys( Key, Return ) {
@@ -305,6 +312,7 @@ class PatricaTrieNode {
 					throw new ValueErrorException( 'Illegal import of non PatricaTrieNode.' );
 				}
 				this._MaxKeyLength = Math.max( this._MaxKeyLength, MaxLength + Children[ Child ]._MaxKeyLength );
+				Children[ Child ]._setParent( this );
 				this._Children.push( Children[ Child ] );
 			}
 			// this._Children = this._Children.concat( this._Children, Children );

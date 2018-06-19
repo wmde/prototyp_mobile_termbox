@@ -236,7 +236,6 @@ export default {
 					[ 'languageNames', CurrentLanguageNames.LanguageNames ],
 					[ 'languages', Trie ]
 				] );
-
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
