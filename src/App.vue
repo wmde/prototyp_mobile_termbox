@@ -6,14 +6,13 @@ import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
-import PatricaTrie from './components/lib/Patrica';
+import { PatricaTrie } from './components/lib/Patrica';
 import { DomHelper } from './components/lib/DomHelpers';
 
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
 	const NewTerms = {};
 	const Languages = [];
-	const Trie = new PatricaTrie();
 	for ( Key in Term.labels ) {
 		NewTerms[ Key ] = {
 			title: Term.labels[ Key ].value
@@ -30,8 +29,6 @@ function wrapTerm( Term ) {
 			);
 		}
 
-		Trie.insert( Key );
-
 		if ( Key in Term.descriptions ) {
 			NewTerms[ Key ].description = Term.descriptions[ Key ].value;
 		} else {
@@ -46,12 +43,10 @@ function wrapTerm( Term ) {
 		}
 	}
 
-	// Add PTrie here
 	for ( Key in NewTerms ) {
 		NewTerms[ Key ].languages = ObjectHelper.copyObj( Languages );
 	}
 
-	// Utils.debugObjectPrint(Trie.getValues())
 	return NewTerms;
 }
 
@@ -132,61 +127,61 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
 				for ( Index in window.navigator.languages ) {
+        
 					Value = window.navigator.languages[ Index ].toLowerCase().split( '-' ).shift();// any formatter could putted here
+
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-					// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 					if ( 0 > Index2 ) {
 						this.$data.languages.splice(
 							-( Index2 + 1 ),
 							0,
 							Value
 						);
-						// this.$data.languages.push( Value );
 					}
 				}
 			}
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
+      
 				Value = window.navigator.systemLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
+
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
-				Value = window.navigator.browserLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
+				
+        Value = window.navigator.browserLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
+
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
+
 				Value = window.navigator.userLanguage.toLowerCase().split( '-' ).shift();// any formatter could putted here
+
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
-				// if ( 0 > this.$data.languages.indexOf( Value ) ) {
 				if ( 0 > Index2 ) {
 					this.$data.languages.splice(
 						-( Index2 + 1 ),
 						0,
 						Value// any formatter could putted here
 					);
-					// this.$data.languages.push( Value );
 				}
 				this.$data.defaultLanguage = Value;
 			}
@@ -212,32 +207,36 @@ export default {
 			return this.$data.defaultLanguage;
 		},
 		getOtherLanguages: function () {
-			/* let Languages = ObjectHelper.copyObj(this.$data.languages)
-			return Languages.splice(
-				Languages.indexOf(this.$data.defaultLanguage),
-				1
-			);*/
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
+			let Index, Language;
 			let Key = 'en';
-			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
+			const Trie = new PatricaTrie();
+			if (
+				false === Utils.isEmpty( CurrentTerm.Term )			&&
+				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
+			) {
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
+
+				for ( Index in CurrentLanguageNames.LanguageNames ) {
+					Language = CurrentLanguageNames.LanguageNames[ Index ].charAt( 0 ).toUpperCase() +
+						CurrentLanguageNames.LanguageNames[ Index ].slice( 1 ).toLowerCase();
+					Trie.insert( Language, Index );
+				}
+
 				this.$data.languageSettings.multibleSets( [
-					[ 'term', ObjectHelper.copyObj( CurrentTerm.Term ) ],
+					[ 'term', CurrentTerm.Term ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
-					[ 'languageNames', CurrentLanguageNames.LanguageNames ]
+					[ 'languageNames', CurrentLanguageNames.LanguageNames ],
+					[ 'languages', Trie ]
 				] );
-				/**
-                 *  Put the following in the code to debug troggle button behavior
 
-                 Utils.debugObjectPrint(CurrentTerm)
-                 */
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
