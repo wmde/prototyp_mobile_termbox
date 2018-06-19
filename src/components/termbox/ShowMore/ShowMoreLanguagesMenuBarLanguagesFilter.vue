@@ -23,7 +23,6 @@ export default {
 			toReframe: null,
 			searchField: null,
 			currentLanguageString: '',
-			currentLanguageStringN: '',
 			lastSearch: null,
 			selectedLanguages: [],
 			possibleLanguages: null,

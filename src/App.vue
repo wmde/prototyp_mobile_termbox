@@ -121,14 +121,14 @@ export default {
 		getClientLanguages: function () {
 			let Index, Value, Index2;
 			if ( 'undefined' !== typeof window.navigator.language ) {
-				this.$data.defaultLanguage = window.navigator.language.toLowerCase().split( '-' ).shift();
+				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
 			}
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
 				for ( Index in window.navigator.languages ) {
 
-					Value = window.navigator.languages[ Index ].toLowerCase().split( '-' ).shift();
+					Value = window.navigator.languages[ Index ].toLowerCase();
 
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 					if ( 0 > Index2 ) {
@@ -143,7 +143,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
 
-				Value = window.navigator.systemLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.systemLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -158,7 +158,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
 
-				Value = window.navigator.browserLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.browserLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -173,7 +173,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
 
-				Value = window.navigator.userLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.userLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -214,7 +214,8 @@ export default {
 			let Key = 'en';
 			const Trie = new PatricaTrie();
 			if (
-				false === Utils.isEmpty( CurrentTerm.Term )			&&
+				false === Utils.isEmpty( CurrentTerm.Term )
+			&&
 				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
 			) {
 				this.$data.languageSettings = new SharedStore();
