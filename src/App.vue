@@ -233,7 +233,6 @@ export default {
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
-					[ 'languageNames', CurrentLanguageNames.LanguageNames ],
 					[ 'languages', Trie ]
 				] );
 				this.$data.termLoaded = true;

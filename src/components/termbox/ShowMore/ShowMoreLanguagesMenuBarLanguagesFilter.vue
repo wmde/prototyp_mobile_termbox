@@ -2,29 +2,7 @@
 import ObjectHelper from '../../lib/ObjectHelper';
 import { DomHelper } from '../../lib/DomHelpers';
 import Utils from '../../../Utils';
-import { Compare } from '../../lib/Patrica';
-
-class LanguageCompare extends Compare {
-	__Languages;
-
-	constructor( Languages ) {
-		super();
-		this.setLanguages( Languages );
-	}
-
-	setLanguages( Languages ) {
-		if ( false === Array.isArray( Languages ) ) {
-			Languages = [ Languages ];
-		}
-
-		this.__Languages = Languages;
-	}
-
-	compare( Language ) {
-		return -1 < this.__Languages.indexOf( Language );
-	}
-
-}
+import LanguageCompare from '../../lib/LanguageCompare';
 
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
@@ -46,16 +24,14 @@ export default {
 			searchField: null,
 			currentLanguageString: '',
 			currentLanguageStringN: '',
-			otherLanguages: [],
 			lastSearch: null,
 			selectedLanguages: [],
 			possibleLanguages: null,
-			startLanguages: {},
-			startLanguagesShort: [],
 			model: {}
 		};
 	},
 	mounted: function () {
+		let StartLanguages, Key;
 		const TopBar = document.getElementById( 'showMoreLanguagesLanguagesFilterFixedTop' );
 		this.$data.reAdjust = [
 			TopBar,
@@ -82,12 +58,18 @@ export default {
 
 		this.$data.possibleLanguages = this.$props.languagesSettings.get( 'languages' ).findAllByValue(
 			new LanguageCompare( this.$props.languagesSettings.get( 'possibleLanguages' ) )
-		);
-
-		this.$data.possibleLanguages = this.getPossibleLanguages();
+		).getKeysAndValues();
 
 		this.$data.startLanguagesShort = ObjectHelper.copyObj( this.$data.selectedLanguages );
-		this.getSelectedStartLanguages();
+		// eslint-disable-next-line
+		StartLanguages = this.getLanguagesAndLabels( this.$data.selectedLanguages );
+		for ( Key in this.$data.possibleLanguages ) {
+			if ( -1 === this.$data.selectedLanguages.indexOf( this.$data.possibleLanguages[ Key ] ) ) {
+				StartLanguages[ Key ] = this.$data.possibleLanguages[ Key ];
+			}
+		}
+
+		this.$data.possibleLanguages = StartLanguages;
 
 		this.$data.currentLanguageString = this.$props.languagesSettings.get( 'languages' ).findByValue(
 			new LanguageCompare( this.$props.languagesSettings.get( 'currentLanguage' ) )
@@ -119,13 +101,10 @@ export default {
 	computed: {
 		getTopLanguages() {
 
-			if ( 0 === this.$data.otherLanguages.length ) {
-				this.getOtherLanguages();
+			if ( 0 === this.$data.selectedLanguages.length ) {
+				this.getSelectedLanguages();
 			}
 			return this.getLanguagesAndLabels( this.$data.selectedLanguages );
-		},
-		getLanguageNames: function () {
-			return this.$props.languagesSettings.get( 'languageNames' );
 		},
 		getLanguages() {
 			let CurrentSearch;
@@ -153,9 +132,6 @@ export default {
 		},
 		getCurrentLanguage() {
 			return this.$props.languagesSettings.get( 'currentLanguage' );
-		},
-		getStartLanguages() {
-			return this.$data.startLanguages;
 		}
 	},
 	methods: {
@@ -173,15 +149,6 @@ export default {
 		},
 		filterSubKeys( Key, Value ) {
 			return -1 < this.$props.languagesSettings.get( 'possibleLanguages' ).indexOf( Value );
-		},
-		getSelectedStartLanguages() {
-			this.$data.startLanguages = this.getLanguagesAndLabels( this.$data.selectedLanguages );
-		},
-		getPossibleLanguages() {
-			return this.$data.possibleLanguages.getKeysAndValues();
-		},
-		getLanguageId( Language ) {
-			return this.$data.selectedLanguages.indexOf( Language );
 		},
 		getLanguagesAndLabels( ToFind ) {
 			let Languages, OuterLoop, InnerLoop;
@@ -210,9 +177,8 @@ export default {
 
 			return Language.toLowerCase().startsWith( this.$data.keyMap.toLowerCase() );
 		},
-		getOtherLanguages: function () {
+		getSelectedLanguages: function () {
 			let Index;
-			this.$data.otherLanguages.push( 0 );
 			this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'currentLanguage' ) );
 			for ( Index in this.$props.languagesSettings.get( 'otherLanguages' ) ) {
 				if ( -1 < Utils.binarySearch(
@@ -220,7 +186,6 @@ export default {
 					this.$props.languagesSettings.get( 'otherLanguages' )[ Index ]
 				) ) {
 					if ( this.$props.languagesSettings.get( 'currentLanguage' ) !== this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] ) {
-						this.$data.otherLanguages.push( this.$data.selectedLanguages.length );
 						this.$data.selectedLanguages.push( this.$props.languagesSettings.get( 'otherLanguages' )[ Index ] );
 					}
 				}
@@ -232,11 +197,8 @@ export default {
 		ignoreLanguage: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) === Language;
 		},
-		isStartLanguages( Language ) {
-			return -1 < this.$data.startLanguagesShort.indexOf( Language );
-		},
 		isSelected: function ( Language ) {
-			return -1 < this.$data.selectedLanguages.indexOf( Language );
+			return this.$data.model[ Language ];
 		},
 		close: function () {
 			this.$props.menuSwitch.set( 'switch', 0 );
@@ -248,34 +210,18 @@ export default {
 			if ( false === this.$data.model[ Language ] ) {
 				this.selectLanguage( Language );
 			} else {
-				this.unSelectLanguage( this.getLanguageId( Language ) );
+				this.unSelectLanguage( Language );
 			}
 			this.$data.model[ Language ] = !this.$data.model[ Language ];
 			this.renderTextInput();
 			this.$forceUpdate();
 		},
 		selectLanguage: function ( Language ) {
-			const SelectIndex = this.$data.selectedLanguages.length;
 			this.$data.selectedLanguages.push( Language );
-			this.$data.otherLanguages.push( SelectIndex );
 		},
-		unSelectLanguage: function ( LanguageId ) {
-			const Index = Utils.binarySearch(
-				this.$data.otherLanguages,
-				LanguageId
-			);
-			let ToRemove;
-			if ( -1 < Index ) {
-				ToRemove = this.$data.otherLanguages[ Index ];
-				this.$data.otherLanguages.splice(
-					Index,
-					1
-				);
-				this.$data.selectedLanguages.splice(
-					ToRemove,
-					1
-				);
-			}
+		unSelectLanguage: function ( Language ) {
+			// I really do not like that
+			this.$data.selectedLanguages.splice( this.$data.selectedLanguages.indexOf( Language ), 1 );
 		},
 		renderTextInput: function () {
 			let Reload;
@@ -360,47 +306,12 @@ export default {
 						<label>{{currentLanguageString}}</label>
 					</div>
 				</div>
-				<div v-bind:key="languagecode"
-					v-for="(languagecode, languagestring) in getStartLanguages"
-					@click="selection( languagecode )"
-				>
-					<div v-if="
-						true === showCurrentLanguage( languagestring )
-					&&
-						false === ignoreLanguage( languagecode )
-					&&
-						false === isSelected( languagecode )"
-						class="showMoreLanguagesLanguagesInActiveLanguage">
-						<input
-							v-model="model[languagecode]"
-							type="checkbox"
-						/>
-						<label>{{languagestring}}</label>
-					</div>
-					<div v-else-if="
-						true === showCurrentLanguage( languagestring )
-					&&
-						false === ignoreLanguage( languagecode )
-					&&
-						true === isSelected( languagecode )"
-						class="showMoreLanguagesLanguagesActiveLanguage"
-					>
-						<input
-							v-model="model[languagecode]"
-							checked
-							type="checkbox"
-						/>
-						<label>{{languagestring}}</label>
-					</div>
-				</div>
 				<!-- just stupido you are forced to do that //-->
 				<div v-bind:key="languagestring"
 					v-for="(languagecode, languagestring) in getLanguages"
 					@click="selection( languagecode )"
 				>
 					<div v-if="
-						false === isStartLanguages(languagestring)
-					&&
 						false === ignoreLanguage(languagecode)
 					&&
 						false === isSelected(languagecode)"
@@ -413,8 +324,6 @@ export default {
 						<label>{{languagestring}}</label>
 					</div>
 					<div v-else-if="
-						false === isStartLanguages(languagecode)
-					&&
 						false === ignoreLanguage(languagecode)
 					&&
 						true === isSelected(languagecode)"
