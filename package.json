@@ -1,6 +1,6 @@
 {
   "name": "ptermb",
-  "version": "0.0.0a",
+  "version": "0.0.1b",
   "description": "just a prototype",
   "author": "Matthias Geisler",
   "email": "<matthias.geisler@wikimedia.de>",
@@ -16,9 +16,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
-    "vue": "^2.5.16",
-    "vue-i18n": "^7.7.0",
-    "whatwg-fetch": "^2.0.4"
+    "vue": "^2.5.16"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

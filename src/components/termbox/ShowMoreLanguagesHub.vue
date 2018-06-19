@@ -54,7 +54,7 @@ export default{
 				DomHelper.addClass( this.$data.ContentBox, 'showMoreLanguagesContentActive' );
 			}
 		},
-		keepButtonFieldVisible() { // it become a watchdog...I should rename it
+		keepButtonFieldVisible() {
 
 			if ( 'none' === this.$data.MoreImage.style.display ) {
 				this.$data.DomEffects.sticky();
@@ -127,7 +127,6 @@ export default{
 {
     margin: 1em 0 0 0!important;
     padding-left: 0px!important;
-    /*width: 102.5%;*/
     width: 100%;
     background-color: #F8F9FA;
 }
@@ -145,7 +144,7 @@ export default{
     border-width: 1px;
     border-bottom-color: #f4f4f4;
     border-style: solid;
-    padding-right: 4%!important;
+    padding-right: 3.4%!important;
 }
 
 .keepOnTheTop
@@ -155,7 +154,6 @@ export default{
     opacity: 0.9;
     background-color: #F8F9FA;
     top:0;
-    /*width: 85.4% ;*/
 }
 
 .keepOnTheTop>img

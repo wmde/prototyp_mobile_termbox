@@ -34,7 +34,7 @@ export default {
 	methods: {
 		shouldDisplayInOtherLanguages: function ( Language ) {
 			return this.$props.languagesSettings.get( 'currentLanguage' ) !== Language &&
-				this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
+					this.$props.languagesSettings.get( 'term' ).hasOwnProperty( Language );
 		}
 	}
 };
@@ -89,7 +89,7 @@ export default {
     div.otherLanguages h2
     {
         font-weight: 300;
-        font-size: 0.8em;
+        font-size: 0.9em;
         color: #72777D;
         margin-left: 0;
         margin-bottom: 0;
@@ -101,8 +101,8 @@ export default {
         font-weight: 600;
         margin-left: 0px;
         padding-bottom: 0px;
-        margin-bottom: 0px;
-        margin-top: 0.2em;
+        margin-bottom: 0.5em;
+        margin-top: 0;
         font-size: 0.9em;
         font-family: 'Helvetica Neue','Helvetica','Nimbus Sans L','Arial','Liberation Sans',sans-serif;
     }
@@ -110,11 +110,6 @@ export default {
     div.otherLanguagesContainer
     {
         padding-left: 0.5em;
-    }
-
-    div.otherLanguages > ul.wikibase-entitytermsview-aliases > li:last-child.listItem-extended::after
-    {
-        content: '';
     }
 
     div.otherLanguagesContainer > .wikibase-entitytermsview-heading-description,
