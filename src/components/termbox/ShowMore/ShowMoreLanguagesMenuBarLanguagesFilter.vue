@@ -2,6 +2,33 @@
 import ObjectHelper from '../../lib/ObjectHelper';
 import { DomHelper } from '../../lib/DomHelpers';
 import Utils from '../../../Utils';
+import {Compare} from "../../lib/Patrica";
+
+class LanguageCompare extends Compare {
+	__Languages;
+
+	constructor( Languages )
+	{
+		super();
+		this.setLanguages( Languages )
+	}
+
+	setLanguages( Languages )
+	{
+		if( false === Array.isArray( Languages ) )
+		{
+			Languages = [ Languages ];
+		}
+
+		this.__Languages = Languages
+	}
+
+	compare( Language )
+	{
+		return -1 < this.__Languages.indexOf( Language )
+	}
+
+}
 
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
@@ -21,7 +48,8 @@ export default {
 			documentBody: null,
 			toReframe: null,
 			searchField: null,
-			otherLanguages: []
+			otherLanguages: [],
+			lastSearch: null
 		};
 	},
 	mounted: function () {
@@ -85,7 +113,17 @@ export default {
 				return this.$props.languagesSettings.get( 'languages' ).getKeysAndValues();
 			} else {
 				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
-				CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKey( CurrentSearch );
+				if( null === this.$data.lastSearch ) {
+					CurrentSearch = this.$props.languagesSettings.get('languages').findByKey(CurrentSearch);
+				}
+				else
+				{
+					console.log(this.$data.lastSearch)
+					CurrentSearch = this.$data.lastSearch.findByKey(CurrentSearch, true);
+				}
+
+				this.$data.lastSearch = CurrentSearch;
+
 				if ( null === CurrentSearch ) {
 					return {};
 				} else {
