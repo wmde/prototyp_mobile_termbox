@@ -25,6 +25,7 @@ export default {
 			searchField: null,
 			currentLanguageString: '',
 			lastSearch: null,
+			lastSearchLength: 0,
 			selectedLanguages: [],
 			possibleLanguages: null,
 			model: {}
@@ -106,17 +107,31 @@ export default {
 			}
 			return this.getLanguagesAndLabels( this.$data.selectedLanguages );
 		},
+		getCurrentLanguage() {
+			return this.$props.languagesSettings.get( 'currentLanguage' );
+		},
+		computeLanguages() {
+			return this.getLanguages();
+		}
+	},
+	methods: {
 		getLanguages() {
 			let CurrentSearch, SearchIndex, Results;
+
+			this.$data.keyMap = this.$data.keyMap.trim();
+
 			if ( 0 === this.$data.keyMap.length ) {
 				if ( null === this.$data.possibleLanguages ) {
 					return {};
 				}
-				// eslint-disable-next-line
 				this.$data.lastSearch = null;
+				this.$data.lastSearchLength = 0;
 				return this.$data.possibleLanguages;
 			} else {
-				if ( null === this.$data.lastSearch ) {
+				if (
+					null === this.$data.lastSearch					||
+					this.$data.keyMap.length <= this.$data.lastSearchLength
+				) {
 					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKeyIgnoreCase( this.$data.keyMap );
 				} else {
 					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
@@ -138,7 +153,7 @@ export default {
 					}
 				}
 
-				// eslint-disable-next-line
+				this.$data.lastSearchLength = this.$data.keyMap.length;
 				this.$data.lastSearch = CurrentSearch;
 
 				if ( null === CurrentSearch ) {
@@ -152,11 +167,6 @@ export default {
 				}
 			}
 		},
-		getCurrentLanguage() {
-			return this.$props.languagesSettings.get( 'currentLanguage' );
-		}
-	},
-	methods: {
 		buildModel() {
 			let Index;
 			for ( Index in this.$props.languagesSettings.get( 'possibleLanguages' ) ) {
@@ -330,7 +340,7 @@ export default {
 				</div>
 				<!-- just stupido you are forced to do that //-->
 				<div v-bind:key="languagestring"
-					v-for="(languagecode, languagestring) in getLanguages"
+					v-for="(languagecode, languagestring) in computeLanguages"
 					@click="selection( languagecode )"
 				>
 					<div v-if="
