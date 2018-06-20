@@ -210,12 +210,11 @@ export default {
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
-			let Index, Language;
+			let Index;
 			let Key = 'en';
 			const Trie = new PatricaTrie();
 			if (
-				false === Utils.isEmpty( CurrentTerm.Term )
-			&&
+				false === Utils.isEmpty( CurrentTerm.Term )			&&
 				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
 			) {
 				this.$data.languageSettings = new SharedStore();

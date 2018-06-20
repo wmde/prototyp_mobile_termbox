@@ -112,36 +112,28 @@ export default {
 				if ( null === this.$data.possibleLanguages ) {
 					return {};
 				}
+				// eslint-disable-next-line
 				this.$data.lastSearch = null;
 				return this.$data.possibleLanguages;
 			} else {
 				if ( null === this.$data.lastSearch ) {
 					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKeyIgnoreCase( this.$data.keyMap );
 				} else {
-					if( this.$data.lastSearch instanceof PatricaTrieCollection )
-					{
+					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
 						CurrentSearch = [];
-						for ( SearchIndex = 0; SearchIndex < this.$data.lastSearch.size(); SearchIndex++ )
-						{
+						for ( SearchIndex = 0; SearchIndex < this.$data.lastSearch.size(); SearchIndex++ ) {
 							Results = this.$data.lastSearch.item( SearchIndex ).findByKeyIgnoreCase( this.$data.keyMap, true );
 							CurrentSearch = CurrentSearch.concat( Results.toArray() );
 						}
 
-						if( 0 === CurrentSearch.length )
-						{
+						if ( 0 === CurrentSearch.length ) {
 							CurrentSearch = null;
-						}
-						else if( 1 === CurrentSearch.length )
-						{
-							CurrentSearch = CurrentSearch[0];
-						}
-						else
-						{
+						} else if ( 1 === CurrentSearch.length ) {
+							CurrentSearch = CurrentSearch[ 0 ];
+						} else {
 							CurrentSearch = new PatricaTrieCollection( CurrentSearch );
 						}
-					}
-					else
-					{
+					} else {
 						CurrentSearch = this.$data.lastSearch.findByKeyIgnoreCase( this.$data.keyMap, true );
 					}
 				}
@@ -152,13 +144,10 @@ export default {
 				if ( null === CurrentSearch ) {
 					return {};
 				} else {
-					if( this.$data.lastSearch instanceof PatricaTrieCollection )
-					{
-						return CurrentSearch.getAllKeysAndValues(this.filterSubKeys);
-					}
-					else
-					{
-						return CurrentSearch.getKeysAndValues(this.filterSubKeys);
+					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
+						return CurrentSearch.getAllKeysAndValues( this.filterSubKeys );
+					} else {
+						return CurrentSearch.getKeysAndValues( this.filterSubKeys );
 					}
 				}
 			}
