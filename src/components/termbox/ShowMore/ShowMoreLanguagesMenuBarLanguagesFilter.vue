@@ -28,6 +28,7 @@ export default {
 			lastSearchLength: 0,
 			selectedLanguages: [],
 			possibleLanguages: null,
+			startLanguages: null,
 			model: {}
 		};
 	},
@@ -64,6 +65,7 @@ export default {
 		this.$data.startLanguagesShort = ObjectHelper.copyObj( this.$data.selectedLanguages );
 		// eslint-disable-next-line
 		StartLanguages = this.getLanguagesAndLabels( this.$data.selectedLanguages );
+		this.$data.startLanguages = ObjectHelper.copyObj( StartLanguages );
 		for ( Key in this.$data.possibleLanguages ) {
 			if ( -1 === this.$data.selectedLanguages.indexOf( this.$data.possibleLanguages[ Key ] ) ) {
 				StartLanguages[ Key ] = this.$data.possibleLanguages[ Key ];
@@ -117,6 +119,7 @@ export default {
 	methods: {
 		getLanguages() {
 			let CurrentSearch, SearchIndex, Results;
+			const Return = {};
 
 			this.$data.keyMap = this.$data.keyMap.trim();
 
@@ -160,10 +163,23 @@ export default {
 					return {};
 				} else {
 					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
-						return CurrentSearch.getAllKeysAndValues( this.filterSubKeys );
+						Results = CurrentSearch.getAllKeysAndValues( this.filterSubKeys );
 					} else {
-						return CurrentSearch.getKeysAndValues( this.filterSubKeys );
+						Results = CurrentSearch.getKeysAndValues( this.filterSubKeys );
 					}
+
+					for ( SearchIndex in this.$data.startLanguages ) {
+						if ( SearchIndex in Results ) {
+							Return[ SearchIndex ] = this.$data.startLanguages[ SearchIndex ];
+							delete Results[ SearchIndex ];
+						}
+					}
+
+					for ( SearchIndex in Results ) {
+						Return[ SearchIndex ] = Results[ SearchIndex ];
+					}
+
+					return Return;
 				}
 			}
 		},
