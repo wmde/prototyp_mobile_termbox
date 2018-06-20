@@ -224,9 +224,7 @@ export default {
 				}
 
 				for ( Index in CurrentLanguageNames.LanguageNames ) {
-					Language = CurrentLanguageNames.LanguageNames[ Index ].charAt( 0 ).toUpperCase() +
-						CurrentLanguageNames.LanguageNames[ Index ].slice( 1 ).toLowerCase();
-					Trie.insert( Language, Index );
+					Trie.insert( CurrentLanguageNames.LanguageNames[ Index ], Index );
 				}
 
 				this.$data.languageSettings.multibleSets( [

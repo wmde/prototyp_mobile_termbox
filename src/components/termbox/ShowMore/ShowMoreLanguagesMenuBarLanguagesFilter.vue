@@ -3,6 +3,7 @@ import ObjectHelper from '../../lib/ObjectHelper';
 import { DomHelper } from '../../lib/DomHelpers';
 import Utils from '../../../Utils';
 import LanguageCompare from '../../lib/LanguageCompare';
+import { PatricaTrieCollection } from '../../lib/Patrica';
 
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
@@ -106,26 +107,59 @@ export default {
 			return this.getLanguagesAndLabels( this.$data.selectedLanguages );
 		},
 		getLanguages() {
-			let CurrentSearch;
+			let CurrentSearch, SearchIndex, Results;
 			if ( 0 === this.$data.keyMap.length ) {
 				if ( null === this.$data.possibleLanguages ) {
 					return {};
 				}
+				this.$data.lastSearch = null;
 				return this.$data.possibleLanguages;
 			} else {
-				CurrentSearch = this.$data.keyMap.charAt( 0 ).toUpperCase() + this.$data.keyMap.slice( 1 ).toLowerCase();
 				if ( null === this.$data.lastSearch ) {
-					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKey( CurrentSearch );
+					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKeyIgnoreCase( this.$data.keyMap );
 				} else {
-					CurrentSearch = this.$data.lastSearch.findByKey( CurrentSearch, true );
+					if( this.$data.lastSearch instanceof PatricaTrieCollection )
+					{
+						CurrentSearch = [];
+						for ( SearchIndex = 0; SearchIndex < this.$data.lastSearch.size(); SearchIndex++ )
+						{
+							Results = this.$data.lastSearch.item( SearchIndex ).findByKeyIgnoreCase( this.$data.keyMap, true );
+							CurrentSearch = CurrentSearch.concat( Results.toArray() );
+						}
+
+						if( 0 === CurrentSearch.length )
+						{
+							CurrentSearch = null;
+						}
+						else if( 1 === CurrentSearch.length )
+						{
+							CurrentSearch = CurrentSearch[0];
+						}
+						else
+						{
+							CurrentSearch = new PatricaTrieCollection( CurrentSearch );
+						}
+					}
+					else
+					{
+						CurrentSearch = this.$data.lastSearch.findByKeyIgnoreCase( this.$data.keyMap, true );
+					}
 				}
+
 				// eslint-disable-next-line
 				this.$data.lastSearch = CurrentSearch;
 
 				if ( null === CurrentSearch ) {
 					return {};
 				} else {
-					return CurrentSearch.getKeysAndValues( this.filterSubKeys );
+					if( this.$data.lastSearch instanceof PatricaTrieCollection )
+					{
+						return CurrentSearch.getAllKeysAndValues(this.filterSubKeys);
+					}
+					else
+					{
+						return CurrentSearch.getKeysAndValues(this.filterSubKeys);
+					}
 				}
 			}
 		},
