@@ -3,7 +3,7 @@ import ObjectHelper from '../../lib/ObjectHelper';
 import { DomHelper } from '../../lib/DomHelpers';
 import Utils from '../../../Utils';
 import LanguageCompare from '../../lib/LanguageCompare';
-import { PatricaTrieCollection } from '../../lib/Patrica';
+import { PatricaTrieCollectionEx } from '../../lib/Patrica';
 
 export default {
 	name: 'ShowMoreLanguagesMenuBarLanguagesFilter',
@@ -137,7 +137,7 @@ export default {
 				) {
 					CurrentSearch = this.$props.languagesSettings.get( 'languages' ).findByKeyIgnoreCase( this.$data.keyMap );
 				} else {
-					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
+					if ( this.$data.lastSearch instanceof PatricaTrieCollectionEx ) {
 						CurrentSearch = [];
 						for ( SearchIndex = 0; SearchIndex < this.$data.lastSearch.size(); SearchIndex++ ) {
 							Results = this.$data.lastSearch.item( SearchIndex ).findByKeyIgnoreCase( this.$data.keyMap, true );
@@ -149,7 +149,7 @@ export default {
 						} else if ( 1 === CurrentSearch.length ) {
 							CurrentSearch = CurrentSearch[ 0 ];
 						} else {
-							CurrentSearch = new PatricaTrieCollection( CurrentSearch );
+							CurrentSearch = new PatricaTrieCollectionEx( CurrentSearch );
 						}
 					} else {
 						CurrentSearch = this.$data.lastSearch.findByKeyIgnoreCase( this.$data.keyMap, true );
@@ -162,7 +162,7 @@ export default {
 				if ( null === CurrentSearch ) {
 					return {};
 				} else {
-					if ( this.$data.lastSearch instanceof PatricaTrieCollection ) {
+					if ( this.$data.lastSearch instanceof PatricaTrieCollectionEx ) {
 						Results = CurrentSearch.getAllKeysAndValues( this.filterSubKeys );
 					} else {
 						Results = CurrentSearch.getKeysAndValues( this.filterSubKeys );
