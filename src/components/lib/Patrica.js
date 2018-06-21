@@ -320,10 +320,6 @@ export class PatricaTrieNode extends PatricaTrieNodeBase {
 		this._Children = [];
 	}
 
-	static sortChildes( Child ) {
-		return Child._getKey();
-	}
-
 	__searchForKey( Key ) {
 		let Start, End, Middle;
 
@@ -610,16 +606,17 @@ export class PatricaTrieNode extends PatricaTrieNodeBase {
 	}
 
 	_fromString( Nodes, Position ) {
-		let ImportNode;
-		const Imports = [];
+		let ImportNode, InsertPosition;
 
 		while ( Nodes.length > Position ) {
 			ImportNode = PatricaTrieNode._loadFromString( Nodes, Position, this );
 			Position = ImportNode[ 0 ];
-			Imports.push( ImportNode[ 1 ] );
+			InsertPosition = this._insertPosition( ImportNode[ 1 ]._getKey().charCodeAt( 0 ) );
+			if ( -1 >= InsertPosition ) {
+				this._Children.splice( -( InsertPosition + 1 ), 0, ImportNode[ 1 ] );
+			}
+
 			if ( ']' === Nodes.charAt( Position ) ) {
-				this._importChildren( Imports );
-				this._Children = this._Children.sort( PatricaTrieNodeBase.sortChildes );
 				return ++Position;
 			}
 		}
@@ -1173,16 +1170,18 @@ export class PatricaTrieNodeEx extends PatricaTrieNode {
 	}
 
 	_fromString( Nodes, Position, ValueDeserializer ) {
-		let ImportNode;
-		const Imports = [];
+		let ImportNode, InsertPosition;
 
 		while ( Nodes.length > Position ) {
 			ImportNode = PatricaTrieNodeEx._loadFromString( Nodes, Position, this, ValueDeserializer );
+
 			Position = ImportNode[ 0 ];
-			Imports.push( ImportNode[ 1 ] );
+			InsertPosition = this._insertPosition( ImportNode[ 1 ]._getKey().charCodeAt( 0 ) );
+			if ( -1 >= InsertPosition ) {
+				this._Children.splice( -( InsertPosition + 1 ), 0, ImportNode[ 1 ] );
+			}
+
 			if ( ']' === Nodes.charAt( Position ) ) {
-				this._importChildren( Imports );
-				this._Children = this._Children.sort( PatricaTrieNodeBase.sortChildes );
 				return ++Position;
 			}
 		}

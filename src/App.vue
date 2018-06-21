@@ -2,16 +2,15 @@
 import Utils from './Utils.js';
 import ObjectHelper from './components/lib/ObjectHelper';
 import CurrentTerm from './components/lib/CurrentTerm';
-//import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
 import { PatricaTrieEx } from './components/lib/Patrica';
 import { DomHelper } from './components/lib/DomHelpers';
-import CurrentLanguageNames from './components/data/en_lang_trie_data'
+import CurrentLanguageNames from './components/data/en_lang_trie_data';
+import CurrentLanguageNamesOrg from './components/data/en_lang_data';
 
-function pipeOut(Value)
-{
+function pipeOut( Value ) {
 	return Value;
 }
 function wrapTerm( Term ) {
@@ -97,8 +96,7 @@ export default {
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
 		 */
-		//CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
-		//CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_trie_data.json' );
+		// CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
 	mounted: function () {
 		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
@@ -216,26 +214,21 @@ export default {
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
-			//let Index;
+			let Trie, Index;
 			let Key = 'en';
-			//const Trie = new PatricaTrieEx();
-			let Trie;
-			if (
-				false === Utils.isEmpty( CurrentTerm.Term )
-			//&&
-			//	false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
-			) {
+			const Trie2 = new PatricaTrieEx();
+			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
+				// eslint-disable-next-line
+				//Trie = PatricaTrieEx.loadFromString( CurrentLanguageNames.languages, pipeOut )
+				for ( Index in CurrentLanguageNamesOrg ) {
+					Trie2.insert( CurrentLanguageNamesOrg[ Index ], Index );
+				}
 
-				console.log( CurrentLanguageNames.v )
-				Trie = PatricaTrieEx.loadFromString( CurrentLanguageNames.v, pipeOut )
-
-				//for ( Index in CurrentLanguageNames.LanguageNames ) {
-				//	Trie.insert( CurrentLanguageNames.LanguageNames[ Index ], Index );
-				//}
+				Trie = PatricaTrieEx.loadFromString( Trie2.serialize( pipeOut ), pipeOut );
 
 				this.$data.languageSettings.multibleSets( [
 					[ 'term', CurrentTerm.Term ],
@@ -244,8 +237,16 @@ export default {
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
 					[ 'languages', Trie ]
 				] );
-				//Trie = PatricaTrieEx.loadFromString( Trie.serialize( pipeOut ), pipeOut );
-				//Utils.debugObjectPrint( Trie.serialize( pipeOut ) )
+
+				Utils.debugObjectPrint( Trie2.serialize( pipeOut ) );
+				/* Utils.debugObjectPrint( CurrentLanguageNamesOrg )
+				Utils.debugObjectPrint( '---' )
+				Utils.debugObjectPrint( CurrentLanguageNames.languages )
+				Utils.debugObjectPrint( Trie2.serialize( pipeOut ) );
+				Utils.debugObjectPrint( Trie.serialize( pipeOut ) );
+				console.log( PatricaTrieEx.loadFromString( Trie.serialize( pipeOut ), pipeOut ) );
+				console.log( Trie )*/
+
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
