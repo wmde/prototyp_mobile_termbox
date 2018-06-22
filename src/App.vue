@@ -124,7 +124,7 @@ export default {
 		},
 		getClientLanguages: function () {
 			let Index, Value, Index2;
-			
+
 			if ( 'undefined' !== typeof window.navigator.language ) {
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
