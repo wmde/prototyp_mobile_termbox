@@ -124,6 +124,7 @@ export default {
 		},
 		getClientLanguages: function () {
 			let Index, Value, Index2;
+			
 			if ( 'undefined' !== typeof window.navigator.language ) {
 				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
@@ -192,15 +193,15 @@ export default {
 		},
 		getCurrentLanguage: function ( SupportedLanguages ) {
 			let Index;
+
 			if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
 				this.$data.languages.splice( this.$data.languages.indexOf( this.$data.defaultLanguage ), 1 );
 				for ( Index in this.$data.languages ) {
 					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) ) {
-						this.$data.defaultLanguage = this.$data.languages[ Index ];
-						break;
+						return this.$data.languages[ Index ];
 					}
 				}
-			} else {
+
 				if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
 					this.$data.defaultLanguage = 'en';
 				} else {
