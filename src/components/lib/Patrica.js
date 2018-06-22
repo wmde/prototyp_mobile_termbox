@@ -1,11 +1,5 @@
 import Utils from '../../Utils';
-import { BaseException, ValueErrorException, TypeErrorException } from './BaseExceptions';
-
-class NotImplementedException extends BaseException {
-	constructor( What ) {
-		super( 'NotImplementedException', `${What} is not implemented (yet).` );
-	}
-}
+import { BaseException, NotImplementedException, ValueErrorException, TypeErrorException } from './BaseExceptions';
 
 class InvalidMethodException extends BaseException {
 	constructor( What ) {
