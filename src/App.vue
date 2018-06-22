@@ -8,11 +8,11 @@ import SharedStore from './components/lib/SharedStore';
 import { PatricaTrieEx } from './components/lib/Patrica';
 import { DomHelper } from './components/lib/DomHelpers';
 import CurrentLanguageNames from './components/data/en_lang_trie_data';
-import CurrentLanguageNamesOrg from './components/data/en_lang_data';
 
 function pipeOut( Value ) {
 	return Value;
 }
+
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
 	const NewTerms = {};
@@ -214,21 +214,16 @@ export default {
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
-			let Trie, Index;
+			let Trie;
 			let Key = 'en';
-			const Trie2 = new PatricaTrieEx();
+
 			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
 				// eslint-disable-next-line
-				//Trie = PatricaTrieEx.loadFromString( CurrentLanguageNames.languages, pipeOut )
-				for ( Index in CurrentLanguageNamesOrg ) {
-					Trie2.insert( CurrentLanguageNamesOrg[ Index ], Index );
-				}
-
-				Trie = PatricaTrieEx.loadFromString( Trie2.serialize( pipeOut ), pipeOut );
+				Trie = PatricaTrieEx.loadFromString( CurrentLanguageNames.languages, pipeOut )
 
 				this.$data.languageSettings.multibleSets( [
 					[ 'term', CurrentTerm.Term ],
@@ -237,15 +232,6 @@ export default {
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
 					[ 'languages', Trie ]
 				] );
-
-				Utils.debugObjectPrint( Trie2.serialize( pipeOut ) );
-				/* Utils.debugObjectPrint( CurrentLanguageNamesOrg )
-				Utils.debugObjectPrint( '---' )
-				Utils.debugObjectPrint( CurrentLanguageNames.languages )
-				Utils.debugObjectPrint( Trie2.serialize( pipeOut ) );
-				Utils.debugObjectPrint( Trie.serialize( pipeOut ) );
-				console.log( PatricaTrieEx.loadFromString( Trie.serialize( pipeOut ), pipeOut ) );
-				console.log( Trie )*/
 
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
