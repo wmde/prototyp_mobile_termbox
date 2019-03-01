@@ -1,3 +1,5 @@
+The prototype has been completed. The work on the production implementation happens in https://gerrit.wikimedia.org/r/#/admin/projects/wikibase/termbox.
+
 # prototyp mobile termbox
 
 > just a prototyp
