@@ -2,12 +2,16 @@
 import Utils from './Utils.js';
 import ObjectHelper from './components/lib/ObjectHelper';
 import CurrentTerm from './components/lib/CurrentTerm';
-import CurrentLanguageNames from './components/lib/CurrentLanguageNames';
 import Termbox from './components/Termbox.vue';
 import Statementbox from './components/Statementbox';
 import SharedStore from './components/lib/SharedStore';
-import { PatricaTrie } from './components/lib/Patrica';
+import { PatricaTrieEx } from './components/lib/Patrica';
 import { DomHelper } from './components/lib/DomHelpers';
+import CurrentLanguageNames from './components/data/en_lang_trie_data';
+
+function pipeOut( Value ) {
+	return Value;
+}
 
 function wrapTerm( Term ) {
 	let Key, Alias, Index;
@@ -92,7 +96,7 @@ export default {
 		/**
 		 * Language data was generated using Language::fetchLanguageNames('en','all') in mediawiki
 		 */
-		CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
+		// CurrentLanguageNames.loadLanguageNames( './components/data/en_lang_data.json' );
 	},
 	mounted: function () {
 		this.$data.documentBody = document.getElementsByTagName( 'body' )[ 0 ];
@@ -120,15 +124,16 @@ export default {
 		},
 		getClientLanguages: function () {
 			let Index, Value, Index2;
+
 			if ( 'undefined' !== typeof window.navigator.language ) {
-				this.$data.defaultLanguage = window.navigator.language.toLowerCase().split( '-' ).shift();
+				this.$data.defaultLanguage = window.navigator.language.toLowerCase();
 				this.$data.languages.push( this.$data.defaultLanguage );
 			}
 
 			if ( 'undefined' !== typeof window.navigator.languages ) {
 				for ( Index in window.navigator.languages ) {
 
-					Value = window.navigator.languages[ Index ].toLowerCase().split( '-' ).shift();
+					Value = window.navigator.languages[ Index ].toLowerCase();
 
 					Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 					if ( 0 > Index2 ) {
@@ -143,7 +148,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.systemLanguage ) {
 
-				Value = window.navigator.systemLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.systemLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -158,7 +163,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.browserLanguage ) {
 
-				Value = window.navigator.browserLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.browserLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -173,7 +178,7 @@ export default {
 
 			if ( 'undefined' !== typeof window.navigator.userLanguage ) {
 
-				Value = window.navigator.userLanguage.toLowerCase().split( '-' ).shift();
+				Value = window.navigator.userLanguage.toLowerCase();
 
 				Index2 = Utils.binaryInsertSearch( this.$data.languages, Value );
 				if ( 0 > Index2 ) {
@@ -188,15 +193,15 @@ export default {
 		},
 		getCurrentLanguage: function ( SupportedLanguages ) {
 			let Index;
+
 			if ( -1 === SupportedLanguages.indexOf( this.$data.defaultLanguage ) ) {
 				this.$data.languages.splice( this.$data.languages.indexOf( this.$data.defaultLanguage ), 1 );
 				for ( Index in this.$data.languages ) {
 					if ( -1 < SupportedLanguages.indexOf( this.$data.languages[ Index ] ) ) {
-						this.$data.defaultLanguage = this.$data.languages[ Index ];
-						break;
+						return this.$data.languages[ Index ];
 					}
 				}
-			} else {
+
 				if ( -1 < SupportedLanguages.indexOf( 'en' ) ) {
 					this.$data.defaultLanguage = 'en';
 				} else {
@@ -210,32 +215,25 @@ export default {
 			return this.$data.languages;
 		},
 		refreshOnLoaded: function () {
-			let Index, Language;
+			let Trie;
 			let Key = 'en';
-			const Trie = new PatricaTrie();
-			if (
-				false === Utils.isEmpty( CurrentTerm.Term )			&&
-				false === Utils.isEmpty( CurrentLanguageNames.LanguageNames )
-			) {
+
+			if ( false === Utils.isEmpty( CurrentTerm.Term ) ) {
 				this.$data.languageSettings = new SharedStore();
 				if ( false === ( Key in CurrentTerm.Term ) ) {
 					Key = Object.keys( CurrentTerm.Term )[ 0 ];
 				}
-
-				for ( Index in CurrentLanguageNames.LanguageNames ) {
-					Language = CurrentLanguageNames.LanguageNames[ Index ].charAt( 0 ).toUpperCase() +
-						CurrentLanguageNames.LanguageNames[ Index ].slice( 1 ).toLowerCase();
-					Trie.insert( Language, Index );
-				}
+				// eslint-disable-next-line
+				Trie = PatricaTrieEx.loadFromString( CurrentLanguageNames.languages, pipeOut )
 
 				this.$data.languageSettings.multibleSets( [
 					[ 'term', CurrentTerm.Term ],
 					[ 'currentLanguage', this.getCurrentLanguage( CurrentTerm.Term[ Key ].languages ) ], // TODO
 					[ 'otherLanguages', this.getOtherLanguages() ],
 					[ 'possibleLanguages', CurrentTerm.Term[ Key ].languages ],
-					[ 'languageNames', CurrentLanguageNames.LanguageNames ],
 					[ 'languages', Trie ]
 				] );
+
 				this.$data.termLoaded = true;
 				this.$nextTick( function () {
 					this.$forceUpdate();
